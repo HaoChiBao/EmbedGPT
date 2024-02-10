@@ -1,0 +1,37 @@
+{
+    "manifest_version": 3,
+    "name": "EmbedGPT",
+    "description": "GPT-4 integrated into your browser",
+    "version": "0.0.1",
+
+    "permissions": [
+        "scripting",
+        "activeTab",
+        "storage"
+    ],
+    "host_permissions": ["<all_urls>"],
+    "web_accessible_resources":[{
+        "resources": ["/app/*", "/images/*"],
+        "matches": ["<all_urls>"]
+    }],
+    "icons": {
+        "16": "./images/icon16.png",
+        "48": "./images/icon16.png",
+        "128": "./images/icon16.png"
+    },
+    "background": {
+        "type": "module"
+    },
+    "action": {
+        "default_icon": "./images/icon16.png",
+        "default_popup": "./app/popup/popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["./app/content/content.js"],
+            "css": ["./app/content/content.css"],
+            "run_at": "document_start"
+        }
+    ]
+}
