@@ -1,48 +1,35 @@
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-    console.log(request, sender, sendResponse)
-    if (request.action === "capture") {
-        const dimensions = request.dimensions || { x: 0, y: 0, width: 200, height: 150 }; // Default dimensions if not provided
-        const originalDimensions = request.originalDimensions || { width: 200, height: 150 }; // Default dimensions if not provided
-        await chrome.tabs.captureVisibleTab(null, { format: "png" }, async (dataUrl) => {
-            // You can send the dataUrl to a server or display it on the page
-            console.log(dataUrl);
-            // Open a new tab with the captured image
-            // chrome.tabs.create({ url: dataUrl });
 
-            sendResponse({ message: "Captured" });
-        });
-    }
-    return true;
-});
+chrome.runtime.onStartup.addListener(() => {
+    console.log(`onStartup()`)
+})
 
+// listen for messages from the content script
 chrome.runtime.onConnect.addListener((port) => {
     if(port.name === "content") {
         port.onMessage.addListener(async (msg) => {
             // console.log(msg)
 
+            if(!msg.action) {port.postMessage({error: 'action not specified'}) ;return}
+
             const response = { 
-                message: "Received"
-                // fill in the response
+                action: msg.action,
+                data: {}
             }
             switch(msg.action) {
-                case "test":
-                    
-                    break;
 
                 case 'capture':
                     const dimensions = msg.dimensions || { x: 0, y: 0, width: 200, height: 150 }; // Default dimensions if not provided
                     const originalDimensions = msg.originalDimensions || { width: 200, height: 150 }; // Default dimensions if not provided
-                    await chrome.tabs.captureVisibleTab(null, { format: "png" }, async (dataUrl) => {
-                        // You can send the dataUrl to a server or display it on the page
-                        console.log(dataUrl);
-                        // Open a new tab with the captured image
-                        // chrome.tabs.create({ url: dataUrl });
 
-                        port.postMessage({ message: "Captured" });
-                    });
+                    const dataUrl = await chrome.tabs.captureVisibleTab(null, { format: "png" })
+                    response.data.dataUrl = dataUrl
+                    response.data.dimensions = dimensions
+
+                    // chrome.tabs.create({ url: dataUrl})
+                    // response.dataUrl = dataUrl
                     break;
-            }
 
+            }
             port.postMessage(response);
         });
     }
