@@ -7,7 +7,8 @@
     "permissions": [
         "scripting",
         "activeTab",
-        "storage"
+        "storage",
+        "downloads"
     ],
     "host_permissions": ["<all_urls>"],
     "web_accessible_resources":[{
@@ -20,6 +21,7 @@
         "128": "./images/icon16.png"
     },
     "background": {
+        "service_worker": "./app/background/background.js",
         "type": "module"
     },
     "action": {
@@ -31,7 +33,7 @@
             "matches": ["<all_urls>"],
             "js": ["./app/content/content.js"],
             "css": ["./app/content/content.css"],
-            "run_at": "document_start"
+            "run_at": "document_end"
         }
     ]
 }
