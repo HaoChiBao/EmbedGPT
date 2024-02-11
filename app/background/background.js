@@ -7,7 +7,7 @@ chrome.runtime.onStartup.addListener(() => {
 chrome.runtime.onConnect.addListener((port) => {
     if(port.name === "content") {
         port.onMessage.addListener(async (msg) => {
-            // console.log(msg)
+            console.log(msg)
 
             if(!msg.action) {port.postMessage({error: 'action not specified'}) ;return}
 
@@ -27,6 +27,10 @@ chrome.runtime.onConnect.addListener((port) => {
 
                     // chrome.tabs.create({ url: dataUrl})
                     // response.dataUrl = dataUrl
+                    break;
+
+                case 'refresh':
+                    // keeps the service worker actuve
                     break;
 
             }

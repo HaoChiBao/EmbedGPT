@@ -17,9 +17,13 @@
 
 
 .highlight-element{
-    border: 2px solid red;
+    border: 7px solid rgb(110, 135, 225);
+    border-radius: 1rem;
+
     position: fixed;
     z-index: 6969;
+    cursor: crosshair;
+
 }
 
 .cropped-image-test{
@@ -29,7 +33,7 @@
 
 .highlight-area{
     position: fixed;
-    z-index: 1000;
+    z-index: 6969;
     top: 0;
     left: 0;
     pointer-events: none;

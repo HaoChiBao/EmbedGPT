@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "EmbedGPT",
-    "description": "GPT-4 integrated into your browser",
+    "name": "What Do You See",
+    "description": "AI search/query integrated into your browser",
     "version": "0.0.1",
 
     "permissions": [
@@ -16,16 +16,16 @@
         "matches": ["<all_urls>"]
     }],
     "icons": {
-        "16": "./images/icon16.png",
-        "48": "./images/icon16.png",
-        "128": "./images/icon16.png"
+        "16": "./images/stars.png",
+        "48": "./images/stars.png",
+        "128": "./images/stars.png"
     },
     "background": {
         "service_worker": "./app/background/background.js",
         "type": "module"
     },
     "action": {
-        "default_icon": "./images/icon16.png",
+        "default_icon": "./images/stars.png",
         "default_popup": "./app/popup/popup.html"
     },
     "content_scripts": [
