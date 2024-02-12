@@ -216,7 +216,7 @@ const main = async () => {
         highlight_area.style.cursor = 'default'
 
         console.log('transforming path')
-        const MOVE_STEP = 8 // how fast the points move to the corners
+        const MOVE_STEP = 6 // how fast the points move to the corners
 
         const ANGLE_STEP = Math.PI/100 // how fast the angle changes
         let angle = 0
@@ -358,6 +358,15 @@ const main = async () => {
                 // end the loop
                 if(angle >= Math.PI/4) {
                     clearInterval(loop)
+
+                    // capture the image
+                    const dimensions = {
+                        x: h_bounding_box.minX,
+                        y: h_bounding_box.minY,
+                        width: h_bounding_box.maxX - h_bounding_box.minX,
+                        height: h_bounding_box.maxY - h_bounding_box.minY
+                    }
+                    port.postMessage({ action: 'capture', dimensions: dimensions });
                     
                     let query_x = h_bounding_box.minX - 200
                     if (query_x < 0) query_x = 20
@@ -393,6 +402,7 @@ const main = async () => {
         return queryElement
     }
 
+    // removes the query element from DOM
     const clearHighlightQuery = () => {
         if(h_query_element) h_query_element.remove()
     }
@@ -433,26 +443,11 @@ const main = async () => {
         clearHighlightQuery()
     }
 
-    // ends the highlighter 
+    // when the user finishes highlighting 
     const end_highlighter = async () => {
-        const dimensions = {
-            x: h_start.x,
-            y: h_start.y,
-            width: h_end.x - h_start.x,
-            height: h_end.y - h_start.y
-        }
-        
-        dimensions.x = h_bounding_box.minX
-        dimensions.y = h_bounding_box.minY
-        dimensions.width = h_bounding_box.maxX - h_bounding_box.minX
-        dimensions.height = h_bounding_box.maxY - h_bounding_box.minY
 
+        // animates the highlighter path to the corners
         transformHighlightPath()
-
-        // execute the capture action
-        setTimeout(() => { // delay to allow the highlight element to be removed
-            port.postMessage({ action: 'capture', dimensions: dimensions });
-        }, 100)
     }
     
     const init_highlighter = () => {

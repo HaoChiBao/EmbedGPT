@@ -1,30 +1,19 @@
 @font-face {font-family: 'GTWalsheimPro-Regular';src: url('https://cdn.shopify.com/s/files/1/0588/4228/4186/files/GTWalsheimPro-Regular.woff?v=1669253354') format('woff');} 
 
-.highlight-element{
-    border: 7px solid rgb(110, 135, 225);
-    border-radius: 1rem;
-    
-    position: fixed;
-    z-index: 6969;
-    cursor: crosshair;
-    
-}
-
-.cropped-image-test{
-    border-style: dotted;
-    z-index: 1000;
-}
-
 .highlight-area{
     position: fixed;
     z-index: 6969;
     top: 0;
     left: 0;
     pointer-events: none;
+
+    margin: 0;
+    padding: 0;
 }
 
 .highlight-query {
     padding: 0.5rem;
+    margin: 0;
 
     border-radius: 1rem;
     backdrop-filter: blur(5px);
@@ -70,4 +59,9 @@
 .test-menu .move-around{
     height: 1.5rem;
     background-color: rgb(110, 135, 225);
+}
+
+.cropped-image-test{
+    border-style: dotted;
+    z-index: 1000;
 }
