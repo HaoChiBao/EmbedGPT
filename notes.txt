@@ -1,0 +1,10 @@
+Features
+
+Content
+* User highlight page
+    * User queries highlighted image
+
+Popup 
+* User activates highlight page action
+* User has normal Chatgpt/Gemini Features
+* 

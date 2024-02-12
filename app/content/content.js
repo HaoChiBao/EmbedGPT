@@ -208,6 +208,7 @@ const main = async () => {
         ctx.clearRect(0, 0, highlight_area.width, highlight_area.height)
     }
 
+    let loop = null
     // transforms highlight path into 4 corners
     const transformHighlightPath= () => {
         draw_path = false
@@ -255,46 +256,44 @@ const main = async () => {
             }
         })
 
-
+        clearInterval(loop)
         // move points to the bounding box
-        const loop = setInterval(async () => {
+        loop = setInterval(async () => {
 
             let count = 0
             let max_length = top_left.length + top_right.length + bottom_left.length + bottom_right.length
             
-            if(top_left.length > 0) {
-                top_left.forEach((point, index) => {
-                    if(point.x > h_bounding_box.minX) point.x -= MOVE_STEP
-                    else{ point.x = h_bounding_box.minX; count++}
+            top_left.forEach((point, index) => {
+                if(point.x > h_bounding_box.minX) point.x -= MOVE_STEP
+                else{ point.x = h_bounding_box.minX; count++}
 
-                    if(point.y > h_bounding_box.minY) point.y -= MOVE_STEP
-                    else {point.y = h_bounding_box.minY; count++}
-                })
+                if(point.y > h_bounding_box.minY) point.y -= MOVE_STEP
+                else {point.y = h_bounding_box.minY; count++}
+            })
 
-                top_right.forEach((point, index) => {
-                    if(point.x < h_bounding_box.maxX) point.x += MOVE_STEP
-                    else {point.x = h_bounding_box.maxX; count++}
+            top_right.forEach((point, index) => {
+                if(point.x < h_bounding_box.maxX) point.x += MOVE_STEP
+                else {point.x = h_bounding_box.maxX; count++}
 
-                    if(point.y > h_bounding_box.minY) point.y -= MOVE_STEP
-                    else {point.y = h_bounding_box.minY; count++}
-                })
+                if(point.y > h_bounding_box.minY) point.y -= MOVE_STEP
+                else {point.y = h_bounding_box.minY; count++}
+            })
 
-                bottom_left.forEach((point, index) => {
-                    if(point.x > h_bounding_box.minX) point.x -= MOVE_STEP
-                    else {point.x = h_bounding_box.minX; count++}
+            bottom_left.forEach((point, index) => {
+                if(point.x > h_bounding_box.minX) point.x -= MOVE_STEP
+                else {point.x = h_bounding_box.minX; count++}
 
-                    if(point.y < h_bounding_box.maxY) point.y += MOVE_STEP
-                    else {point.y = h_bounding_box.maxY; count++}
-                })
+                if(point.y < h_bounding_box.maxY) point.y += MOVE_STEP
+                else {point.y = h_bounding_box.maxY; count++}
+            })
 
-                bottom_right.forEach((point, index) => {
-                    if(point.x < h_bounding_box.maxX) point.x += MOVE_STEP
-                    else {point.x = h_bounding_box.maxX; count++}
+            bottom_right.forEach((point, index) => {
+                if(point.x < h_bounding_box.maxX) point.x += MOVE_STEP
+                else {point.x = h_bounding_box.maxX; count++}
 
-                    if(point.y < h_bounding_box.maxY) point.y += MOVE_STEP
-                    else {point.y = h_bounding_box.maxY; count++}
-                })
-            }
+                if(point.y < h_bounding_box.maxY) point.y += MOVE_STEP
+                else {point.y = h_bounding_box.maxY; count++}
+            })
 
             const logo = {x: h_bounding_box.maxX, y: h_bounding_box.maxY}
             if(bottom_right.length > 0) {
