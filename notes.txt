@@ -3,8 +3,18 @@ Features
 Content
 * User highlight page
     * User queries highlighted image
+* Enhance google search
+    * Provides summary/insight on what the user searches for
+    * ie. What is the best food? --> Response...
 
 Popup 
 * User activates highlight page action
-* User has normal Chatgpt/Gemini Features
+* User has access to normal Chatgpt/Gemini chat Features
+* 
+
+
+Inspiration
+* Samsung AI Features
+* Glasp (Chrome extension)
+* Chat-gpt for google
 * 
