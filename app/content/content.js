@@ -208,6 +208,7 @@ const main = async () => {
         ctx.clearRect(0, 0, highlight_area.width, highlight_area.height)
     }
 
+    // transforms highlight path into 4 corners
     const transformHighlightPath= () => {
         draw_path = false
         highlight = false
@@ -370,7 +371,7 @@ const main = async () => {
                         h_query_element.style.opacity = 1
                     }, 100)
 
-                    await cancel_highlighter()
+                    await stop_highlighter()
                 }
 
             }
@@ -378,6 +379,7 @@ const main = async () => {
         }, 5)
     }
 
+    // creates the query element (highlighter element that allows the user to type in a query)
     const createQueryElement = (x, y) => {
         const queryElement = document.createElement('input')
         queryElement.className = 'highlight-query'
@@ -402,7 +404,8 @@ const main = async () => {
         highlight_area.style.cursor = 'crosshair'
     }
 
-    const cancel_highlighter = async () => {
+    // stops highlighter drawing
+    const stop_highlighter = async () => {
 
         // clear the highlight variables
         highlight = false
@@ -423,8 +426,9 @@ const main = async () => {
         // clearHighlightPath()
     }
 
+    // close the highlighter
     const close_highlighter = async () => {
-        await cancel_highlighter()
+        await stop_highlighter()
         clearHighlightPath()
         clearHighlightQuery()
     }
@@ -516,9 +520,7 @@ const main = async () => {
 
     init_highlighter()
 
-    // return
-
-    // testing ______________________________________________
+    //______________________________________________ TESTING ______________________________________________
 
     const moveAround = document.createElement('div')
     moveAround.className = 'move-around'
