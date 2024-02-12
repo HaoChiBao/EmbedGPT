@@ -1,3 +1,60 @@
+@font-face {font-family: 'GTWalsheimPro-Regular';src: url('https://cdn.shopify.com/s/files/1/0588/4228/4186/files/GTWalsheimPro-Regular.woff?v=1669253354') format('woff');} 
+
+.highlight-element{
+    border: 7px solid rgb(110, 135, 225);
+    border-radius: 1rem;
+    
+    position: fixed;
+    z-index: 6969;
+    cursor: crosshair;
+    
+}
+
+.cropped-image-test{
+    border-style: dotted;
+    z-index: 1000;
+}
+
+.highlight-area{
+    position: fixed;
+    z-index: 6969;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.highlight-query {
+    padding: 0.5rem;
+
+    border-radius: 1rem;
+    backdrop-filter: blur(5px);
+    border: none;
+    background-color: rgba(176, 177, 224, 0.375);
+    
+    font-family: 'GTWalsheimPro-Regular', sans-serif ;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #715AFF;
+    text-transform: lowercase;
+    /* color: #7e7e7e; */
+
+    position: fixed;
+    z-index: 7979;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: 0.3s ease;
+}
+
+.highlight-query:focus {
+    outline: none;
+}
+
+/* testing_____________________________ */
+
 .test-menu{
     position: fixed;
     top: 1rem;
@@ -13,28 +70,4 @@
 .test-menu .move-around{
     height: 1.5rem;
     background-color: rgb(110, 135, 225);
-}
-
-
-.highlight-element{
-    border: 7px solid rgb(110, 135, 225);
-    border-radius: 1rem;
-
-    position: fixed;
-    z-index: 6969;
-    cursor: crosshair;
-
-}
-
-.cropped-image-test{
-    border-style: dotted;
-    z-index: 1000;
-}
-
-.highlight-area{
-    position: fixed;
-    z-index: 6969;
-    top: 0;
-    left: 0;
-    pointer-events: none;
 }

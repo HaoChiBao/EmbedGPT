@@ -17,6 +17,10 @@ chrome.runtime.onConnect.addListener((port) => {
             }
             switch(msg.action) {
 
+                case 'refresh':
+                    // keeps the service worker actuve
+                    break;
+
                 case 'capture':
                     const dimensions = msg.dimensions || { x: 0, y: 0, width: 200, height: 150 }; // Default dimensions if not provided
                     const originalDimensions = msg.originalDimensions || { width: 200, height: 150 }; // Default dimensions if not provided
@@ -28,9 +32,11 @@ chrome.runtime.onConnect.addListener((port) => {
                     // chrome.tabs.create({ url: dataUrl})
                     // response.dataUrl = dataUrl
                     break;
+                
+                case 'queryImage':
+                    break;
 
-                case 'refresh':
-                    // keeps the service worker actuve
+                case 'queryText':
                     break;
 
             }

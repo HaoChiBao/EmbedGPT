@@ -63,6 +63,7 @@ const cropDataUrl = async (dataUrl, dimensions) => {
 
 // initialize data and event listeners
 const main = async () => {
+    let highlight_imageData = null
 
     // __________________________________________PORT FOR SERVICE WORKER__________________________________________
     const port = await chrome.runtime.connect({ name: "content" });
@@ -78,57 +79,55 @@ const main = async () => {
 
     port.postMessage({ action: 'refresh' });
 
-        // __________________________________________RESPONSE HANDLER__________________________________________
-        const responseHandler = async (response) => {
-            // console.log(response)
-            if(response.error) {
-                console.error(response.error)
-                return
-            }
-        
-            const action = response.action
-            const data = response.data
-            switch(action) {
-                case 'capture':
-                    
-                    const dataUrl = data.dataUrl
-                    const dimensions = data.dimensions
-        
-                    const croppedImageData = await cropDataUrl(dataUrl, dimensions)
-        
-                    
-                    // testing
-                    const img = document.createElement('img')
-                    img.src = croppedImageData
-                    img.className = 'cropped-image-test'
-                    document.body.appendChild(img)
-        
-                    console.log(img)
-        
-                    break;
-        
-                case 'refresh':
-                    // keeps the service worker actuve
-                    setTimeout(() => {
-                        port.postMessage({ action: 'refresh' });
-                    }, 20000)
-                    break;
-            }
-            
+    // __________________________________________RESPONSE HANDLER__________________________________________
+    const responseHandler = async (response) => {
+        // console.log(response)
+        if(response.error) {
+            console.error(response.error)
+            return
         }
+    
+        const action = response.action
+        const data = response.data
+        switch(action) {
+            case 'capture':
+                
+                const dataUrl = data.dataUrl
+                const dimensions = data.dimensions
+    
+                const croppedImageData = await cropDataUrl(dataUrl, dimensions)
+                highlight_imageData = croppedImageData
+                
+                // testing
+                const img = document.createElement('img')
+                img.src = croppedImageData
+                img.className = 'cropped-image-test'
+                document.body.appendChild(img)
+    
+                console.log(img)
+    
+                break;
+    
+            case 'refresh':
+                // keeps the service worker actuve
+                setTimeout(() => {
+                    port.postMessage({ action: 'refresh' });
+                }, 20000)
+                break;
+        }
+        
+    }
 
     // __________________________________________HIGHLIGHTER__________________________________________
     let highlight = false;
     let h_start = null // this will turn into {x: 0, y: 0} when the user clicks
     let h_end = null // this will turn into {x: 0, y: 0} when the user releases the mouse
-    let h_element = null // this will be the highlight element
-    let h_path = [] // this will be the path of the highlight element
-
     let draw_path = false //represents WHEN the program allows the user to draw
-
+    
+    
     // represents if the user wants to draw to highlight or drag to highlight
-    let pencil_highlight = true
-    // pencil_highlight = !pencil_highlight
+    let h_path = [] // this will be the path of the highlight element
+    let h_query_element = null
 
     const h_bounding_box = { // holds the min and max values of the pencil highlight
         minX: null,
@@ -354,11 +353,24 @@ const main = async () => {
                 }
 
                 angle += ANGLE_STEP
+
+                // end the loop
                 if(angle >= Math.PI/4) {
                     clearInterval(loop)
-                    console.log('done')
+                    
+                    let query_x = h_bounding_box.minX - 200
+                    if (query_x < 0) query_x = 20
+
+                    const query_y = h_bounding_box.minY + (h_bounding_box.maxY - h_bounding_box.minY) / 2
+                    h_query_element = createQueryElement(query_x, query_y)
+                    document.body.appendChild(h_query_element)
+
+                    setTimeout(() => {
+                        h_query_element.style.width = '250px'
+                        h_query_element.style.opacity = 1
+                    }, 100)
+
                     await cancel_highlighter()
-                    // clearHighlightPath()
                 }
 
             }
@@ -366,25 +378,26 @@ const main = async () => {
         }, 5)
     }
 
-    // creates the highlight element
-    const createHighlightElement = (x, y) => {
-        const highlightElement = document.createElement('div')
-        highlightElement.className = 'highlight-element'
-        highlightElement.style.left = x + 'px'
-        highlightElement.style.top = y + 'px'
-        return highlightElement
+    const createQueryElement = (x, y) => {
+        const queryElement = document.createElement('input')
+        queryElement.className = 'highlight-query'
+        queryElement.placeholder = 'what do you see?'
+        queryElement.spellcheck = false
+
+        queryElement.style.left = x + 'px'
+        queryElement.style.top = y + 'px'
+        queryElement.style.opacity = 0
+        queryElement.width = '0px'
+        return queryElement
+    }
+
+    const clearHighlightQuery = () => {
+        if(h_query_element) h_query_element.remove()
     }
 
     // starts the highlighter
     const start_highlighter = (x, y) => {
         draw_path = true
-
-        if(!pencil_highlight){
-            // create the highlight element and append to page
-            h_element = createHighlightElement(x, y)
-            document.body.appendChild(h_element)
-        }
-
         highlight_area.style.pointerEvents = 'auto'
         highlight_area.style.cursor = 'crosshair'
     }
@@ -404,19 +417,16 @@ const main = async () => {
         h_bounding_box.maxY = null
 
         draw_path = false
-         
-        // remove the highlight element
-        if(h_element) await h_element.remove()
-
-        // check if there are any duplicates on the page
-        const h_elements = document.querySelectorAll('.highlight-element')
-        h_elements.forEach( async (element) => { element.remove() })
-
-        h_element = null
  
         highlight_area.style.pointerEvents = 'none'
         highlight_area.style.cursor = 'default'
         // clearHighlightPath()
+    }
+
+    const close_highlighter = async () => {
+        await cancel_highlighter()
+        clearHighlightPath()
+        clearHighlightQuery()
     }
 
     // ends the highlighter 
@@ -428,17 +438,12 @@ const main = async () => {
             height: h_end.y - h_start.y
         }
         
-        if(pencil_highlight){
-            dimensions.x = h_bounding_box.minX
-            dimensions.y = h_bounding_box.minY
-            dimensions.width = h_bounding_box.maxX - h_bounding_box.minX
-            dimensions.height = h_bounding_box.maxY - h_bounding_box.minY
-        }
+        dimensions.x = h_bounding_box.minX
+        dimensions.y = h_bounding_box.minY
+        dimensions.width = h_bounding_box.maxX - h_bounding_box.minX
+        dimensions.height = h_bounding_box.maxY - h_bounding_box.minY
 
-        //await cancel_highlighter()
-
-        if (pencil_highlight) transformHighlightPath()
-        else await cancel_highlighter()
+        transformHighlightPath()
 
         // execute the capture action
         setTimeout(() => { // delay to allow the highlight element to be removed
@@ -449,9 +454,10 @@ const main = async () => {
     const init_highlighter = () => {
     
 
-        window.addEventListener('resize', () => {
+        window.addEventListener('resize', async () => {
             highlight_area.width = window.innerWidth
             highlight_area.height = window.innerHeight
+            await close_highlighter()
         })
 
         // highlight event listeners
@@ -472,31 +478,22 @@ const main = async () => {
                 // push the path to the highlight element
                 h_path.push({ x: h_end.x, y: h_end.y })
 
-                // update the highlight element
-                if(pencil_highlight){
-                    // update the line path
-                    await drawHighlightPath([h_path])
+                // update the line path
+                await drawHighlightPath([h_path])
 
-                    // check if the current x or y is less than the min or greater than the max
-                    if(h_end.x < h_bounding_box.minX || h_bounding_box.minX == null) h_bounding_box.minX = h_end.x
-                    if(h_end.y < h_bounding_box.minY || h_bounding_box.minY == null ) h_bounding_box.minY = h_end.y
-                    if(h_end.x > h_bounding_box.maxX || h_bounding_box.maxX == null) h_bounding_box.maxX = h_end.x
-                    if(h_end.y > h_bounding_box.maxY || h_bounding_box.maxY == null) h_bounding_box.maxY = h_end.y
+                // check if the current x or y is less than the min or greater than the max
+                if(h_end.x < h_bounding_box.minX || h_bounding_box.minX == null) h_bounding_box.minX = h_end.x
+                if(h_end.y < h_bounding_box.minY || h_bounding_box.minY == null ) h_bounding_box.minY = h_end.y
+                if(h_end.x > h_bounding_box.maxX || h_bounding_box.maxX == null) h_bounding_box.maxX = h_end.x
+                if(h_end.y > h_bounding_box.maxY || h_bounding_box.maxY == null) h_bounding_box.maxY = h_end.y
 
-                } else {
-                    h_element.style.width = (h_end.x - h_start.x) + 'px'
-                    h_element.style.height = (h_end.y - h_start.y) + 'px'
-
-                    clearHighlightPath()
-                    await drawHighlightLogo(h_end.x, h_end.y)
-                }
+                
             }
         })
 
         window.addEventListener('mouseup', async (e) => {
             if(e.button === 2) { // if the user right clicks while highlighting, cancel the highlighter
-                await cancel_highlighter()
-                clearHighlightPath()
+                await close_highlighter()
             }
             
             if(highlight && draw_path) {
@@ -507,14 +504,12 @@ const main = async () => {
         
         // end highlighter if the user clicks outside the window
         window.addEventListener('blur', async (e) => {
-            await cancel_highlighter()
-            clearHighlightPath()
+            await close_highlighter()
         })
         
         window.addEventListener('keyup', async (e) => {
             if(e.key === 'Escape') {
-                await cancel_highlighter()
-                clearHighlightPath()
+                await close_highlighter()
             }
         })
     }
@@ -549,20 +544,17 @@ const main = async () => {
     const testHighlight = document.createElement('button')
     testHighlight.textContent = 'Highlight'
     testHighlight.onclick = () => {
+        // this will begin the highlighter
+        close_highlighter()
         highlight = true
-    }
-
-    const toggleHighlight = document.createElement('button')
-    toggleHighlight.textContent = 'Toggle Highlight'
-    toggleHighlight.onclick = () => {
-        pencil_highlight = !pencil_highlight
+        highlight_area.style.pointerEvents = 'auto'
+        highlight_area.style.cursor = 'crosshair'
     }
     
     testMenu.appendChild(moveAround)
     testMenu.appendChild(testInput)
     testMenu.appendChild(testButton)
     testMenu.appendChild(testHighlight)
-    testMenu.appendChild(toggleHighlight)
     document.body.appendChild(testMenu)
     makeElementDraggable(testMenu, moveAround)
 
