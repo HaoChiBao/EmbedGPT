@@ -146,11 +146,10 @@ const main = async () => {
     const ctx = highlight_area.getContext('2d')
     
     // draws the highlight path
-    const drawHighlightPath = async (e) => {
+    const drawHighlightPath = async (paths, logo = {x: h_end.x, y: h_end.y}) => {
 
         ctx.clearRect(0, 0, highlight_area.width, highlight_area.height)
         ctx.beginPath()
-
         
         ctx.lineWidth = 7
         ctx.lineCap = 'round'
@@ -179,27 +178,192 @@ const main = async () => {
         // Set the gradient as the stroke style
         ctx.strokeStyle = gradient;
         
-        ctx.moveTo(h_start.x, h_start.y)
-        h_path.forEach((point, index) => {
-            // if(index%2 === 0) return
-            ctx.lineTo(point.x, point.y)
-        })
-        ctx.lineTo(e.clientX, e.clientY)
+        // ctx.moveTo(h_path[0].x, h_path[0].y)
+        // h_path.forEach((point, index) => {
+        //     // if(index%2 === 0) return
+        //     ctx.lineTo(point.x, point.y)
+        // })
 
+        paths.forEach((path) => {
+            if(path.length === 0) return
+
+            ctx.moveTo(path[0].x, path[0].y)
+            path.forEach((point, index) => {
+                // if(index%2 === 0) return
+                ctx.lineTo(point.x, point.y)
+            })
+            ctx.stroke()
+        })
         
-        ctx.stroke()
-        await drawHighlightLogo(e)
+        await drawHighlightLogo(logo.x, logo.y)
     }
 
-    const drawHighlightLogo = async (e) => {
+    const drawHighlightLogo = async (x, y) => {
         const logo = new Image()
         logo.src = await chrome.runtime.getURL('images/stars.png')
-        ctx.drawImage(logo, e.clientX + 5, e.clientY + 5, 25, 25)
+        ctx.drawImage(logo, x + 5, y + 5, 25, 25)
     }
 
     // clears the highlight path
     const clearHighlightPath = () => {
         ctx.clearRect(0, 0, highlight_area.width, highlight_area.height)
+    }
+
+    const transformHighlightPath= () => {
+        draw_path = false
+        highlight = false
+        highlight_area.style.pointerEvents = 'none'
+        highlight_area.style.cursor = 'default'
+
+        console.log('transforming path')
+        const MOVE_STEP = 8 // how fast the points move to the corners
+
+        const ANGLE_STEP = Math.PI/100 // how fast the angle changes
+        let angle = 0
+
+        const BORDER_RADIUS = 20 // the radius of the border
+
+        // stores the points that are closest to the corners
+        const top_left = []
+        const top_right = []
+        const bottom_left = []
+        const bottom_right = []
+
+        // divide the points into the corners
+        h_path.forEach((point, index) => {
+            const diffMinX = Math.abs(h_bounding_box.minX - point.x)
+            const diffMinY = Math.abs(h_bounding_box.minY - point.y)
+            const diffMaxX = Math.abs(h_bounding_box.maxX - point.x)
+            const diffMaxY = Math.abs(h_bounding_box.maxY - point.y)
+
+            // take the smallest difference
+            const smallest_x_distance = Math.min(diffMinX, diffMaxX)
+            const smallest_y_distance = Math.min(diffMinY, diffMaxY)
+
+            if( smallest_x_distance === diffMinX) {
+                if (smallest_y_distance === diffMinY){
+                    top_left.push(point)
+                } else {
+                    bottom_left.push(point)
+                }
+            } else {
+                if (smallest_y_distance === diffMinY){
+                    top_right.push(point)
+                } else {
+                    bottom_right.push(point)
+                }
+            }
+        })
+
+
+        // move points to the bounding box
+        const loop = setInterval(async () => {
+
+            let count = 0
+            let max_length = top_left.length + top_right.length + bottom_left.length + bottom_right.length
+            
+            if(top_left.length > 0) {
+                top_left.forEach((point, index) => {
+                    if(point.x > h_bounding_box.minX) point.x -= MOVE_STEP
+                    else{ point.x = h_bounding_box.minX; count++}
+
+                    if(point.y > h_bounding_box.minY) point.y -= MOVE_STEP
+                    else {point.y = h_bounding_box.minY; count++}
+                })
+
+                top_right.forEach((point, index) => {
+                    if(point.x < h_bounding_box.maxX) point.x += MOVE_STEP
+                    else {point.x = h_bounding_box.maxX; count++}
+
+                    if(point.y > h_bounding_box.minY) point.y -= MOVE_STEP
+                    else {point.y = h_bounding_box.minY; count++}
+                })
+
+                bottom_left.forEach((point, index) => {
+                    if(point.x > h_bounding_box.minX) point.x -= MOVE_STEP
+                    else {point.x = h_bounding_box.minX; count++}
+
+                    if(point.y < h_bounding_box.maxY) point.y += MOVE_STEP
+                    else {point.y = h_bounding_box.maxY; count++}
+                })
+
+                bottom_right.forEach((point, index) => {
+                    if(point.x < h_bounding_box.maxX) point.x += MOVE_STEP
+                    else {point.x = h_bounding_box.maxX; count++}
+
+                    if(point.y < h_bounding_box.maxY) point.y += MOVE_STEP
+                    else {point.y = h_bounding_box.maxY; count++}
+                })
+            }
+
+            const logo = {x: h_bounding_box.maxX, y: h_bounding_box.maxY}
+            if(bottom_right.length > 0) {
+                logo.x = bottom_right[0].x
+                logo.y = bottom_right[0].y
+            }
+
+            drawHighlightPath([top_left, top_right, bottom_left, bottom_right], logo)
+
+            if(count === max_length * 2) {
+                if(angle >= Math.PI/4) angle = Math.PI/4
+
+                // draw 1/4 circles in the corners
+                clearHighlightPath()
+                
+                const drawArc = (x, y, radius, startAngle, endAngle, counterClockwise = false) => {
+                    ctx.beginPath()
+                    ctx.arc(x, y, radius, startAngle, endAngle, counterClockwise)
+                    ctx.stroke()
+                }
+                
+                for(let i = 0; i < 4; i++) {
+                    if(i == 0){ //top left corner
+                        const startAngle = Math.PI + Math.PI/4
+                        const endAngle1 = startAngle + angle
+                        const endAngle2 = startAngle - angle
+
+                        drawArc(h_bounding_box.minX + BORDER_RADIUS, h_bounding_box.minY + BORDER_RADIUS, BORDER_RADIUS, startAngle, endAngle1)
+                        drawArc(h_bounding_box.minX + BORDER_RADIUS, h_bounding_box.minY + BORDER_RADIUS, BORDER_RADIUS, startAngle, endAngle2, true)
+                       
+                    } else if (i == 1) { //top right corner
+                        const startAngle = 3 * Math.PI / 2 + Math.PI/4
+                        const endAngle1 = startAngle + angle
+                        const endAngle2 = startAngle - angle
+
+                        drawArc(h_bounding_box.maxX - BORDER_RADIUS, h_bounding_box.minY + BORDER_RADIUS, BORDER_RADIUS, startAngle, endAngle1)
+                        drawArc(h_bounding_box.maxX - BORDER_RADIUS, h_bounding_box.minY + BORDER_RADIUS, BORDER_RADIUS, startAngle, endAngle2, true)
+
+                    } else if (i == 2) { //bottom left corner
+                        const startAngle = Math.PI/2 + Math.PI/4
+                        const endAngle1 = startAngle + angle
+                        const endAngle2 = startAngle - angle
+
+                        drawArc(h_bounding_box.minX + BORDER_RADIUS, h_bounding_box.maxY - BORDER_RADIUS, BORDER_RADIUS, startAngle, endAngle1)
+                        drawArc(h_bounding_box.minX + BORDER_RADIUS, h_bounding_box.maxY - BORDER_RADIUS, BORDER_RADIUS, startAngle, endAngle2, true)
+                        
+                    }
+                    else { //bottom right corner
+                        const startAngle = 2 * Math.PI + Math.PI/4
+                        const endAngle1 = startAngle + angle
+                        const endAngle2 = startAngle - angle
+                        
+                        drawArc(h_bounding_box.maxX- BORDER_RADIUS, h_bounding_box.maxY- BORDER_RADIUS, BORDER_RADIUS, startAngle, endAngle1)
+                        drawArc(h_bounding_box.maxX- BORDER_RADIUS, h_bounding_box.maxY- BORDER_RADIUS, BORDER_RADIUS, startAngle, endAngle2, true)
+                    }
+                    // ctx.stroke()
+                }
+
+                angle += ANGLE_STEP
+                if(angle >= Math.PI/4) {
+                    clearInterval(loop)
+                    console.log('done')
+                    await cancel_highlighter()
+                    // clearHighlightPath()
+                }
+
+            }
+
+        }, 5)
     }
 
     // creates the highlight element
@@ -226,8 +390,10 @@ const main = async () => {
     }
 
     const cancel_highlighter = async () => {
+
         // clear the highlight variables
         highlight = false
+
         h_start = null
         h_end = null
         h_path = []
@@ -248,9 +414,9 @@ const main = async () => {
 
         h_element = null
  
-        clearHighlightPath()
         highlight_area.style.pointerEvents = 'none'
         highlight_area.style.cursor = 'default'
+        // clearHighlightPath()
     }
 
     // ends the highlighter 
@@ -269,7 +435,10 @@ const main = async () => {
             dimensions.height = h_bounding_box.maxY - h_bounding_box.minY
         }
 
-       await cancel_highlighter()
+        //await cancel_highlighter()
+
+        if (pencil_highlight) transformHighlightPath()
+        else await cancel_highlighter()
 
         // execute the capture action
         setTimeout(() => { // delay to allow the highlight element to be removed
@@ -306,7 +475,7 @@ const main = async () => {
                 // update the highlight element
                 if(pencil_highlight){
                     // update the line path
-                    await drawHighlightPath(e)
+                    await drawHighlightPath([h_path])
 
                     // check if the current x or y is less than the min or greater than the max
                     if(h_end.x < h_bounding_box.minX || h_bounding_box.minX == null) h_bounding_box.minX = h_end.x
@@ -319,32 +488,33 @@ const main = async () => {
                     h_element.style.height = (h_end.y - h_start.y) + 'px'
 
                     clearHighlightPath()
-                    await drawHighlightLogo(e)
+                    await drawHighlightLogo(h_end.x, h_end.y)
                 }
             }
         })
 
         window.addEventListener('mouseup', async (e) => {
-            if(e.button === 2 && draw_path) { // if the user right clicks while highlighting, cancel the highlighter
+            if(e.button === 2) { // if the user right clicks while highlighting, cancel the highlighter
                 await cancel_highlighter()
+                clearHighlightPath()
             }
-
+            
             if(highlight && draw_path) {
                 h_end = { x: e.clientX, y: e.clientY }
                 await end_highlighter()
             }
         })
-
+        
         // end highlighter if the user clicks outside the window
-        window.addEventListener('blur', (e) => {
-            if(highlight) {
-                cancel_highlighter()
-            }
+        window.addEventListener('blur', async (e) => {
+            await cancel_highlighter()
+            clearHighlightPath()
         })
-
-        window.addEventListener('keyup', (e) => {
+        
+        window.addEventListener('keyup', async (e) => {
             if(e.key === 'Escape') {
-                cancel_highlighter()
+                await cancel_highlighter()
+                clearHighlightPath()
             }
         })
     }
