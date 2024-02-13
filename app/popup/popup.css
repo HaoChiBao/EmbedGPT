@@ -7,8 +7,8 @@
 }
 
 body {
-    height: 561px;
-    width: 332px;
+    height: calc(561px - 2rem);
+    width: calc(332px - 2rem);
     display: flex;
     flex-direction: column;
     align-items: center;

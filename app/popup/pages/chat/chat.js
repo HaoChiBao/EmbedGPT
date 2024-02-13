@@ -45,7 +45,7 @@ create_chat_button.addEventListener('mouseover', async () => {
     setTimeout(() => {
         create_chat_img.src = '../../../../images/stars.png';
         create_chat_img.style.transform = 'scale(1)';
-    }, 300)
+    }, 200)
 })
 
 create_chat_button.addEventListener('mouseout', () => {
@@ -54,7 +54,7 @@ create_chat_button.addEventListener('mouseout', () => {
     setTimeout(() => {
         create_chat_img.src = '../../../../images/plus.png';
         if(!create_chat_pressed) create_chat_img.style.transform = 'scale(1)';
-    }, 300)
+    }, 200)
 })
 
 create_chat_button.addEventListener('click', () => {
@@ -63,7 +63,8 @@ create_chat_button.addEventListener('click', () => {
     setTimeout(() => {
         create_chat_pressed = false;
         create_chat_button.style.transform = 'scale(1)';
-    }, 500)
+        closeMenu();
+    }, 300)
 })
 
 
