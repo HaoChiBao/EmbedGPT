@@ -18,8 +18,8 @@ body {
     position: relative;
     overflow: hidden;
     padding:1rem;
-    
-    /* border-style: dotted; */
+
+    border-style: dotted;
 }
 
 /* __________________________________________MENU_________________________________________ */
@@ -67,7 +67,7 @@ body {
 /* -=-=-=-=-=-=-Menu=--=-=-=-=-=-=-=-= */
 .menu {
     /* sends menu off screen */
-    transform: translateX(-110%);
+    /* transform: translateX(-110%); */
 
     position: absolute;
     z-index: 500;
@@ -108,7 +108,7 @@ body {
     border: none;
     
     aspect-ratio: 1/1;
-    height: 3rem;
+    height: 43px;
     
     cursor: pointer;
     transition: 0.3s ease;
@@ -119,8 +119,8 @@ body {
 } */
 
 .menu #create-new-chat img{
-    width: 1.2rem;
-    height: 1.2rem;
+    aspect-ratio: 1/1;
+    width: 20px;
     transition: 0.5s ease;
 
     pointer-events: none;
@@ -139,6 +139,35 @@ body {
     width: calc(100% - 2rem);
     border-style: dotted;
 }
+
+.menu .menu-section .menu-header{
+    display: flex;
+    align-items: center;
+    color: #fff;
+}
+.menu .menu-section .menu-header button{
+    aspect-ratio: 1/1;
+    height: 1rem;
+    
+    background-color: transparent;
+    border: none;
+    
+    cursor: pointer;
+    transition: 0.3s ease;
+    
+    margin: 0.5rem;
+}
+
+.menu .menu-section .menu-header button img{
+    aspect-ratio: 1/1;
+    transition: 0.3s ease;
+}
+
+.menu .menu-section .menu-header button.active img{
+    transform: rotate(90deg);
+}
+
+
 
 /* __________________________________________HEADER____________________________________________ */
 #chat-header{

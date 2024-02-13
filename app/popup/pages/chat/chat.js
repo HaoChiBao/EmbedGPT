@@ -64,10 +64,38 @@ create_chat_button.addEventListener('click', () => {
         create_chat_pressed = false;
         create_chat_button.style.transform = 'scale(1)';
         closeMenu();
+
+        console.log(0)
     }, 300)
 })
 
+// menu items
+const menu_headers = document.querySelectorAll('.menu-header');
+menu_headers.forEach(header => {
 
+    const button = header.querySelector('.menu-item-toggle');
+    const menu_items = header.querySelector('.menu-items');
+
+    const openItems = () => {
+        button.classList.add('active');
+    }
+
+    const closeItems = () => {
+        button.classList.remove('active');
+    }
+
+    const toggleItems = () => {
+        if (button.classList.contains('active')) {
+            closeItems();
+        } else {
+            openItems();
+        }
+    }
+
+    button.addEventListener('click', () => {
+        toggleItems();
+    })
+})
 
 // ___________________________________HEADER___________________________________
 
