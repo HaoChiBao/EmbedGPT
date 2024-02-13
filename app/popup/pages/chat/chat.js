@@ -34,6 +34,40 @@ menuButton.addEventListener('click', () => {
     toggleMenu()
 })
 
+const create_chat_button = document.getElementById('create-new-chat');
+const create_chat_img = create_chat_button.querySelector('img'); 
+
+let create_chat_pressed = false;
+create_chat_button.addEventListener('mouseover', async () => {
+    if(create_chat_pressed) return
+    create_chat_button.style.transform = 'translateY(-6px) scale(1.1)';
+    create_chat_img.style.transform = 'scale(0)';
+    setTimeout(() => {
+        create_chat_img.src = '../../../../images/stars.png';
+        create_chat_img.style.transform = 'scale(1)';
+    }, 300)
+})
+
+create_chat_button.addEventListener('mouseout', () => {
+    if(!create_chat_pressed) create_chat_button.style.transform = 'translateY(0) scale(1)';
+    create_chat_img.style.transform = 'scale(0)';
+    setTimeout(() => {
+        create_chat_img.src = '../../../../images/plus.png';
+        if(!create_chat_pressed) create_chat_img.style.transform = 'scale(1)';
+    }, 300)
+})
+
+create_chat_button.addEventListener('click', () => {
+    create_chat_pressed = true;
+    create_chat_button.style.transform = 'scale(0.85)';
+    setTimeout(() => {
+        create_chat_pressed = false;
+        create_chat_button.style.transform = 'scale(1)';
+    }, 500)
+})
+
+
+
 // ___________________________________HEADER___________________________________
 
 const header = document.getElementById('chat-header');

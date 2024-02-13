@@ -75,14 +75,13 @@ body {
     z-index: 500;
     top:0;
     left:0;
-    
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
 
     width: 70%;
     height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     
     background: radial-gradient(250% 100% at 90% 65%, #D48DFF 0%, #5887FF 25%, #715AFF 50%, #E6978E 100%);
     
@@ -98,8 +97,48 @@ body {
     transform: translateX(0%);
 }
 
+.menu #create-new-chat{
+    position: absolute;
+    bottom: 1rem;
+    right: 2rem;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    border-radius: 3rem;
+    border: none;
+    
+    aspect-ratio: 1/1;
+    height: 3rem;
+    
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+/* .menu #create-new-chat:hover{
+    transform: translateY(-6px) scale(1.1);
+} */
+
+.menu #create-new-chat img{
+    width: 1.2rem;
+    height: 1.2rem;
+    transition: 0.5s ease;
+
+    pointer-events: none;
+}
+
 .menu .menu-section{
-    width: 70%;
+    margin-top: 1rem;
+    padding-top: 3rem;
+
+    width: calc(100% - 2rem);
+    height: 80%;
+    border-style: dotted;
+}
+.menu .menu-settings{
+    height: 20%;
+    width: calc(100% - 2rem);
     border-style: dotted;
 }
 
@@ -184,7 +223,8 @@ body {
 }
 
 #chat-search button:hover img{
-    transform: translateY(-0.3rem);
+    transform: translateY(-0.3rem) scale(1.1);
+    filter: drop-shadow(0 0 1rem rgba(255, 255, 255, 0.5))
 }
 #chat-search button:active img{
     transform: scale(0.9);
