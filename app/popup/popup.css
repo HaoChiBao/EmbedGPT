@@ -1,6 +1,9 @@
+@font-face {font-family: 'GTWalsheimPro-Regular';src: url('https://cdn.shopify.com/s/files/1/0588/4228/4186/files/GTWalsheimPro-Regular.woff?v=1669253354') format('woff');} 
+
 *{
     margin: 0;
     padding: 0;
+    font-family: 'GTWalsheimPro-Regular', sans-serif;
 }
 
 body {
@@ -10,5 +13,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    padding:1rem;
 }
 

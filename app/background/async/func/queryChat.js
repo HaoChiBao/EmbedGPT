@@ -1,16 +1,21 @@
+import {OPENAI_API_KEY} from './API_KEYS.js'
 
-const GPT_ENDPOINT = "https://api.openai.com/v1/chat/completions"
-const api_key = ""
+const GPT_INFO = {
+    GPT_ENDPOINT: "https://api.openai.com/v1/chat/completions",
+    GPT_IMAGE_MODAL: "gpt-4-vision-preview",
+    GPT_TEXT_MODAL: "gpt-4",
+    API_KEY: OPENAI_API_KEY
+}
 
 const chatGPT_Image_Query  = async (chatHistory, imageData) => {
-    const response = await fetch(GPT_ENDPOINT, {
+    const response = await fetch(GPT_INFO.GPT_ENDPOINT, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${api_key}`
+            'Authorization': `Bearer ${GPT_INFO.API_KEY}`
         },
         body: JSON.stringify({
-            model: "gpt-4-vision-preview",
+            model: GPT_INFO.GPT_IMAGE_MODAL,
             messages: chatHistory,
         })
     })
@@ -18,14 +23,14 @@ const chatGPT_Image_Query  = async (chatHistory, imageData) => {
 }
 
 const chatGPT_Text_Query  = async (chatHistory) => {
-    const response = await fetch(GPT_ENDPOINT, {
+    const response = await fetch(GPT_INFO.GPT_ENDPOINT, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${api_key}`
+            'Authorization': `Bearer ${GPT_INFO.API_KEY}`
         },
         body: JSON.stringify({
-            model: "gpt-4",
+            model: GPT_INFO.GPT_TEXT_MODAL,
             messages: chatHistory,
         })
     })

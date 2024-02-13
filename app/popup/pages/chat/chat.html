@@ -7,8 +7,39 @@
     <link rel="stylesheet" href="chat.css">
 </head>
 <body>
-    Chat
-    <button id = 'test'>test</button>
+
+    <!-- ___________________________________HEADER_____________________________________ -->
+
+    <button class="menu-button">
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+    </button>
+
+    <section class = 'menu'>
+
+        <div class="menu-section"></div>
+
+        <button id = 'create-new-chat'>chat</button>
+    </section>
+
+    <section id = "chat-header">
+        <h2>chat-name</h2>
+    </section>
+    
+    <!-- ___________________________________BODY_____________________________________ -->
+    <section id = 'chat-body'>
+        start a new conversation...
+    </section>
+    
+    <!-- ___________________________________SEARCH_____________________________________ -->
+    <section id = 'chat-search'>
+        <input type="text" placeholder="enter prompt here:">
+        <button>
+            <img src="../../../../images/stars.png" alt="">
+        </button>
+    </section>
+
 </body>
 <script src="chat.js" type="module"></script>
 </html>

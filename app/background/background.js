@@ -17,6 +17,8 @@ chrome.runtime.onConnect.addListener((port) => {
                 data: {}
             }
 
+            let chatHistory = null
+            let chat_model = null
             // switch on the action (This is where the magic happens!)
             switch(msg.action) {
 
@@ -38,13 +40,17 @@ chrome.runtime.onConnect.addListener((port) => {
                 
                 case 'queryImage':
                     const imageData = msg.imageData
-                    const chatHistory = msg.chatHistory
-                    const chat_model = msg.chat_model
+                    chatHistory = msg.chatHistory
+                    chat_model = msg.chat_model
 
-                    response.data.content = await queryChat()
+                    response.data.content = await queryChat(chatHistory, imageData, chat_model)
                     break;
 
                 case 'queryText':
+                    chatHistory = msg.chatHistory
+                    chat_model = msg.chat_model
+
+                    response.data.content = await queryChat(chatHistory, null, chat_model)
                     break;
 
             }

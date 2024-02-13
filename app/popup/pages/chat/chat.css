@@ -1,14 +1,191 @@
+@font-face {font-family: 'GTWalsheimPro-Regular';src: url('https://cdn.shopify.com/s/files/1/0588/4228/4186/files/GTWalsheimPro-Regular.woff?v=1669253354') format('woff');} 
+
 *{
     margin: 0;
     padding: 0;
+    font-family: 'GTWalsheimPro-Regular', sans-serif;
 }
 
 body {
-    height: 561px;
+    /* height: 561px; */
+    height: 600px;
     width: 332px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    border-style: dotted;
+
+    padding:1rem;
+
+    overflow: hidden;
+
+    position: relative;
 }
 
+/* __________________________________________MENU_________________________________________ */
+
+/* -=-=-=-=-=-=-Menu Button=--=-=-=-=-=-=-=-= */
+.menu-button{
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    aspect-ratio: 1/1;
+    height: 26px;
+
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    z-index: 1000;
+}
+
+.menu-button .menu-line{
+    width: 33px;
+    height: 6px;
+    
+    border-radius: 0.2rem;
+    transition: 0.5s ease;
+}
+
+/* non active line */
+.menu-button .menu-line:nth-child(1){background-color: #715AFF;}
+.menu-button .menu-line:nth-child(2){background-color: #5887FF;}
+.menu-button .menu-line:nth-child(3){background-color: #8DADFF;}
+
+/* active line */
+.menu-button.active .menu-line:nth-child(1){background-color: #fff; transform: translateY(10px) rotate(45deg);}
+.menu-button.active .menu-line:nth-child(2){opacity: 0;}
+.menu-button.active .menu-line:nth-child(3){background-color: #fff; transform: translateY(-10px) rotate(-45deg);}
+
+/* -=-=-=-=-=-=-Menu=--=-=-=-=-=-=-=-= */
+.menu {
+    /* sends menu off screen */
+    /* transform: translateX(-110%); */
+
+    position: absolute;
+    z-index: 500;
+    top:0;
+    left:0;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 70%;
+    height: 100%;
+    
+    background: radial-gradient(250% 100% at 90% 65%, #D48DFF 0%, #5887FF 25%, #715AFF 50%, #E6978E 100%);
+    
+    /* grainy filter */
+    /* filter: url(#grainy); */
+    
+    backdrop-filter: blur(10px);
+    border-radius: 0 1.5rem 1.5rem 0;
+    transition: 0.5s ease;
+}
+
+.menu.active {
+    transform: translateX(0%);
+}
+
+.menu .menu-section{
+    width: 70%;
+    border-style: dotted;
+}
+
+/* __________________________________________HEADER____________________________________________ */
+#chat-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    position: relative;
+    width: 100%;
+    transition: 0.5s ease;
+}
+
+#chat-header.active{filter: blur(5px);}
+
+/* __________________________________________BODY____________________________________________ */
+#chat-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: 100%;
+    width: 100%;
+
+    color: rgb(160, 160, 160);
+
+    transition: 0.5s ease;
+}
+
+#chat-body.active{filter: blur(5px);}
+
+/* __________________________________________SEARCH____________________________________________ */
+#chat-search{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    width: 100%;
+    
+    background: linear-gradient(90deg, #715AFF 0%, #8DADFF 100%);
+    border-radius: 1.5rem;
+    transition: 0.5s ease;
+}
+
+#chat-search.active{filter: blur(5px);}
+
+#chat-search input{
+    padding:0.7rem 1rem;
+    
+    background-color: transparent;
+    border: none;
+    outline: none;
+
+    font-size: 1.2rem;
+    width: 100%;
+    color: #fff;
+}
+#chat-search input::placeholder{
+    color: #ececec;
+}
+
+#chat-search button{
+    padding:0.5rem 1rem;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+#chat-search button img{
+    width: 1.5rem;
+    height: 1.5rem;
+
+    transition: 0.5s ease;
+}
+
+#chat-search button:hover img{
+    transform: translateY(-0.3rem);
+}
+#chat-search button:active img{
+    transform: scale(0.9);
+}
