@@ -1,3 +1,4 @@
+import {queryChat} from "./async/func/queryChat.js";
 
 chrome.runtime.onStartup.addListener(() => {
     console.log(`onStartup()`)
@@ -15,6 +16,8 @@ chrome.runtime.onConnect.addListener((port) => {
                 action: msg.action,
                 data: {}
             }
+
+            // switch on the action (This is where the magic happens!)
             switch(msg.action) {
 
                 case 'refresh':
@@ -34,6 +37,11 @@ chrome.runtime.onConnect.addListener((port) => {
                     break;
                 
                 case 'queryImage':
+                    const imageData = msg.imageData
+                    const chatHistory = msg.chatHistory
+                    const chat_model = msg.chat_model
+
+                    response.data.content = await queryChat()
                     break;
 
                 case 'queryText':
