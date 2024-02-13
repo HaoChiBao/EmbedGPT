@@ -70,32 +70,46 @@ create_chat_button.addEventListener('click', () => {
 })
 
 // menu items
-const menu_headers = document.querySelectorAll('.menu-header');
-menu_headers.forEach(header => {
+let lastChat = null;
+const menu_chats = document.querySelectorAll('.menu-item');
+menu_chats.forEach(menu_chat => {
+    
+    const activateChat = () => {
+        lastChat = menu_chat;
 
-    const button = header.querySelector('.menu-item-toggle');
-    const menu_items = header.querySelector('.menu-items');
+        menu_chat.classList.add('active');
+        const chat_image = menu_chat.querySelector('.chat-image');
+        chat_image.style.transform = 'scale(0)';
+        setTimeout(() => {
+            chat_image.src = '../../../../images/stars.png';
+            chat_image.style.transform = 'scale(1)';
+        }, 200)
+    }
+    
+    const deactivateChat = (chat) => {
+        if(!chat) return
 
-    const openItems = () => {
-        button.classList.add('active');
-        menu_items.classList.add('active');
+        chat.classList.remove('active');
+        const chat_image = chat.querySelector('.chat-image');
+        chat_image.style.transform = 'scale(0)';
+        setTimeout(() => {
+            chat_image.src = '../../../../images/chat.png';
+            chat_image.style.transform = 'scale(1)';
+        }, 200)
     }
 
-    const closeItems = () => {
-        button.classList.remove('active');
-        menu_items.classList.remove('active');
+    const deactivateLastChat = () => {
+        deactivateChat(lastChat);
     }
 
-    const toggleItems = () => {
-        if (button.classList.contains('active')) {
-            closeItems();
-        } else {
-            openItems();
-        }
-    }
+    menu_chat.addEventListener('click', () => {
+        deactivateLastChat();
+        activateChat();
 
-    button.addEventListener('click', () => {
-        toggleItems();
+        // wait for animation to finish before closing menu
+        setTimeout(() => {
+            closeMenu();
+        }, 500)
     })
 })
 
