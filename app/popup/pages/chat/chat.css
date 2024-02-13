@@ -142,32 +142,125 @@ body {
 
 .menu .menu-section .menu-header{
     display: flex;
-    align-items: center;
+    flex-direction: column;
     color: #fff;
 }
-.menu .menu-section .menu-header button{
+.menu .menu-section .menu-header .menu-item-toggle{
     aspect-ratio: 1/1;
     height: 1rem;
     
     background-color: transparent;
     border: none;
-    
+
+    display: flex;
+    align-items: center;
     cursor: pointer;
     transition: 0.3s ease;
     
     margin: 0.5rem;
+
+    color: #fff;
+    font-size: 1rem;
 }
 
-.menu .menu-section .menu-header button img{
+.menu .menu-section .menu-header .menu-item-toggle img{
     aspect-ratio: 1/1;
     transition: 0.3s ease;
+
+    height: 12px;
+    width: 9px;
+
+    margin-right:0.5rem
 }
 
-.menu .menu-section .menu-header button.active img{
+.menu .menu-section .menu-header .menu-item-toggle.active img{
     transform: rotate(90deg);
 }
 
+.menu .menu-section .menu-header .menu-items{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 
+    /* border-style: dotted; */
+}
+
+.menu .menu-section .menu-header .menu-items .menu-item{
+    display: flex;
+    align-items: center;
+    
+    transition: 0.3s ease;
+    cursor: pointer;
+    
+    border-radius: 1rem;
+    padding: 0.2rem 0.4rem;
+    
+    margin-right: 0.5rem;
+
+    position: relative;
+}
+
+.menu .menu-section .menu-header .menu-items .menu-item p{
+    font-size: 1rem;
+    margin-left: 0.3rem;
+    /* transition: 0.3s ease; */
+    
+    width: 75%;
+    
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.menu .menu-section .menu-header .menu-items .menu-item .chat-dots{
+    position: absolute;
+    right: 0;
+    opacity: 0;
+    
+    aspect-ratio: 1/1;
+    width: 1.2rem;
+    
+    
+    border: none;
+    background-color: transparent;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    border-radius: 1rem;
+    margin: 0.2rem;
+}
+
+.menu .menu-section .menu-header .menu-items .menu-item .chat-dots img{
+    aspect-ratio: 1/1;
+    width: 0.8rem;
+    transition: 0.3s ease;
+}
+
+.menu .menu-section .menu-header .menu-items .menu-item .chat-dots:hover{
+    backdrop-filter: blur(5px);
+    background-color: rgba(121, 121, 121, 0.271);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.menu .menu-section .menu-header .menu-items .menu-item .chat-image{
+    aspect-ratio: 1/1;
+    width: 1rem;
+    /* margin: 0.4rem; */
+    transition: 0.3s ease;
+
+    filter: invert(1);
+}
+
+.menu .menu-section .menu-header .menu-items .menu-item:hover{
+    background-color: #E7ECFF;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    color: rgb(36, 36, 36);
+}
+
+.menu .menu-section .menu-header .menu-items .menu-item:hover .chat-dots{opacity: 1;}
+.menu .menu-section .menu-header .menu-items .menu-item:hover .chat-image{filter: invert(0);}
 
 /* __________________________________________HEADER____________________________________________ */
 #chat-header{
