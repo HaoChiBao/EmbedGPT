@@ -6,6 +6,8 @@ Content
 * Enhance google search
     * Provides summary/insight on what the user searches for
     * ie. What is the best food? --> Response... (similar to ChatGPT for Google)
+* Writing feedback
+    * Similar to grammarly
 
 Popup 
 * User activates highlight page action
