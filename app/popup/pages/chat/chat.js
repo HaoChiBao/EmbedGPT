@@ -78,10 +78,12 @@ menu_headers.forEach(header => {
 
     const openItems = () => {
         button.classList.add('active');
+        menu_items.classList.add('active');
     }
 
     const closeItems = () => {
         button.classList.remove('active');
+        menu_items.classList.remove('active');
     }
 
     const toggleItems = () => {
