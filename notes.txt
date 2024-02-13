@@ -5,12 +5,13 @@ Content
     * User queries highlighted image
 * Enhance google search
     * Provides summary/insight on what the user searches for
-    * ie. What is the best food? --> Response...
+    * ie. What is the best food? --> Response... (similar to ChatGPT for Google)
 
 Popup 
 * User activates highlight page action
 * User has access to normal Chatgpt/Gemini chat Features
-* 
+    * text query
+    * image query 
 
 
 Inspiration

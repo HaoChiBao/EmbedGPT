@@ -9,18 +9,17 @@
 body {
     height: calc(561px - 2rem);
     width: calc(302px - 2rem);
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    border-style: dotted;
-
-    padding:1rem;
-
-    overflow: hidden;
-
     position: relative;
+    overflow: hidden;
+    padding:1rem;
+    
+    /* border-style: dotted; */
 }
 
 /* __________________________________________MENU_________________________________________ */
