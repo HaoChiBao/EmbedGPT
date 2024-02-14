@@ -20,4 +20,4 @@ Inspiration
 * Samsung AI Features
 * Glasp (Chrome extension)
 * Chat-gpt for google
-* 
+* Grammarly
