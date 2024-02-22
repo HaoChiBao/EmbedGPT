@@ -11,6 +11,7 @@ Content
 
 Popup 
 * User activates highlight page action
+* Auth for chat history save
 * User has access to normal Chatgpt/Gemini chat Features
     * text query
     * image query 
