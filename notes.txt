@@ -8,6 +8,7 @@ Content
     * ie. What is the best food? --> Response... (similar to ChatGPT for Google)
 * Writing feedback
     * Similar to grammarly
+* Reactive UI ?
 
 Popup 
 * User activates highlight page action
