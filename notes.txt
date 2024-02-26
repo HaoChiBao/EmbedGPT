@@ -22,3 +22,4 @@ Inspiration
 * Glasp (Chrome extension)
 * Chat-gpt for google
 * Grammarly
+* Github Co-pilot
