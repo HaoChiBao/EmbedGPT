@@ -24,3 +24,5 @@ Inspiration
 * Chat-gpt for google
 * Grammarly
 * Github Co-pilot
+
+Literally just for github contribution today
