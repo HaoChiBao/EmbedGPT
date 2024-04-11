@@ -8,6 +8,10 @@ Content
     * ie. What is the best food? --> Response... (similar to ChatGPT for Google)
 * Writing feedback
     * Similar to grammarly
+* Voice Response    
+    * google cloud text to speech to read out responses
+* Camera input
+    * User can take a picture and ask questions about the image
 * Reactive UI ?
 
 Popup 
