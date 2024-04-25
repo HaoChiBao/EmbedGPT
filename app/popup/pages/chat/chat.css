@@ -22,6 +22,35 @@ body {
     /* border-style: dotted; */
 }
 
+/* scroll wheel css =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background:transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    /* background: linear-gradient(-45deg, #d98cf5,#2b20f8,#31a2fa); */
+    background: linear-gradient(-45deg, #715AFF,#5887FF,#8DADFF);
+
+    background-clip: content-box;
+    border: 5px solid transparent;
+    border-radius: 10px;
+    /* background-image: url('https://assets.materialup.com/uploads/cde34f59-a45f-48d4-9699-3a686999b9dc/preview.gif'); */
+    }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    /* background: #555; */
+    opacity: 0.8;
+}
+
+
 /* __________________________________________MENU_________________________________________ */
 
 /* -=-=-=-=-=-=-Menu Button=--=-=-=-=-=-=-=-= */
@@ -44,6 +73,10 @@ body {
     cursor: pointer;
 
     z-index: 1000;
+
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+
 }
 
 .menu-button .menu-line{
@@ -271,6 +304,7 @@ body {
 .menu .menu-section .menu-header .menu-items .menu-item:hover .chat-image{filter: invert(0);}
 
 /* __________________________________________HEADER____________________________________________ */
+/* this element was removed (who tf names their gpt chats? */
 #chat-header{
     display: flex;
     align-items: center;
@@ -279,6 +313,8 @@ body {
     position: relative;
     width: 100%;
     transition: 0.5s ease;
+
+    height: 26px;
 }
 
 #chat-header.active{filter: blur(5px);}
@@ -287,27 +323,58 @@ body {
 #chat-body{
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: start;
 
     padding:1rem;
 
     height: 100%;
     width: 100%;
 
-    color: rgb(160, 160, 160);
-
+    color: #000;
     transition: 0.5s ease;
+
+    /* border-style: dotted; */
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    font-size: 1rem;
 }
 
 #chat-body.active{filter: blur(5px);}
 
 #chat-body .empty-chat{
+    color: rgb(160, 160, 160);
     position: absolute;
     top:50%;
     left:50%;
     transform: translate(-50%, -50%);
 
     white-space: nowrap;
+}
+
+#chat-body .user-chat{
+    border-top: #8DADFF 1px solid;
+    padding-top: 1rem;
+}
+
+#chat-body .message {
+    width: 100%;
+    /* border-style: dotted; */
+    margin: 0.5rem 0;
+
+    display: flex;
+    align-items: start;
+    gap: 0.5rem;
+}
+
+#chat-body .message img{
+    aspect-ratio: 1/1;
+    width: 2rem;
+}
+
+#chat-body .message p{
+    margin-top: 0.25rem;
 }
 
 /* __________________________________________SEARCH____________________________________________ */

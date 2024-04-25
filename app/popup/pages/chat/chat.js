@@ -1,8 +1,12 @@
 // ________ Global Variables ______
 
-// header elements
-const header = document.getElementById('chat-header'); 
-const title = header.querySelector('h2');
+// menu elements
+const menu = document.querySelector('.menu');
+const menuButton = document.querySelector('.menu-button');
+const sections = document.querySelectorAll('section');
+
+// chat body elements
+const chat_body = document.getElementById('chat-body');
 
 // form/query elements
 const form = document.getElementById('chat-search');
@@ -16,20 +20,21 @@ let chatHistory = [
     // },
     // {
     //     role: 'system',
-    //     content: 'The average distance from the Earth to the Sun is 93 million miles (150 million kilometers).'
+    //     content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
     // },
     // {
     //     role: 'user',
     //     content: 'what is the capital of Nigeria?',
-    // }
+    // },
+    // {
+    //     role: 'system',
+    //     content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    // },
 ]
 
 
 // _________________________________MENU___________________________________
 
-const menu = document.querySelector('.menu');
-const menuButton = document.querySelector('.menu-button');
-const sections = document.querySelectorAll('section');
 
 const toggleMenu = () => {
     if (menuButton.classList.contains('active')) {
@@ -46,6 +51,7 @@ const openMenu = () => {
     sections.forEach(section => {
         section.classList.add('active');
     })
+    form.classList.add('active');
 }
 
 const closeMenu = () => {
@@ -54,6 +60,7 @@ const closeMenu = () => {
     sections.forEach(section => {
         section.classList.remove('active');
     })
+    form.classList.remove('active');
 }
 
 menuButton.addEventListener('click', () => {
@@ -139,34 +146,80 @@ menu_chats.forEach(menu_chat => {
     })
 })
 
+chat_body.addEventListener('click', ()=>{
+    closeMenu();
+})
+
 // ___________________________________HEADER___________________________________
 
 // ___________________________________CHAT___________________________________
 
+const create_chat_bubble = (role, content) => {
+    const message_element = document.createElement('div'); 
+    const profile_image = document.createElement('img');
+    const message = document.createElement('p');
+
+    if(role === 'user' || role === 0) {
+        message_element.classList.add('user-chat');
+        profile_image.src = '../../../../images/profile.png';
+    } else {
+        message_element.classList.add('system-chat');
+        profile_image.src = '../../../../images/stars.png';
+    }
+    message_element.classList.add('message');
+    message.innerHTML = content;
+
+    message_element.appendChild(profile_image);
+    message_element.appendChild(message);
+
+    return message_element;
+}
 // used when chat is first loaded
 const load_chat = () => {
+    if(chatHistory.length === 0) {
+        const empty_chat = document.createElement('div');
+        empty_chat.classList.add('empty-chat');
+        chat_body.appendChild(empty_chat)
+        return
+    }
 
+    chat_body.innerHTML = '';
+
+    chatHistory.forEach(chat => {
+        const chat_element = create_chat_bubble(chat.role, chat.content);
+        chat_body.appendChild(chat_element);
+    })
+    // set chat scroll to bottom
+    chat_body.scrollTop = chat_body.scrollHeight;
 }
+load_chat();
+
 
 // used when chat is updated
-const render_response = () => {
+const render_response = (content) => {
+    const chat_element = create_chat_bubble('system', '');
+    chat_body.appendChild(chat_element);
 
+    let message = chat_element.querySelector('p');
+    let typed = ''; // current message content
+    const loop = setInterval(() => {
+        if(typed === content) {
+            clearInterval(loop);
+            return
+        }
+        typed += content[typed.length];
+        message.innerHTML = typed;
+    }, 1000 / 60);
 }
-
 
 // add new message to chat history
 const update_chat_history = (role = 0, content) => {
     // determine role
     role = role === 0 ? 'user' : 'system';
     chatHistory.push({ role, content });
-
-    // update chat on screen
-    render_chat();
 }
 
 // ___________________________________FORM___________________________________
-
-
 
 
 port.onMessage.addListener((msg) => {
@@ -174,7 +227,8 @@ port.onMessage.addListener((msg) => {
     switch(msg.action) {
         case 'queryText':
             const response_message = msg.data.content.choices[0].message.content;
-            update_chat_history(1, response_message);
+            update_chat_history(1, response_message); // add system response to chat history
+            render_response(response_message); // display system response (with animation) in chat
 
             console.log(chatHistory)
             break;
@@ -196,6 +250,7 @@ const handleSubmit = async (e) => {
     console.log('Submitting query:', query)
 
     update_chat_history(0, query);
+    load_chat();
     
     port.postMessage({ 
         action: 'queryText', 
