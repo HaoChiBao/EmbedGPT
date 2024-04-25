@@ -1,3 +1,29 @@
+// ________ Global Variables ______
+
+// header elements
+const header = document.getElementById('chat-header'); 
+const title = header.querySelector('h2');
+
+// form/query elements
+const form = document.getElementById('chat-search');
+
+const port = chrome.runtime.connect({ name: "content" });
+
+let chatHistory = [
+    // {
+    //     role: 'user',
+    //     content: 'how far is the sun from the earth?'
+    // },
+    // {
+    //     role: 'system',
+    //     content: 'The average distance from the Earth to the Sun is 93 million miles (150 million kilometers).'
+    // },
+    // {
+    //     role: 'user',
+    //     content: 'what is the capital of Nigeria?',
+    // }
+]
+
 
 // _________________________________MENU___________________________________
 
@@ -115,52 +141,67 @@ menu_chats.forEach(menu_chat => {
 
 // ___________________________________HEADER___________________________________
 
-const header = document.getElementById('chat-header');
-const title = header.querySelector('h2');
-
-
-
-
 // ___________________________________CHAT___________________________________
 
+// used when chat is first loaded
+const load_chat = () => {
 
+}
+
+// used when chat is updated
+const render_response = () => {
+
+}
+
+
+// add new message to chat history
+const update_chat_history = (role = 0, content) => {
+    // determine role
+    role = role === 0 ? 'user' : 'system';
+    chatHistory.push({ role, content });
+
+    // update chat on screen
+    render_chat();
+}
 
 // ___________________________________FORM___________________________________
 
 
-// const test = document.getElementById('test');
-
-// const port = chrome.runtime.connect({ name: "content" });
 
 
-// const chatHistory = [
-//     {
-//         role: 'user',
-//         content: 'how far is the sun from the earth?'
-//     },
-//     {
-//         role: 'system',
-//         content: 'The average distance from the Earth to the Sun is 93 million miles (150 million kilometers).'
-//     },
-//     {
-//         role: 'user',
-//         content: 'what is the capital of Nigeria?',
-//     }
-// ]
+port.onMessage.addListener((msg) => {
+    console.log(msg)
+    switch(msg.action) {
+        case 'queryText':
+            const response_message = msg.data.content.choices[0].message.content;
+            update_chat_history(1, response_message);
 
-// port.onMessage.addListener((msg) => {
-//     console.log(msg)
-// })
+            console.log(chatHistory)
+            break;
+        default:
+            console.log('Invalid action')
+    }
+})
 
-// test.addEventListener('click', () => {
-//     port.postMessage({ 
-//         action: 'queryText', 
-//         chatModel: 0,
-//         chatHistory: chatHistory,
-//     });
-// })
 
 const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('submitting')
+
+    const input = form.querySelector('input');
+    const query = input.value;
+    input.value = '';
+
+    if(query === '') return
+
+    console.log('Submitting query:', query)
+
+    update_chat_history(0, query);
+    
+    port.postMessage({ 
+        action: 'queryText', 
+        chatModel: 0,
+        chatHistory: chatHistory,
+    });
 }
+
+form.addEventListener('submit', handleSubmit)
