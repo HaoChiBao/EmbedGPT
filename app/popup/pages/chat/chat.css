@@ -327,6 +327,8 @@ body {
 
     padding:1rem;
 
+    padding-top: 2rem;
+
     height: 100%;
     width: 100%;
 
@@ -375,6 +377,10 @@ body {
 
 #chat-body .message p{
     margin-top: 0.25rem;
+}
+
+#chat-body .loading-gif{
+    filter: grayscale(100%);
 }
 
 /* __________________________________________SEARCH____________________________________________ */

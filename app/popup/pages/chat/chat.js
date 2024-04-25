@@ -13,24 +13,30 @@ const form = document.getElementById('chat-search');
 
 const port = chrome.runtime.connect({ name: "content" });
 
-let chatHistory = [
-    // {
-    //     role: 'user',
-    //     content: 'how far is the sun from the earth?'
-    // },
-    // {
-    //     role: 'system',
-    //     content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    // },
-    // {
-    //     role: 'user',
-    //     content: 'what is the capital of Nigeria?',
-    // },
-    // {
-    //     role: 'system',
-    //     content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    // },
+const allChats = [
+    {timestamp: Date.now(), chatHistory: [
+        // {
+        //     role: 'user',
+        //     content: 'how far is the sun from the earth?'
+        // },
+        // {
+        //     role: 'system',
+        //     content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        // },
+        // {
+        //     role: 'user',
+        //     content: 'what is the capital of Nigeria?',
+        // },
+        // {
+        //     role: 'system',
+        //     content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        // },
+    ], title: ''},
 ]
+
+let currentChat = 0;
+
+let chatHistory = allChats[currentChat].chatHistory;
 
 
 // _________________________________MENU___________________________________
@@ -148,6 +154,7 @@ menu_chats.forEach(menu_chat => {
 
 chat_body.addEventListener('click', ()=>{
     closeMenu();
+    console.log(lastChat)
 })
 
 // ___________________________________HEADER___________________________________
@@ -194,13 +201,13 @@ const load_chat = () => {
 }
 load_chat();
 
-
-// used when chat is updated
+let last_response_element = null;
+// used when a response is returned
 const render_response = (content) => {
-    const chat_element = create_chat_bubble('system', '');
-    chat_body.appendChild(chat_element);
+    if(last_response_element == null) return
 
-    let message = chat_element.querySelector('p');
+    let message = last_response_element.querySelector('p');
+    message.innerHTML = '';
     let typed = ''; // current message content
     const loop = setInterval(() => {
         if(typed === content) {
@@ -210,6 +217,25 @@ const render_response = (content) => {
         typed += content[typed.length];
         message.innerHTML = typed;
     }, 1000 / 60);
+
+    last_response_element = null;
+}
+
+const response_loading = () => {
+    const response_element = create_chat_bubble('system', '');
+    chat_body.appendChild(response_element);
+    
+    const message = response_element.querySelector('p');
+
+    const loading_gif = document.createElement('img');
+    loading_gif.classList.add('loading-gif');
+    loading_gif.src = '../../../../images/typing.gif';
+
+    message.appendChild(loading_gif);
+    
+    chat_body.scrollTop = chat_body.scrollHeight;
+    last_response_element = response_element;
+
 }
 
 // add new message to chat history
@@ -237,6 +263,9 @@ port.onMessage.addListener((msg) => {
     }
 })
 
+const setTitle = (title) => {
+    allChats[currentChat].title = title;
+}
 
 const handleSubmit = async (e) => {
     e.preventDefault()
@@ -250,7 +279,12 @@ const handleSubmit = async (e) => {
     console.log('Submitting query:', query)
 
     update_chat_history(0, query);
+    if(allChats[currentChat].title === '') setTitle(query);
     load_chat();
+    response_loading();
+
+    console.log(allChats)
+    
     
     port.postMessage({ 
         action: 'queryText', 
