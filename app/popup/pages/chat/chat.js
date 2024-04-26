@@ -5,6 +5,8 @@ const menu = document.querySelector('.menu');
 const menuButton = document.querySelector('.menu-button');
 const sections = document.querySelectorAll('section');
 
+const menu_section = document.querySelector('.menu-section');
+
 // chat body elements
 const chat_body = document.getElementById('chat-body');
 
@@ -15,23 +17,44 @@ const port = chrome.runtime.connect({ name: "content" });
 
 const allChats = [
     {timestamp: Date.now(), chatHistory: [
-        // {
-        //     role: 'user',
-        //     content: 'how far is the sun from the earth?'
-        // },
-        // {
-        //     role: 'system',
-        //     content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        // },
-        // {
-        //     role: 'user',
-        //     content: 'what is the capital of Nigeria?',
-        // },
-        // {
-        //     role: 'system',
-        //     content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        // },
-    ], title: ''},
+        {
+            role: 'user',
+            content: 'how far is the sun from the earth?'
+        },
+        {
+            role: 'system',
+            content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        },
+        {
+            role: 'user',
+            content: 'what is the capital of Nigeria?',
+        },
+        {
+            role: 'system',
+            content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        },
+    ], title: 'test1'},
+    // timestamp set from yesterday
+    {timestamp: Date.now() - 86400000, chatHistory: [
+        {
+            role: 'user',
+            content: 'how far is the sun from the earth?2'
+        },
+    ], title: 'test2'},
+    // timestamp set from last week
+    {timestamp: Date.now() - 604800000, chatHistory: [
+        {
+            role: 'user',
+            content: 'how far is the sun from the earth?3'
+        },
+    ], title: 'test3'},
+    // timestamp set from last month
+    {timestamp: Date.now() - 2628000000, chatHistory: [
+        {
+            role: 'user',
+            content: 'how far is the sun from the earth?4'
+        },
+    ], title: 'test4'},
 ]
 
 let currentChat = 0;
@@ -107,6 +130,114 @@ create_chat_button.addEventListener('click', () => {
         console.log(0)
     }, 300)
 })
+
+const hide_menu_header = (id) => {
+    const menu_header = document.getElementById(`header-${id}`);
+    menu_header.style.display = 'none';
+}
+
+const show_menu_header = (id) => {
+    const menu_header = document.getElementById(`header-${id}`);
+    menu_header.style.display = 'flex';
+}
+
+const get_menu_header = (id) => {
+    return document.getElementById(`header-${id}`);
+}
+
+const create_menu_header = (title) => {
+    const menu_header = document.createElement('div');
+    menu_header.classList.add('menu-header');
+
+    const menu_item_timestamp = document.createElement('div');
+    menu_item_timestamp.classList.add('menu-item-timestamp');
+
+    const h3 = document.createElement('h3');
+    h3.innerHTML = title;
+
+    const line = document.createElement('div');
+    line.classList.add('line');
+
+    menu_item_timestamp.appendChild(h3);
+    menu_item_timestamp.appendChild(line);
+
+    const menu_items = document.createElement('div');
+    menu_items.classList.add('menu-items');
+
+    menu_header.appendChild(menu_item_timestamp);
+    menu_header.appendChild(menu_items);
+
+    return menu_header;
+}
+
+// 
+const create_menu_item = (chat) => {
+    const menu_item = document.createElement('div');
+    menu_item.classList.add('menu-item');
+
+    const chat_image = document.createElement('img');
+    chat_image.classList.add('chat-image');
+    chat_image.src = '../../../../images/chat.png';
+
+    const chat_text = document.createElement('p');
+    chat_text.innerHTML = chat.title;
+
+    const chat_dots = document.createElement('button');
+    chat_dots.classList.add('chat-dots');
+
+    const dots_image = document.createElement('img');
+    dots_image.src = '../../../../images/dots.png';
+
+    chat_dots.appendChild(dots_image);
+
+    menu_item.appendChild(chat_image);
+    menu_item.appendChild(chat_text);
+    menu_item.appendChild(chat_dots);
+
+    return menu_item;
+}
+
+/* 
+    sort chats by timestamps
+    separated by:
+        Today
+        Yesterday
+        Last Week
+        Last Month
+        Older
+*/
+const render_all_chats = () => {
+    const current_date = Date.now();
+    // const menu_header = create_menu_header('Today');
+    // menu_section.appendChild(menu_header);
+
+    allChats.forEach(chat => {
+        const timestamp = chat.timestamp;
+
+        const menu_item = create_menu_item(chat);
+
+        let header_id = 0;
+
+        if(timestamp > current_date - 86400000) {header_id = 0} // Today 
+        else if(timestamp > current_date - 172800000) {header_id = 1} // Yesterday 
+        else if(timestamp > current_date - 604800000) {header_id = 2} // Last Week 
+        else if(timestamp > current_date - 2628000000) {header_id = 3} // Last Month 
+        else {header_id = 4} //Older
+        
+        show_menu_header(header_id);
+        const menu_header = get_menu_header(header_id);
+        const menu_items = menu_header.querySelector('.menu-items');
+        menu_items.appendChild(menu_item);
+
+        menu_item.addEventListener('click', () => {
+            currentChat = allChats.indexOf(chat);
+            chatHistory = allChats[currentChat].chatHistory;
+            load_chat();
+        })
+    })
+}
+
+render_all_chats();
 
 // menu items
 let lastChat = null;
@@ -235,7 +366,6 @@ const response_loading = () => {
     
     chat_body.scrollTop = chat_body.scrollHeight;
     last_response_element = response_element;
-
 }
 
 // add new message to chat history

@@ -179,6 +179,8 @@ body {
     display: flex;
     flex-direction: column;
     color: #fff;
+
+    display: none;
 }
 .menu .menu-section .menu-header .menu-item-timestamp{
     aspect-ratio: 1/1;
@@ -198,6 +200,7 @@ body {
     color: #fff;
     font-size: 0.75rem;
     font-weight: 300;
+    white-space: nowrap;
 }
 
 .menu .menu-section .menu-header .menu-item-timestamp .line{

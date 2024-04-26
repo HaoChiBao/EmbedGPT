@@ -111,7 +111,11 @@ const main = async () => {
             case 'refresh':
                 // keeps the service worker actuve
                 setTimeout(() => {
-                    port.postMessage({ action: 'refresh' });
+                    try{
+                        port.postMessage({ action: 'refresh' });
+                    } catch(e) {
+                        console.error(e)
+                    }
                 }, 20000)
                 break;
         }
