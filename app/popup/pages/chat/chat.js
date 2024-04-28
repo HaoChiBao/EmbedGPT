@@ -61,6 +61,10 @@ let currentChat = 0;
 
 let currentChatHistory = allChats[currentChat].chatHistory;
 
+// ___________________________________UTILS___________________________________
+const create_unique_id = () => { // create unique id for each chat
+
+}
 
 // _________________________________MENU___________________________________
 
@@ -103,7 +107,7 @@ const create_new_chat = () => {
     const last_chat = allChats[allChats.length - 1];
     if(last_chat.chatHistory.length === 0) return
 
-    const new_chat = {timestamp: Date.now(), chatHistory: [], title: 'meh'};
+    const new_chat = {timestamp: Date.now(), chatHistory: [], title: 'New Chat'};
     allChats.push(new_chat);
     currentChat = allChats.indexOf(new_chat);
     currentChatHistory = allChats[currentChat].chatHistory;
@@ -212,14 +216,14 @@ const create_menu_item = (chat) => {
 /* 
     sort chats by timestamps
     separated by:
-        Today
-        Yesterday
-        Last Week
-        Last Month
-        Older
+    Today
+    Yesterday
+    Last Week
+    Last Month
+    Older
 */
+let lastChat = null;
 const render_all_chats = () => {
-    console.log(0)
     // clear all menu items/headers
     for(let i = 0; i < 5; i++) {
         hide_menu_header(i);
@@ -257,43 +261,44 @@ const render_all_chats = () => {
         })
     })
 
-        // menu items
-    let lastChat = null;
+    // menu items
+    const activateChat = (chat) => {
+        console.log(chat)
+        if(!chat) return
+        lastChat = chat;
+        
+        chat.classList.add('active');
+        const chat_image = chat.querySelector('.chat-image');
+        chat_image.style.transform = 'scale(0)';
+        setTimeout(() => {
+            chat_image.src = '../../../../images/stars.png';
+            chat_image.style.transform = 'scale(1)';
+        }, 200)
+    }
+
+    const deactivateChat = (chat) => {
+        if(!chat) return
+
+        chat.classList.remove('active');
+        const chat_image = chat.querySelector('.chat-image');
+        chat_image.style.transform = 'scale(0)';
+        setTimeout(() => {
+            chat_image.src = '../../../../images/chat.png';
+            chat_image.style.transform = 'scale(1)';
+        }, 200)
+    }
+
+    const deactivateLastChat = () => {
+        deactivateChat(lastChat);
+    }
+
     const menu_chats = document.querySelectorAll('.menu-item');
     menu_chats.forEach(menu_chat => {
         
-        const activateChat = () => {
-            lastChat = menu_chat;
-
-            menu_chat.classList.add('active');
-            const chat_image = menu_chat.querySelector('.chat-image');
-            chat_image.style.transform = 'scale(0)';
-            setTimeout(() => {
-                chat_image.src = '../../../../images/stars.png';
-                chat_image.style.transform = 'scale(1)';
-            }, 200)
-        }
-        
-        const deactivateChat = (chat) => {
-            if(!chat) return
-
-            chat.classList.remove('active');
-            const chat_image = chat.querySelector('.chat-image');
-            chat_image.style.transform = 'scale(0)';
-            setTimeout(() => {
-                chat_image.src = '../../../../images/chat.png';
-                chat_image.style.transform = 'scale(1)';
-            }, 200)
-        }
-
-        const deactivateLastChat = () => {
-            deactivateChat(lastChat);
-        }
-
         menu_chat.addEventListener('click', () => {
             deactivateLastChat();
-            activateChat();
-
+            activateChat(menu_chat);
+            
             // wait for animation to finish before closing menu
             setTimeout(() => {
                 closeMenu();
