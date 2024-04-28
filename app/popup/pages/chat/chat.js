@@ -59,7 +59,7 @@ const allChats = [
 
 let currentChat = 0;
 
-let chatHistory = allChats[currentChat].chatHistory;
+let currentChatHistory = allChats[currentChat].chatHistory;
 
 
 // _________________________________MENU___________________________________
@@ -69,9 +69,9 @@ const toggleMenu = () => {
     if (menuButton.classList.contains('active')) {
         closeMenu();
     } else {
+        render_all_chats();
         openMenu();
     }
-
 }
 
 const openMenu = () => {
@@ -98,6 +98,18 @@ menuButton.addEventListener('click', () => {
 
 const create_chat_button = document.getElementById('create-new-chat');
 const create_chat_img = create_chat_button.querySelector('img'); 
+
+const create_new_chat = () => {
+    const last_chat = allChats[allChats.length - 1];
+    if(last_chat.chatHistory.length === 0) return
+
+    const new_chat = {timestamp: Date.now(), chatHistory: [], title: 'meh'};
+    allChats.push(new_chat);
+    currentChat = allChats.indexOf(new_chat);
+    currentChatHistory = allChats[currentChat].chatHistory;
+
+    load_chat();
+}
 
 let create_chat_pressed = false;
 create_chat_button.addEventListener('mouseover', async () => {
@@ -126,8 +138,8 @@ create_chat_button.addEventListener('click', () => {
         create_chat_pressed = false;
         create_chat_button.style.transform = 'scale(1)';
         closeMenu();
-
-        console.log(0)
+        create_new_chat();
+        // console.log(0)
     }, 300)
 })
 
@@ -207,6 +219,15 @@ const create_menu_item = (chat) => {
         Older
 */
 const render_all_chats = () => {
+    console.log(0)
+    // clear all menu items/headers
+    for(let i = 0; i < 5; i++) {
+        hide_menu_header(i);
+        const menu_header = get_menu_header(i);
+        const menu_items = menu_header.querySelector('.menu-items');
+        menu_items.innerHTML = '';
+    }
+
     const current_date = Date.now();
     // const menu_header = create_menu_header('Today');
     // menu_section.appendChild(menu_header);
@@ -231,61 +252,60 @@ const render_all_chats = () => {
 
         menu_item.addEventListener('click', () => {
             currentChat = allChats.indexOf(chat);
-            chatHistory = allChats[currentChat].chatHistory;
+            currentChatHistory = allChats[currentChat].chatHistory;
             load_chat();
+        })
+    })
+
+        // menu items
+    let lastChat = null;
+    const menu_chats = document.querySelectorAll('.menu-item');
+    menu_chats.forEach(menu_chat => {
+        
+        const activateChat = () => {
+            lastChat = menu_chat;
+
+            menu_chat.classList.add('active');
+            const chat_image = menu_chat.querySelector('.chat-image');
+            chat_image.style.transform = 'scale(0)';
+            setTimeout(() => {
+                chat_image.src = '../../../../images/stars.png';
+                chat_image.style.transform = 'scale(1)';
+            }, 200)
+        }
+        
+        const deactivateChat = (chat) => {
+            if(!chat) return
+
+            chat.classList.remove('active');
+            const chat_image = chat.querySelector('.chat-image');
+            chat_image.style.transform = 'scale(0)';
+            setTimeout(() => {
+                chat_image.src = '../../../../images/chat.png';
+                chat_image.style.transform = 'scale(1)';
+            }, 200)
+        }
+
+        const deactivateLastChat = () => {
+            deactivateChat(lastChat);
+        }
+
+        menu_chat.addEventListener('click', () => {
+            deactivateLastChat();
+            activateChat();
+
+            // wait for animation to finish before closing menu
+            setTimeout(() => {
+                closeMenu();
+            }, 500)
         })
     })
 }
 
 render_all_chats();
 
-// menu items
-let lastChat = null;
-const menu_chats = document.querySelectorAll('.menu-item');
-menu_chats.forEach(menu_chat => {
-    
-    const activateChat = () => {
-        lastChat = menu_chat;
-
-        menu_chat.classList.add('active');
-        const chat_image = menu_chat.querySelector('.chat-image');
-        chat_image.style.transform = 'scale(0)';
-        setTimeout(() => {
-            chat_image.src = '../../../../images/stars.png';
-            chat_image.style.transform = 'scale(1)';
-        }, 200)
-    }
-    
-    const deactivateChat = (chat) => {
-        if(!chat) return
-
-        chat.classList.remove('active');
-        const chat_image = chat.querySelector('.chat-image');
-        chat_image.style.transform = 'scale(0)';
-        setTimeout(() => {
-            chat_image.src = '../../../../images/chat.png';
-            chat_image.style.transform = 'scale(1)';
-        }, 200)
-    }
-
-    const deactivateLastChat = () => {
-        deactivateChat(lastChat);
-    }
-
-    menu_chat.addEventListener('click', () => {
-        deactivateLastChat();
-        activateChat();
-
-        // wait for animation to finish before closing menu
-        setTimeout(() => {
-            closeMenu();
-        }, 500)
-    })
-})
-
 chat_body.addEventListener('click', ()=>{
     closeMenu();
-    console.log(lastChat)
 })
 
 // ___________________________________HEADER___________________________________
@@ -314,16 +334,16 @@ const create_chat_bubble = (role, content) => {
 }
 // used when chat is first loaded
 const load_chat = () => {
-    if(chatHistory.length === 0) {
-        const empty_chat = document.createElement('div');
-        empty_chat.classList.add('empty-chat');
-        chat_body.appendChild(empty_chat)
-        return
-    }
-
     chat_body.innerHTML = '';
 
-    chatHistory.forEach(chat => {
+    if(currentChatHistory.length === 0) {
+        const empty_chat = document.createElement('div');
+        empty_chat.classList.add('empty-chat');
+        empty_chat.innerHTML = 'start a conversation...';
+        chat_body.appendChild(empty_chat)
+    }
+
+    currentChatHistory.forEach(chat => {
         const chat_element = create_chat_bubble(chat.role, chat.content);
         chat_body.appendChild(chat_element);
     })
@@ -372,7 +392,10 @@ const response_loading = () => {
 const update_chat_history = (role = 0, content) => {
     // determine role
     role = role === 0 ? 'user' : 'system';
-    chatHistory.push({ role, content });
+    currentChatHistory.push({ role, content });
+
+    // update timestamp (last sent message)
+    allChats[currentChat].timestamp = Date.now();
 }
 
 // ___________________________________FORM___________________________________
@@ -386,7 +409,7 @@ port.onMessage.addListener((msg) => {
             update_chat_history(1, response_message); // add system response to chat history
             render_response(response_message); // display system response (with animation) in chat
 
-            console.log(chatHistory)
+            console.log(currentChatHistory)
             break;
         default:
             console.log('Invalid action')
@@ -419,7 +442,7 @@ const handleSubmit = async (e) => {
     port.postMessage({ 
         action: 'queryText', 
         chatModel: 0,
-        chatHistory: chatHistory,
+        chatHistory: currentChatHistory,
     });
 }
 
