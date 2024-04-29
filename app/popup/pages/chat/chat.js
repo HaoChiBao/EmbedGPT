@@ -1,11 +1,16 @@
 // ________ Global Variables ______
 
+const NEW_CHAT_NAME = "New Chat";
+
 // menu elements
 const menu = document.querySelector('.menu');
 const menuButton = document.querySelector('.menu-button');
 const sections = document.querySelectorAll('section');
 
 const menu_section = document.querySelector('.menu-section');
+
+const create_chat_button = document.getElementById('create-new-chat');
+const create_chat_img = create_chat_button.querySelector('img'); 
 
 // chat body elements
 const chat_body = document.getElementById('chat-body');
@@ -15,7 +20,10 @@ const form = document.getElementById('chat-search');
 
 const port = chrome.runtime.connect({ name: "content" });
 
-const allChats = [
+// determine last chat activated
+let lastChatId = null;
+
+let allChats = [
     {timestamp: Date.now(), chatHistory: [
         {
             role: 'user',
@@ -33,37 +41,52 @@ const allChats = [
             role: 'system',
             content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
         },
-    ], title: 'test1'},
+    ], title: 'test1', id: 'testid1'},
     // timestamp set from yesterday
     {timestamp: Date.now() - 86400000, chatHistory: [
         {
             role: 'user',
             content: 'how far is the sun from the earth?2'
         },
-    ], title: 'test2'},
+    ], title: 'test2', id: 'testid2'},
     // timestamp set from last week
     {timestamp: Date.now() - 604800000, chatHistory: [
         {
             role: 'user',
             content: 'how far is the sun from the earth?3'
         },
-    ], title: 'test3'},
+    ], title: 'test3', id: 'testid3'},
     // timestamp set from last month
     {timestamp: Date.now() - 2628000000, chatHistory: [
         {
             role: 'user',
             content: 'how far is the sun from the earth?4'
         },
-    ], title: 'test4'},
+    ], title: 'test4', id: 'testid4'},
 ]
 
-let currentChat = 0;
+allChats = []
 
-let currentChatHistory = allChats[currentChat].chatHistory;
+let currentChat = null;
+// let currentChatId = allChats[currentChat].id;
+// let currentChatHistory = allChats[currentChat].chatHistory;
+let currentChatId = null
+let currentChatHistory = null
+
 
 // ___________________________________UTILS___________________________________
 const create_unique_id = () => { // create unique id for each chat
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let id = '';
+    for(let i = 0; i < 10; i++) {
+        id += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    id += Date.now();
+    return id;
+}
 
+const get_chat_by_id = (id) => {
+    return allChats.find(chat => chat.id === id);
 }
 
 // _________________________________MENU___________________________________
@@ -96,56 +119,29 @@ const closeMenu = () => {
     form.classList.remove('active');
 }
 
-menuButton.addEventListener('click', () => {
-    toggleMenu()
-})
-
-const create_chat_button = document.getElementById('create-new-chat');
-const create_chat_img = create_chat_button.querySelector('img'); 
-
 const create_new_chat = () => {
-    const last_chat = allChats[allChats.length - 1];
-    if(last_chat.chatHistory.length === 0) return
+    // check if any chats are empty, meaning that they are new chats
+    const empty_chat = allChats.find(chat => chat.chatHistory.length === 0);
+    if(empty_chat) {
+        currentChat = allChats.indexOf(empty_chat);
+        currentChatHistory = allChats[currentChat].chatHistory;
+        currentChatId = allChats[currentChat].id;
+        lastChatId = currentChatId;
+        load_chat();
+        return
+    }
 
-    const new_chat = {timestamp: Date.now(), chatHistory: [], title: 'New Chat'};
+    const new_chat = {timestamp: Date.now(), chatHistory: [], title: NEW_CHAT_NAME, id : create_unique_id()};
     allChats.push(new_chat);
     currentChat = allChats.indexOf(new_chat);
     currentChatHistory = allChats[currentChat].chatHistory;
+    currentChatId = allChats[currentChat].id;
 
+    lastChatId = currentChatId;
+
+    console.log(allChats)
     load_chat();
 }
-
-let create_chat_pressed = false;
-create_chat_button.addEventListener('mouseover', async () => {
-    if(create_chat_pressed) return
-    create_chat_button.style.transform = 'translateY(-6px) scale(1.1)';
-    create_chat_img.style.transform = 'scale(0)';
-    setTimeout(() => {
-        create_chat_img.src = '../../../../images/stars.png';
-        create_chat_img.style.transform = 'scale(1)';
-    }, 200)
-})
-
-create_chat_button.addEventListener('mouseout', () => {
-    if(!create_chat_pressed) create_chat_button.style.transform = 'translateY(0) scale(1)';
-    create_chat_img.style.transform = 'scale(0)';
-    setTimeout(() => {
-        create_chat_img.src = '../../../../images/plus.png';
-        if(!create_chat_pressed) create_chat_img.style.transform = 'scale(1)';
-    }, 200)
-})
-
-create_chat_button.addEventListener('click', () => {
-    create_chat_pressed = true;
-    create_chat_button.style.transform = 'scale(0.85)';
-    setTimeout(() => {
-        create_chat_pressed = false;
-        create_chat_button.style.transform = 'scale(1)';
-        closeMenu();
-        create_new_chat();
-        // console.log(0)
-    }, 300)
-})
 
 const hide_menu_header = (id) => {
     const menu_header = document.getElementById(`header-${id}`);
@@ -190,6 +186,7 @@ const create_menu_header = (title) => {
 const create_menu_item = (chat) => {
     const menu_item = document.createElement('div');
     menu_item.classList.add('menu-item');
+    menu_item.id = chat.id;
 
     const chat_image = document.createElement('img');
     chat_image.classList.add('chat-image');
@@ -222,8 +219,9 @@ const create_menu_item = (chat) => {
     Last Month
     Older
 */
-let lastChat = null;
 const render_all_chats = () => {
+    if(allChats.length === 0) create_new_chat();
+
     // clear all menu items/headers
     for(let i = 0; i < 5; i++) {
         hide_menu_header(i);
@@ -235,6 +233,8 @@ const render_all_chats = () => {
     const current_date = Date.now();
     // const menu_header = create_menu_header('Today');
     // menu_section.appendChild(menu_header);
+    
+    allChats.sort((a, b) => b.timestamp - a.timestamp); // sort by timestamp
 
     allChats.forEach(chat => {
         const timestamp = chat.timestamp;
@@ -248,24 +248,25 @@ const render_all_chats = () => {
         else if(timestamp > current_date - 604800000) {header_id = 2} // Last Week 
         else if(timestamp > current_date - 2628000000) {header_id = 3} // Last Month 
         else {header_id = 4} //Older
-        
-        show_menu_header(header_id);
-        const menu_header = get_menu_header(header_id);
-        const menu_items = menu_header.querySelector('.menu-items');
-        menu_items.appendChild(menu_item);
 
         menu_item.addEventListener('click', () => {
             currentChat = allChats.indexOf(chat);
             currentChatHistory = allChats[currentChat].chatHistory;
+            currentChatId = allChats[currentChat].id;
             load_chat();
         })
+
+        const menu_header = get_menu_header(header_id);
+        const menu_items = menu_header.querySelector('.menu-items');
+        menu_items.appendChild(menu_item);
+
+        show_menu_header(header_id);
     })
 
     // menu items
     const activateChat = (chat) => {
-        console.log(chat)
         if(!chat) return
-        lastChat = chat;
+        lastChatId = chat.id;
         
         chat.classList.add('active');
         const chat_image = chat.querySelector('.chat-image');
@@ -289,7 +290,7 @@ const render_all_chats = () => {
     }
 
     const deactivateLastChat = () => {
-        deactivateChat(lastChat);
+        deactivateChat(document.getElementById(lastChatId));
     }
 
     const menu_chats = document.querySelectorAll('.menu-item');
@@ -304,10 +305,13 @@ const render_all_chats = () => {
                 closeMenu();
             }, 500)
         })
+
+        // check if chat has same id as last chat activated
+        if(menu_chat.id === lastChatId) {
+            activateChat(menu_chat);
+        }
     })
 }
-
-render_all_chats();
 
 chat_body.addEventListener('click', ()=>{
     closeMenu();
@@ -355,7 +359,6 @@ const load_chat = () => {
     // set chat scroll to bottom
     chat_body.scrollTop = chat_body.scrollHeight;
 }
-load_chat();
 
 let last_response_element = null;
 // used when a response is returned
@@ -406,21 +409,6 @@ const update_chat_history = (role = 0, content) => {
 // ___________________________________FORM___________________________________
 
 
-port.onMessage.addListener((msg) => {
-    console.log(msg)
-    switch(msg.action) {
-        case 'queryText':
-            const response_message = msg.data.content.choices[0].message.content;
-            update_chat_history(1, response_message); // add system response to chat history
-            render_response(response_message); // display system response (with animation) in chat
-
-            console.log(currentChatHistory)
-            break;
-        default:
-            console.log('Invalid action')
-    }
-})
-
 const setTitle = (title) => {
     allChats[currentChat].title = title;
 }
@@ -437,11 +425,12 @@ const handleSubmit = async (e) => {
     console.log('Submitting query:', query)
 
     update_chat_history(0, query);
-    if(allChats[currentChat].title === '') setTitle(query);
+    console.log(allChats[currentChat].title, NEW_CHAT_NAME)
+    if(allChats[currentChat].title === NEW_CHAT_NAME) setTitle(query);
     load_chat();
     response_loading();
 
-    console.log(allChats)
+    // console.log(allChats)
     
     
     port.postMessage({ 
@@ -451,4 +440,65 @@ const handleSubmit = async (e) => {
     });
 }
 
-form.addEventListener('submit', handleSubmit)
+const main = () => {
+    menuButton.addEventListener('click', () => {
+        toggleMenu()
+    })
+
+    let create_chat_pressed = false;
+    create_chat_button.addEventListener('mouseover', async () => {
+        if(create_chat_pressed) return
+        create_chat_button.style.transform = 'translateY(-6px) scale(1.1)';
+        create_chat_img.style.transform = 'scale(0)';
+        setTimeout(() => {
+            create_chat_img.src = '../../../../images/stars.png';
+            create_chat_img.style.transform = 'scale(1)';
+        }, 200)
+    })
+
+    create_chat_button.addEventListener('mouseout', () => {
+        if(!create_chat_pressed) create_chat_button.style.transform = 'translateY(0) scale(1)';
+        create_chat_img.style.transform = 'scale(0)';
+        setTimeout(() => {
+            create_chat_img.src = '../../../../images/plus.png';
+            if(!create_chat_pressed) create_chat_img.style.transform = 'scale(1)';
+        }, 200)
+    })
+
+    create_chat_button.addEventListener('click', () => {
+        create_chat_pressed = true;
+        create_chat_button.style.transform = 'scale(0.85)';
+        setTimeout(() => {
+            create_chat_pressed = false;
+            create_chat_button.style.transform = 'scale(1)';
+            closeMenu();
+            create_new_chat();
+            // console.log(0)
+        }, 300)
+    })
+
+    // message received from background script
+    port.onMessage.addListener((msg) => {
+        console.log(msg)
+        switch(msg.action) {
+            case 'queryText':
+                const response_message = msg.data.content.choices[0].message.content;
+                update_chat_history(1, response_message); // add system response to chat history
+                render_response(response_message); // display system response (with animation) in chat
+    
+                console.log(currentChatHistory)
+                break;
+            default:
+                console.log('Invalid action')
+        }
+    })
+
+    // send message to background script
+    form.addEventListener('submit', handleSubmit)
+
+    
+    render_all_chats(); // load elements in menu
+    load_chat(); // load chat history
+}
+
+main();
