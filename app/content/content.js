@@ -63,6 +63,7 @@ const cropDataUrl = async (dataUrl, dimensions) => {
 
 // initialize data and event listeners
 const main = async () => {
+
     let highlight_imageData = null
 
     // __________________________________________PORT FOR SERVICE WORKER__________________________________________
@@ -415,6 +416,8 @@ const main = async () => {
         draw_path = true
         highlight_area.style.pointerEvents = 'auto'
         highlight_area.style.cursor = 'crosshair'
+
+        gradient_outer.classList.add('active')
     }
 
     // stops highlighter drawing
@@ -437,6 +440,7 @@ const main = async () => {
         highlight_area.style.pointerEvents = 'none'
         highlight_area.style.cursor = 'default'
         // clearHighlightPath()
+
     }
 
     // close the highlighter
@@ -444,6 +448,8 @@ const main = async () => {
         await stop_highlighter()
         clearHighlightPath()
         clearHighlightQuery()
+
+        gradient_outer.classList.remove('active')
     }
 
     // when the user finishes highlighting 
@@ -518,6 +524,51 @@ const main = async () => {
 
     init_highlighter()
 
+    
+    // __________________________________________GRADIENT CANVAS__________________________________________
+    const gradient_outer = document.createElement('div')
+    gradient_outer.className = 'gradient-outer'
+    // gradient_outer.classList.add('active')
+    
+    const gradient_area = document.createElement('canvas')
+    gradient_area.className = 'gradient-area'
+    gradient_area.width = 32
+    gradient_area.height = 32
+    
+    gradient_outer.appendChild(gradient_area)
+    document.body.appendChild(gradient_outer)
+
+    const context = gradient_area.getContext('2d')
+    let time = 0;
+
+    const color = function (x, y, r, g, b) {
+    context.fillStyle = `rgb(${r}, ${g}, ${b})`
+    context.fillRect(x, y, 10, 10);
+    }
+    const R = function (x, y, time) {
+    return (Math.floor(192 + 64 * Math.cos((x * x - y * y) / 300 + time)));
+    }
+
+    const G = function (x, y, time) {
+    return (Math.floor(192 + 64 * Math.sin((x * x * Math.cos(time / 4) + y * y * Math.sin(time / 3)) / 300)));
+    }
+
+    const B = function (x, y, time) {
+    return (Math.floor(192 + 64 * Math.sin(5 * Math.sin(time / 9) + ((x - 100) * (x - 100) + (y - 100) * (y - 100)) / 1100)));
+    }
+
+    const startAnimation = function () {
+    for (x = 0; x <= 30; x++) {
+        for (y = 0; y <= 30; y++) {
+            color(x, y, R(x, y, time), G(x, y, time), B(x, y, time));
+        }
+    }
+    time = time + 0.03;
+    window.requestAnimationFrame(startAnimation);
+    }
+
+    startAnimation();
+
     //______________________________________________ TESTING ______________________________________________
 
     const moveAround = document.createElement('div')
@@ -549,6 +600,8 @@ const main = async () => {
         highlight = true
         highlight_area.style.pointerEvents = 'auto'
         highlight_area.style.cursor = 'crosshair'
+
+        gradient_outer.classList.add('active')
     }
     
     testMenu.appendChild(moveAround)
@@ -557,6 +610,5 @@ const main = async () => {
     testMenu.appendChild(testHighlight)
     document.body.appendChild(testMenu)
     makeElementDraggable(testMenu, moveAround)
-
 }
 main()

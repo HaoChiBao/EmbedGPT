@@ -488,6 +488,16 @@ const main = () => {
     
                 console.log(currentChatHistory)
                 break;
+            case 'refresh':
+                // keeps the service worker actuve
+                setTimeout(() => {
+                    try{
+                        port.postMessage({ action: 'refresh' });
+                    } catch(e) {
+                        console.error(e)
+                    }
+                }, 20000)
+                break;
             default:
                 console.log('Invalid action')
         }
@@ -496,6 +506,7 @@ const main = () => {
     // send message to background script
     form.addEventListener('submit', handleSubmit)
 
+    port.postMessage({ action: 'refresh' });
     
     render_all_chats(); // load elements in menu
     load_chat(); // load chat history
