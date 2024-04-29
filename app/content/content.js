@@ -594,9 +594,9 @@ const main = async () => {
 
     const testHighlight = document.createElement('button')
     testHighlight.textContent = 'Highlight'
-    testHighlight.onclick = () => {
+    testHighlight.onclick = async () => {
         // this will begin the highlighter
-        close_highlighter()
+        await close_highlighter()
         highlight = true
         highlight_area.style.pointerEvents = 'auto'
         highlight_area.style.cursor = 'crosshair'
