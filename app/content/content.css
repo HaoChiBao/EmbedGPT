@@ -47,7 +47,7 @@
 /* ______________________GRADIENT CSS___________________ */
 .gradient-outer {
     position: fixed;
-    z-index: 6969;
+    z-index: 6900;
     top: 100%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -67,7 +67,7 @@
     justify-content: center;
     
     opacity: 0.1;
-    pointer-events: none;
+    /* pointer-events: none; */
     
     border-radius: 50%;
     transition: 0.5s ease;

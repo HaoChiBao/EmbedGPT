@@ -67,7 +67,7 @@ const main = async () => {
     let highlight_imageData = null
 
     // __________________________________________PORT FOR SERVICE WORKER__________________________________________
-    const port = await chrome.runtime.connect({ name: "content" });
+    let port = await chrome.runtime.connect({ name: "content" });
     
     port.onMessage.addListener(async (response) => {
         const execute = await responseHandler(response)
@@ -76,6 +76,7 @@ const main = async () => {
 
     port.onDisconnect.addListener(() => {
         console.log('Port disconnected')
+        port = chrome.runtime.connect({ name: "content" });
     })
 
     port.postMessage({ action: 'refresh' });
@@ -568,6 +569,16 @@ const main = async () => {
     }
 
     startAnimation();
+    let clickOut = false
+    gradient_outer.addEventListener('click', async () => {
+        if (clickOut){
+            await close_highlighter()
+            clickOut = false
+        }
+    })
+    gradient_outer.addEventListener('mousedown', async () => {
+        clickOut = true
+    })
 
     //______________________________________________ TESTING ______________________________________________
 
