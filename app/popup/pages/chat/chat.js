@@ -24,7 +24,7 @@ const port = chrome.runtime.connect({ name: "content" });
 let lastChatId = null;
 
 let allChats = [
-    {timestamp: Date.now(), chatHistory: [
+    {timestamp: Date.now() - 10000000, chatHistory: [
         {
             role: 'user',
             content: 'how far is the sun from the earth?'

@@ -176,29 +176,10 @@ body {
 
     overflow-y: auto;
     overflow-x: hidden;
+
+    -webkit-mask-image: linear-gradient(to bottom,black 95%,transparent 100%);
+    mask-image: linear-gradient(to bottom,black 95%,transparent 100%);
 }
-
-/* change menu section scroll bar to white */
-.menu .menu-section::-webkit-scrollbar-thumb {
-    /* background: #fff; */
-
-    /* background-clip: content-box; */
-    /* border: 5px solid transparent; */
-    /* border-radius: 10px; */
-}
-.menu .menu-section::-webkit-scrollbar {
-    /* width: 15px; */
-}
-.menu .menu-section::-webkit-scrollbar-thumb:hover {
-    /* opacity: 0.8; */
-}
-::-webkit-scrollbar-track {
-    /* background:transparent; */
-}
-
-
-
-
 
 .menu .menu-settings{
     height: 20%;
