@@ -65,7 +65,7 @@ let allChats = [
     ], title: 'test4', id: 'testid4'},
 ]
 
-allChats = []
+// allChats = []
 
 let currentChat = null;
 // let currentChatId = allChats[currentChat].id;
@@ -139,7 +139,6 @@ const create_new_chat = () => {
 
     lastChatId = currentChatId;
 
-    console.log(allChats)
     load_chat();
 }
 
@@ -363,6 +362,7 @@ const load_chat = () => {
 let last_response_element = null;
 // used when a response is returned
 const render_response = (content) => {
+
     if(last_response_element == null) return
 
     let message = last_response_element.querySelector('p');
@@ -440,7 +440,7 @@ const handleSubmit = async (e) => {
     });
 }
 
-const main = () => {
+const main = async () => {
     menuButton.addEventListener('click', () => {
         toggleMenu()
     })
@@ -503,13 +503,28 @@ const main = () => {
         }
     })
 
+    const savedChats = await chrome.storage.local.get(["allChats"])
+    console.log(savedChats)
+    if(savedChats.allChats) {
+        console.log('overwriting')
+        allChats = savedChats.allChats;
+    }
+
     // send message to background script
     form.addEventListener('submit', handleSubmit)
 
     port.postMessage({ action: 'refresh' });
     
+    create_new_chat(); // create new chat when user starts the extension
+
     render_all_chats(); // load elements in menu
     load_chat(); // load chat history
+
+    // When the user leaves the chrome extension save the chat history
+    window.addEventListener('blur', () => {
+        // set chrome local storage
+        chrome.storage.local.set(({ allChats }));
+    })
 }
 
 main();
