@@ -414,7 +414,8 @@ const main = async () => {
 
     // starts the highlighter
     const start_highlighter = (x, y) => {
-        draw_path = true
+        // draw_path = true
+        highlight = true
         highlight_area.style.pointerEvents = 'auto'
         highlight_area.style.cursor = 'crosshair'
 
@@ -474,7 +475,8 @@ const main = async () => {
             if(highlight) {
                 // where the highlight starts
                 h_start = { x: e.clientX, y: e.clientY }
-                start_highlighter(h_start.x, h_start.y)
+                draw_path = true
+                start_highlighter()
             }
         })
 
@@ -608,11 +610,12 @@ const main = async () => {
     testHighlight.onclick = async () => {
         // this will begin the highlighter
         await close_highlighter()
-        highlight = true
-        highlight_area.style.pointerEvents = 'auto'
-        highlight_area.style.cursor = 'crosshair'
+        start_highlighter()
+        // highlight = true
+        // highlight_area.style.pointerEvents = 'auto'
+        // highlight_area.style.cursor = 'crosshair'
 
-        gradient_outer.classList.add('active')
+        // gradient_outer.classList.add('active')
     }
     
     testMenu.appendChild(moveAround)

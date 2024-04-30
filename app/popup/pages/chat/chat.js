@@ -43,26 +43,22 @@ let allChats = [
         },
     ], title: 'test1', id: 'testid1'},
     // timestamp set from yesterday
-    {timestamp: Date.now() - 86400000, chatHistory: [
-        {
-            role: 'user',
-            content: 'how far is the sun from the earth?2'
-        },
-    ], title: 'test2', id: 'testid2'},
+    {timestamp: Date.now() - 86400000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?2'},], title: 'test2', id: 'testid2'},
     // timestamp set from last week
-    {timestamp: Date.now() - 604800000, chatHistory: [
-        {
-            role: 'user',
-            content: 'how far is the sun from the earth?3'
-        },
-    ], title: 'test3', id: 'testid3'},
+    {timestamp: Date.now() - 604800000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?3'},], title: 'test3', id: 'testid3'},
     // timestamp set from last month
-    {timestamp: Date.now() - 2628000000, chatHistory: [
-        {
-            role: 'user',
-            content: 'how far is the sun from the earth?4'
-        },
-    ], title: 'test4', id: 'testid4'},
+    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?4'},], title: 'test4', id: 'testid4'},
+    // random test data
+    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?5'},], title: 'test5', id: 'testid5'},
+    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?6'},], title: 'test6', id: 'testid6'},
+    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?7'},], title: 'test7', id: 'testid7'},
+    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?8'},], title: 'test8', id: 'testid8'},
+    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?9'},], title: 'test9', id: 'testid9'},
+    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?5'},], title: 'test5', id: 'testid5'},
+    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?6'},], title: 'test6', id: 'testid6'},
+    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?7'},], title: 'test7', id: 'testid7'},
+    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?8'},], title: 'test8', id: 'testid8'},
+    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?9'},], title: 'test9', id: 'testid9'},
 ]
 
 // allChats = []
@@ -140,6 +136,8 @@ const create_new_chat = () => {
     lastChatId = currentChatId;
 
     load_chat();
+
+    console.log(allChats)
 }
 
 const hide_menu_header = (id) => {
@@ -230,12 +228,14 @@ const render_all_chats = () => {
     }
 
     const current_date = Date.now();
+    // const current_date = new Date();
     // const menu_header = create_menu_header('Today');
     // menu_section.appendChild(menu_header);
     
     allChats.sort((a, b) => b.timestamp - a.timestamp); // sort by timestamp
 
     allChats.forEach(chat => {
+        console.log(chat)
         const timestamp = chat.timestamp;
 
         const menu_item = create_menu_item(chat);
@@ -404,6 +404,7 @@ const update_chat_history = (role = 0, content) => {
 
     // update timestamp (last sent message)
     allChats[currentChat].timestamp = Date.now();
+    // allChats[currentChat].timestamp = new Date();
 }
 
 // ___________________________________FORM___________________________________
@@ -425,7 +426,7 @@ const handleSubmit = async (e) => {
     console.log('Submitting query:', query)
 
     update_chat_history(0, query);
-    console.log(allChats[currentChat].title, NEW_CHAT_NAME)
+    // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
     if(allChats[currentChat].title === NEW_CHAT_NAME) setTitle(query);
     load_chat();
     response_loading();
@@ -503,12 +504,12 @@ const main = async () => {
         }
     })
 
-    const savedChats = await chrome.storage.local.get(["allChats"])
-    console.log(savedChats)
-    if(savedChats.allChats) {
-        console.log('overwriting')
-        allChats = savedChats.allChats;
-    }
+    // const savedChats = await chrome.storage.local.get(["allChats"])
+    
+    // if(savedChats.allChats) {
+    //     console.log('overwriting')
+    //     allChats = savedChats.allChats;
+    // }
 
     // send message to background script
     form.addEventListener('submit', handleSubmit)
@@ -523,7 +524,8 @@ const main = async () => {
     // When the user leaves the chrome extension save the chat history
     window.addEventListener('blur', () => {
         // set chrome local storage
-        chrome.storage.local.set(({ allChats }));
+        // chrome.storage.local.set(({ allChats }));
+        chrome.storage.local.set(({ allChats: [] }));
     })
 }
 
