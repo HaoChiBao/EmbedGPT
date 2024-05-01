@@ -274,7 +274,12 @@ body {
 .menu .menu-section .menu-header .menu-items .menu-item p:focus{
     outline: none;
     border-radius: 0;
-    border-bottom: 1px solid #000;
+    /* linear gradient underline */
+    background-image: linear-gradient(90deg, #715AFF 0%, #8DADFF 100%);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+
 }
 
 .menu .menu-section .menu-header .menu-items .menu-item .chat-dots{

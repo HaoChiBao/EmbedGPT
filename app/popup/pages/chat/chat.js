@@ -62,7 +62,7 @@ const port = chrome.runtime.connect({ name: "content" });
 let lastChatId = null;
 
 let allChats = []
-// allChats = test_data
+allChats = test_data
 
 let currentChat = null;
 // let currentChatId = allChats[currentChat].id;
@@ -187,6 +187,36 @@ const close_all_edit_menus = () => {
     })
 }
 
+const activateChat = (chat) => {
+    if(!chat) return
+    lastChatId = chat.id;
+    
+    chat.classList.add('active');
+    const chat_image = chat.querySelector('.chat-image');
+    chat_image.style.transform = 'scale(0)';
+    setTimeout(() => {
+        chat_image.src = '../../../../images/stars.png';
+        chat_image.style.transform = 'scale(1)';
+    }, 200)
+}
+
+const deactivateChat = (chat) => {
+    if(!chat) return
+
+    chat.classList.remove('active');
+    const chat_image = chat.querySelector('.chat-image');
+    chat_image.style.transform = 'scale(0)';
+    setTimeout(() => {
+        chat_image.src = '../../../../images/chat.png';
+        chat_image.style.transform = 'scale(1)';
+    }, 200)
+}
+
+const deactivateLastChat = () => {
+    deactivateChat(document.getElementById(lastChatId));
+}
+
+
 const create_menu_item = (chat) => {
     const menu_item = document.createElement('div');
     menu_item.classList.add('menu-item');
@@ -232,8 +262,9 @@ const create_menu_item = (chat) => {
 
     chat_dots.addEventListener('click', (e) => {
         e.stopPropagation();
+        const isActive = edit_menu.classList.contains('active');
         close_all_edit_menus();
-        edit_menu.classList.toggle('active');
+        if(!isActive) edit_menu.classList.add('active');
     });
 
     edit_menu.addEventListener('click', (e) => {
@@ -261,6 +292,13 @@ const create_menu_item = (chat) => {
         setTitle(chat_text.innerHTML);
     }
 
+    const open_chat = () => {
+        currentChat = allChats.indexOf(chat);
+        currentChatHistory = allChats[currentChat].chatHistory;
+        currentChatId = allChats[currentChat].id;
+        load_chat();
+    }
+
     let is_editing = false;
     chat_text.addEventListener('click', (e) => {
         if(is_editing) e.stopPropagation();
@@ -270,6 +308,11 @@ const create_menu_item = (chat) => {
         // make chat title editable
         close_all_edit_menus();
         start_edit();
+        
+        deactivateLastChat();
+        activateChat(menu_item);
+
+        open_chat();
     });
 
     // is_editing = false; when user presses enter or clicks outside of chat_text
@@ -281,8 +324,6 @@ const create_menu_item = (chat) => {
         }
     })
 
-
-    
     delete_btn.addEventListener('click', (e) => {
         close_all_edit_menus();
 
@@ -295,10 +336,7 @@ const create_menu_item = (chat) => {
 
     menu_item.addEventListener('click', () => {
         close_all_edit_menus();
-        currentChat = allChats.indexOf(chat);
-        currentChatHistory = allChats[currentChat].chatHistory;
-        currentChatId = allChats[currentChat].id;
-        load_chat();
+        open_chat();
     })
 
     return menu_item;
@@ -353,35 +391,6 @@ const render_all_chats = () => {
     })
 
     // menu items
-    const activateChat = (chat) => {
-        if(!chat) return
-        lastChatId = chat.id;
-        
-        chat.classList.add('active');
-        const chat_image = chat.querySelector('.chat-image');
-        chat_image.style.transform = 'scale(0)';
-        setTimeout(() => {
-            chat_image.src = '../../../../images/stars.png';
-            chat_image.style.transform = 'scale(1)';
-        }, 200)
-    }
-
-    const deactivateChat = (chat) => {
-        if(!chat) return
-
-        chat.classList.remove('active');
-        const chat_image = chat.querySelector('.chat-image');
-        chat_image.style.transform = 'scale(0)';
-        setTimeout(() => {
-            chat_image.src = '../../../../images/chat.png';
-            chat_image.style.transform = 'scale(1)';
-        }, 200)
-    }
-
-    const deactivateLastChat = () => {
-        deactivateChat(document.getElementById(lastChatId));
-    }
-
     const menu_chats = document.querySelectorAll('.menu-item');
     menu_chats.forEach(menu_chat => {
         
