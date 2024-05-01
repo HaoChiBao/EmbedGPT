@@ -17,6 +17,7 @@ const chat_body = document.getElementById('chat-body');
 
 // form/query elements
 const form = document.getElementById('chat-search');
+const search_input = form.querySelector('input');
 
 const port = chrome.runtime.connect({ name: "content" });
 
@@ -578,6 +579,8 @@ const main = async () => {
         // chrome.storage.local.set(({ allChats }));
         chrome.storage.local.set(({ allChats: [] }));
     })
+
+    search_input.focus();
 }
 
 main();
