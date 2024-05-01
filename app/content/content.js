@@ -625,4 +625,4 @@ const main = async () => {
     document.body.appendChild(testMenu)
     makeElementDraggable(testMenu, moveAround)
 }
-main()
+// main()

@@ -61,8 +61,9 @@ const port = chrome.runtime.connect({ name: "content" });
 // determine last chat activated
 let lastChatId = null;
 
+const TEST = false;
 let allChats = []
-allChats = test_data
+if(TEST) allChats = test_data
 
 let currentChat = null;
 // let currentChatId = allChats[currentChat].id;
@@ -308,11 +309,13 @@ const create_menu_item = (chat) => {
         // make chat title editable
         close_all_edit_menus();
         start_edit();
-        
+
+        // change chat menu item to focus
         deactivateLastChat();
         activateChat(menu_item);
 
-        open_chat();
+        // open chat if not already open
+        if(currentChatId !== chat.id) open_chat();
     });
 
     // is_editing = false; when user presses enter or clicks outside of chat_text
@@ -327,7 +330,8 @@ const create_menu_item = (chat) => {
     delete_btn.addEventListener('click', (e) => {
         close_all_edit_menus();
 
-        if(chat.title == NEW_CHAT_NAME) return
+        console.log(chat.chatHistory.length)
+        if(chat.title == NEW_CHAT_NAME && chat.chatHistory.length === 0) return
         if(chat.id === currentChatId) {create_new_chat()}
         
         allChats = allChats.filter(curr_chat => curr_chat.id !== chat.id);
@@ -524,9 +528,11 @@ const handleSubmit = async (e) => {
 
     console.log('Submitting query:', query)
 
+    // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
+    console.log(currentChatHistory.length)
+    if(allChats[currentChat].title === NEW_CHAT_NAME && currentChatHistory.length === 0 ) setTitle(query);
     update_chat_history(0, query);
     // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
-    if(allChats[currentChat].title === NEW_CHAT_NAME) setTitle(query);
     load_chat();
     response_loading();
 
@@ -603,12 +609,11 @@ const main = async () => {
         }
     })
 
-    // const savedChats = await chrome.storage.local.get(["allChats"])
+    const savedChats = await chrome.storage.local.get(["allChats"])
     
-    // if(savedChats.allChats) {
-    //     console.log('overwriting')
-    //     allChats = savedChats.allChats;
-    // }
+    if(savedChats.allChats) {
+        if (!TEST) allChats = savedChats.allChats;
+    }
 
     // send message to background script
     form.addEventListener('submit', handleSubmit)
@@ -622,10 +627,9 @@ const main = async () => {
     load_chat(); // load chat history
 
     // When the user leaves the chrome extension save the chat history
-    window.addEventListener('blur', () => {
+    window.addEventListener('blur', async () => {
         // set chrome local storage
-        // chrome.storage.local.set(({ allChats }));
-        chrome.storage.local.set(({ allChats: [] }));
+        await chrome.storage.local.set(({ allChats }));
     })
 
     search_input.focus();
