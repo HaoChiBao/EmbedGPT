@@ -179,7 +179,13 @@ const create_menu_header = (title) => {
     return menu_header;
 }
 
-// 
+const close_all_edit_menus = () => {
+    const all_edit_menus = document.querySelectorAll('.edit-menu');
+    all_edit_menus.forEach(menu => {
+        menu.classList.remove('active');
+    })
+}
+
 const create_menu_item = (chat) => {
     const menu_item = document.createElement('div');
     menu_item.classList.add('menu-item');
@@ -200,12 +206,55 @@ const create_menu_item = (chat) => {
 
     chat_dots.appendChild(dots_image);
 
+    const edit_menu = document.createElement('div');
+    edit_menu.classList.add('edit-menu');
+
+    const rename_btn = document.createElement('button');
+    rename_btn.classList.add('rename-btn');
+    const rename_img = document.createElement('img');
+    rename_img.src = '../../../../images/rename.png';
+    rename_btn.appendChild(rename_img);
+
+    const delete_btn = document.createElement('button');
+    delete_btn.classList.add('delete-btn');
+    const delete_img = document.createElement('img');
+    delete_img.src = '../../../../images/delete.png';
+    delete_btn.appendChild(delete_img);
+
+    edit_menu.appendChild(rename_btn);
+    edit_menu.appendChild(delete_btn);
+
     menu_item.appendChild(chat_image);
     menu_item.appendChild(chat_text);
     menu_item.appendChild(chat_dots);
+    menu_item.appendChild(edit_menu);
+
+    chat_dots.addEventListener('click', (e) => {
+        e.stopPropagation();
+        close_all_edit_menus();
+        edit_menu.classList.toggle('active');
+    });
+
+    edit_menu.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+    
+    rename_btn.addEventListener('click', (e) => {
+    });
+    
+    delete_btn.addEventListener('click', (e) => {
+        close_all_edit_menus();
+
+        if(chat.title == NEW_CHAT_NAME) return
+        if(chat.id === currentChatId) {create_new_chat()}
+        
+        allChats = allChats.filter(curr_chat => curr_chat.id !== chat.id);
+        render_all_chats();
+    })
 
     return menu_item;
 }
+menu_section.addEventListener('scroll', (e) => {close_all_edit_menus()})
 
 /* 
     sort chats by timestamps
@@ -233,9 +282,8 @@ const render_all_chats = () => {
     // menu_section.appendChild(menu_header);
     
     allChats.sort((a, b) => b.timestamp - a.timestamp); // sort by timestamp
-
-    allChats.forEach(chat => {
-        console.log(chat)
+    console.log(allChats)
+    allChats.forEach((chat, index) => {
         const timestamp = chat.timestamp;
 
         const menu_item = create_menu_item(chat);
@@ -250,6 +298,8 @@ const render_all_chats = () => {
 
         menu_item.addEventListener('click', () => {
             currentChat = allChats.indexOf(chat);
+            console.log(chat)
+            console.log(index)
             currentChatHistory = allChats[currentChat].chatHistory;
             currentChatId = allChats[currentChat].id;
             load_chat();
@@ -517,6 +567,7 @@ const main = async () => {
     port.postMessage({ action: 'refresh' });
     
     create_new_chat(); // create new chat when user starts the extension
+
 
     render_all_chats(); // load elements in menu
     load_chat(); // load chat history

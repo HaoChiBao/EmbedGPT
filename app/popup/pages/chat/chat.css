@@ -175,7 +175,8 @@ body {
     /* border-style: dotted; */
 
     overflow-y: auto;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
+    /* overflow-x: visible; */
 
     -webkit-mask-image: linear-gradient(to bottom,black 95%,transparent 100%);
     mask-image: linear-gradient(to bottom,black 95%,transparent 100%);
@@ -195,6 +196,8 @@ body {
 
     display: none;
 }
+
+/* ____MENU ITEM_____ */
 .menu .menu-section .menu-header .menu-item-timestamp{
     aspect-ratio: 1/1;
     height: 1rem;
@@ -318,6 +321,60 @@ body {
 
 .menu .menu-section .menu-header .menu-items .menu-item:hover .chat-dots{opacity: 1;}
 .menu .menu-section .menu-header .menu-items .menu-item:hover .chat-image{filter: invert(0);}
+
+.menu .menu-section .menu-header .menu-items .menu-item .edit-menu{
+    position: absolute;
+    right: -2rem;
+    
+    aspect-ratio: 4/9;
+    width: 1.6rem;
+
+    opacity: 0;
+    pointer-events: none;
+    
+    border-radius: 1rem;
+    background-color: #DEDEDE;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+}
+.menu .menu-section .menu-header .menu-items .menu-item .edit-menu.active{opacity: 1;pointer-events: all;}
+
+.menu .menu-section .menu-header .menu-items .menu-item .edit-menu button{
+    border: none;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+    
+    width: 100%;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.menu .menu-section .menu-header .menu-items .menu-item .edit-menu button img{
+    aspect-ratio: 1/1;
+    width: 1rem;
+    margin: 0.2rem;
+}
+
+.menu .menu-section .menu-header .menu-items .menu-item .edit-menu .rename-btn{
+    height: 55%;
+    background-color: #fff;
+    border-radius: 1rem;
+}
+.menu .menu-section .menu-header .menu-items .menu-item .edit-menu .rename-btn:hover{background: linear-gradient(90deg, #715AFF 0%, #8DADFF 100%);}
+.menu .menu-section .menu-header .menu-items .menu-item .edit-menu .rename-btn:hover img{filter: invert(1);}
+
+.menu .menu-section .menu-header .menu-items .menu-item .edit-menu .delete-btn{
+    height: 45%;
+    filter: grayscale(100%);
+}
+.menu .menu-section .menu-header .menu-items .menu-item .edit-menu .delete-btn:hover{filter: grayscale(0%);}
 
 /* __________________________________________HEADER____________________________________________ */
 /* this element was removed (who tf names their gpt chats? */
