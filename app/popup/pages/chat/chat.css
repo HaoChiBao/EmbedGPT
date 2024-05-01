@@ -271,6 +271,11 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.menu .menu-section .menu-header .menu-items .menu-item p:focus{
+    outline: none;
+    border-radius: 0;
+    border-bottom: 1px solid #000;
+}
 
 .menu .menu-section .menu-header .menu-items .menu-item .chat-dots{
     position: absolute;

@@ -1,30 +1,4 @@
-// ________ Global Variables ______
-
-const NEW_CHAT_NAME = "New Chat";
-
-// menu elements
-const menu = document.querySelector('.menu');
-const menuButton = document.querySelector('.menu-button');
-const sections = document.querySelectorAll('section');
-
-const menu_section = document.querySelector('.menu-section');
-
-const create_chat_button = document.getElementById('create-new-chat');
-const create_chat_img = create_chat_button.querySelector('img'); 
-
-// chat body elements
-const chat_body = document.getElementById('chat-body');
-
-// form/query elements
-const form = document.getElementById('chat-search');
-const search_input = form.querySelector('input');
-
-const port = chrome.runtime.connect({ name: "content" });
-
-// determine last chat activated
-let lastChatId = null;
-
-let allChats = [
+const test_data = [
     {timestamp: Date.now() - 10000000, chatHistory: [
         {
             role: 'user',
@@ -61,8 +35,34 @@ let allChats = [
     {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?8'},], title: 'test8', id: 'testid8'},
     {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?9'},], title: 'test9', id: 'testid9'},
 ]
+// ________ Global Variables ______
 
-// allChats = []
+const NEW_CHAT_NAME = "New Chat";
+
+// menu elements
+const menu = document.querySelector('.menu');
+const menuButton = document.querySelector('.menu-button');
+const sections = document.querySelectorAll('section');
+
+const menu_section = document.querySelector('.menu-section');
+
+const create_chat_button = document.getElementById('create-new-chat');
+const create_chat_img = create_chat_button.querySelector('img'); 
+
+// chat body elements
+const chat_body = document.getElementById('chat-body');
+
+// form/query elements
+const form = document.getElementById('chat-search');
+const search_input = form.querySelector('input');
+
+const port = chrome.runtime.connect({ name: "content" });
+
+// determine last chat activated
+let lastChatId = null;
+
+let allChats = []
+// allChats = test_data
 
 let currentChat = null;
 // let currentChatId = allChats[currentChat].id;
@@ -239,9 +239,49 @@ const create_menu_item = (chat) => {
     edit_menu.addEventListener('click', (e) => {
         e.stopPropagation();
     });
+
+    
+    const start_edit = () => {
+        chat_text.contentEditable = true;
+        
+        // highlight text
+        const range = document.createRange();
+        range.selectNodeContents(chat_text);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        is_editing = true;
+    }
+
+    const stop_edit = () => {
+        chat_text.contentEditable = false;
+        is_editing = false;
+        if(chat_text.innerHTML === '') chat_text.innerHTML = chat.title;
+        setTitle(chat_text.innerHTML);
+    }
+
+    let is_editing = false;
+    chat_text.addEventListener('click', (e) => {
+        if(is_editing) e.stopPropagation();
+    })
     
     rename_btn.addEventListener('click', (e) => {
+        // make chat title editable
+        close_all_edit_menus();
+        start_edit();
     });
+
+    // is_editing = false; when user presses enter or clicks outside of chat_text
+    chat_text.addEventListener('blur', (e) => {stop_edit();})
+    chat_text.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter') {
+            e.preventDefault();
+            stop_edit();
+        }
+    })
+
+
     
     delete_btn.addEventListener('click', (e) => {
         close_all_edit_menus();
@@ -251,6 +291,14 @@ const create_menu_item = (chat) => {
         
         allChats = allChats.filter(curr_chat => curr_chat.id !== chat.id);
         render_all_chats();
+    })
+
+    menu_item.addEventListener('click', () => {
+        close_all_edit_menus();
+        currentChat = allChats.indexOf(chat);
+        currentChatHistory = allChats[currentChat].chatHistory;
+        currentChatId = allChats[currentChat].id;
+        load_chat();
     })
 
     return menu_item;
@@ -296,15 +344,6 @@ const render_all_chats = () => {
         else if(timestamp > current_date - 604800000) {header_id = 2} // Last Week 
         else if(timestamp > current_date - 2628000000) {header_id = 3} // Last Month 
         else {header_id = 4} //Older
-
-        menu_item.addEventListener('click', () => {
-            currentChat = allChats.indexOf(chat);
-            console.log(chat)
-            console.log(index)
-            currentChatHistory = allChats[currentChat].chatHistory;
-            currentChatId = allChats[currentChat].id;
-            load_chat();
-        })
 
         const menu_header = get_menu_header(header_id);
         const menu_items = menu_header.querySelector('.menu-items');
