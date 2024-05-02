@@ -120,6 +120,8 @@ const main = async () => {
                     }
                 }, 20000)
                 break;
+            default:
+                console.log(action)
         }
         
     }
@@ -413,7 +415,8 @@ const main = async () => {
     }
 
     // starts the highlighter
-    const start_highlighter = (x, y) => {
+    const start_highlighter = async () => {
+        await close_highlighter()
         // draw_path = true
         highlight = true
         highlight_area.style.pointerEvents = 'auto'
@@ -476,7 +479,6 @@ const main = async () => {
                 // where the highlight starts
                 h_start = { x: e.clientX, y: e.clientY }
                 draw_path = true
-                start_highlighter()
             }
         })
 
@@ -583,7 +585,18 @@ const main = async () => {
     })
 
     //______________________________________________ TESTING ______________________________________________
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        switch(request){
+            case 'highlight':
+                console.log('highlighting')
+                start_highlighter()
+                break;
+            default:
+                console.log(request)
+        }
+    })
 
+    return
     const moveAround = document.createElement('div')
     moveAround.className = 'move-around'
     
@@ -609,7 +622,7 @@ const main = async () => {
     testHighlight.textContent = 'Highlight'
     testHighlight.onclick = async () => {
         // this will begin the highlighter
-        await close_highlighter()
+        // await close_highlighter()
         start_highlighter()
         // highlight = true
         // highlight_area.style.pointerEvents = 'auto'
@@ -625,4 +638,4 @@ const main = async () => {
     document.body.appendChild(testMenu)
     makeElementDraggable(testMenu, moveAround)
 }
-// main()
+main()

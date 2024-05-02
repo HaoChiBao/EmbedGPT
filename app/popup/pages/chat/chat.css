@@ -488,7 +488,7 @@ body {
     border: none;
     outline: none;
 
-    font-size: 1.2rem;
+    font-size: 1rem;
     width: 100%;
     color: #fff;
 }
@@ -522,4 +522,77 @@ body {
 }
 #chat-search button:active img{
     transform: scale(0.9);
+}
+
+/* -=-=-=-=-=-=-=-=-=-PREMIUM ITEMS-=-=-=-=-=-=-=-=-==--= */
+#premium-items{
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    position: absolute;
+    
+    top: 0.75rem;
+    /* right: 0.75rem; */
+    right: 1rem;
+
+    gap: 1rem;
+    
+    /* width: 43px; */
+    
+    background-color: transparent;
+}
+
+#premium-items button{
+    /* radial gradient */
+    background: radial-gradient(100% 100% at 0% 0%, #C071FF 0%, #8CC1FF 100%);
+    background-position: 0% 50%;
+    
+    height: 2.5rem;
+    aspect-ratio: 1/1;
+    
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: 0.5s ease;
+}
+
+#premium-items button.active{
+    transform: scale(0.5);
+}
+#premium-items button.active:hover{transform: scale(0.5);}
+#premium-items button.active img{
+    opacity: 0;
+}
+
+#premium-items button img{
+    aspect-ratio: 1/1;
+    height: 50%;
+    pointer-events: none;
+    filter: invert(1);
+
+    transition: 0.5s ease;
+}
+
+#premium-items button:hover{
+    transform: translateY(-0.1rem) scale(1.05);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    
+    transition: 0.5s ease;
+}
+#premium-items button:hover img{
+    animation: rock 1s infinite linear;
+}
+
+@keyframes rock {
+    0% {transform: rotate(0deg);}
+    50% {transform: rotate(5deg);}
+    100% {transform: rotate(0deg);}
 }

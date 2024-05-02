@@ -39,6 +39,10 @@ const test_data = [
 
 const NEW_CHAT_NAME = "New Chat";
 
+// premium items
+const premium_items = document.getElementById('premium-items');
+const smart_circle = document.getElementById('smart-circle');
+
 // menu elements
 const menu = document.querySelector('.menu');
 const menuButton = document.querySelector('.menu-button');
@@ -86,6 +90,27 @@ const create_unique_id = () => { // create unique id for each chat
 const get_chat_by_id = (id) => {
     return allChats.find(chat => chat.id === id);
 }
+
+// ________________________________PREMIUM___________________________________
+
+let clickTimeout = null;
+
+const send_message_to_content = async (message) => {
+    await chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.sendMessage(tabs[0].id, message)
+    })
+}
+
+smart_circle.addEventListener('click', () => {
+    smart_circle.classList.add('active');
+    clearTimeout(clickTimeout);
+    clickTimeout = setTimeout(() => {
+        smart_circle.classList.remove('active');
+        send_message_to_content('highlight');
+        window.close()
+    }, 500)
+
+})
 
 // _________________________________MENU___________________________________
 
