@@ -144,6 +144,8 @@ const main = async () => {
         maxY: null,
     }
 
+    const h_MIN_BOXSIZE = 50 // the minimum size of the bounding box (in pixels)
+
     const highlight_area = document.createElement('canvas')
     highlight_area.className = 'highlight-area'
     highlight_area.width = window.innerWidth
@@ -218,7 +220,7 @@ const main = async () => {
 
     let loop = null
     // transforms highlight path into 4 corners
-    const transformHighlightPath= () => {
+    const transformHighlightPath = () => {
         draw_path = false
         highlight = false
         highlight_area.style.pointerEvents = 'none'
@@ -267,6 +269,20 @@ const main = async () => {
         clearInterval(loop)
         // move points to the bounding box
         loop = setInterval(async () => {
+
+            // check if the differeence between the h_bounding_box min and max is greater than the minimum box size
+            if(Math.abs(h_bounding_box.maxX - h_bounding_box.minX) < h_MIN_BOXSIZE){
+                // increase the size of the bounding box
+                const diff = h_MIN_BOXSIZE - Math.abs(h_bounding_box.maxX - h_bounding_box.minX)
+                h_bounding_box.minX -= diff/2
+                h_bounding_box.maxX += diff/2
+            }
+
+            if(Math.abs(h_bounding_box.maxY - h_bounding_box.minY) < h_MIN_BOXSIZE) {
+                const diff = h_MIN_BOXSIZE - Math.abs(h_bounding_box.maxY - h_bounding_box.minY)
+                h_bounding_box.minY -= diff/2
+                h_bounding_box.maxY += diff/2
+            }
 
             let count = 0
             let max_length = top_left.length + top_right.length + bottom_left.length + bottom_right.length
@@ -375,24 +391,28 @@ const main = async () => {
                     }
                     port.postMessage({ action: 'capture', dimensions: dimensions });
                     
-                    let query_x = h_bounding_box.minX - 200
-                    if (query_x < 0) query_x = 20
+                    // allow user to highlight again
+                    start_highlighter()
 
-                    const query_y = h_bounding_box.minY + (h_bounding_box.maxY - h_bounding_box.minY) / 2
-                    h_query_element = createQueryElement(query_x, query_y)
-                    document.body.appendChild(h_query_element)
+                    // let query_x = h_bounding_box.minX - 200
+                    // if (query_x < 0) query_x = 20
 
-                    setTimeout(() => {
-                        h_query_element.style.width = '250px'
-                        h_query_element.style.opacity = 1
-                    }, 100)
+                    // const query_y = h_bounding_box.minY + (h_bounding_box.maxY - h_bounding_box.minY) / 2
+                    // h_query_element = createQueryElement(query_x, query_y)
+                    // document.body.appendChild(h_query_element)
 
-                    await stop_highlighter()
+                    // setTimeout(() => {
+                    //     h_query_element.style.width = '250px'
+                    //     h_query_element.style.opacity = 1
+                    // }, 100)
+
+                    // await stop_highlighter()
                 }
 
             }
 
-        }, 5)
+        // }, 5)
+        }, 1)
     }
 
     // creates the query element (highlighter element that allows the user to type in a query)
@@ -416,7 +436,6 @@ const main = async () => {
 
     // starts the highlighter
     const start_highlighter = async () => {
-        await close_highlighter()
         // draw_path = true
         highlight = true
         highlight_area.style.pointerEvents = 'auto'
@@ -457,6 +476,13 @@ const main = async () => {
         gradient_outer.classList.remove('active')
     }
 
+    const reset_highlighter = async () => {
+        await stop_highlighter()
+        start_highlighter()
+        clearHighlightPath()
+        clearHighlightQuery()
+    }
+
     // when the user finishes highlighting 
     const end_highlighter = async () => {
 
@@ -476,6 +502,7 @@ const main = async () => {
         // highlight event listeners
         window.addEventListener('mousedown', async (e) => {
             if(highlight) {
+                await reset_highlighter()
                 // where the highlight starts
                 h_start = { x: e.clientX, y: e.clientY }
                 draw_path = true
@@ -505,11 +532,16 @@ const main = async () => {
         })
 
         window.addEventListener('mouseup', async (e) => {
-            if(e.button === 2) { // if the user right clicks while highlighting, cancel the highlighter
+            /* cancel the highlighter if: 
+                1. the user right-clicks
+                2. the user only clicks once (DOESN'T DRAW A PATH)
+            */
+
+            if(e.button === 2 || h_path.length <= 2) { 
                 await close_highlighter()
-            }
+            }  
             
-            if(highlight && draw_path) {
+            else if(highlight && draw_path) {
                 h_end = { x: e.clientX, y: e.clientY }
                 await end_highlighter()
             }
@@ -573,16 +605,17 @@ const main = async () => {
     }
 
     startAnimation();
-    let clickOut = false
-    gradient_outer.addEventListener('click', async () => {
-        if (clickOut){
-            await close_highlighter()
-            clickOut = false
-        }
-    })
-    gradient_outer.addEventListener('mousedown', async () => {
-        clickOut = true
-    })
+
+    // let clickOut = false
+    // gradient_outer.addEventListener('click', async () => {
+    //     if (clickOut){
+    //         await close_highlighter()
+    //         clickOut = false
+    //     }
+    // })
+    // gradient_outer.addEventListener('mousedown', async () => {
+    //     clickOut = true
+    // })
 
     //______________________________________________ TESTING ______________________________________________
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
