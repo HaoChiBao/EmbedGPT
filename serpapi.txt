@@ -1,0 +1,257 @@
+{
+  search_metadata: {
+    id: '66394c3b8b7ed20082d2e83b',
+    status: 'Success',
+    json_endpoint: 'https://serpapi.com/searches/21cd6705f7201182/66394c3b8b7ed20082d2e83b.json',
+    created_at: '2024-05-06 21:31:39 UTC',
+    processed_at: '2024-05-06 21:31:39 UTC',
+    google_reverse_image_url: 'https://www.google.com/searchbyimage?image_url=https://i.imgur.com/5bGzZi7.jpg&sbisrc=cr_1_5_2',
+    raw_html_file: 'https://serpapi.com/searches/21cd6705f7201182/66394c3b8b7ed20082d2e83b.html',
+    total_time_taken: 5.35
+  },
+  search_parameters: {
+    engine: 'google_reverse_image',
+    image_url: 'https://i.imgur.com/5bGzZi7.jpg',
+    google_domain: 'google.com',
+    device: 'desktop'
+  },
+  search_information: {
+    organic_results_state: 'Results for exact spelling',
+    query_displayed: 'nasdaq tsla',
+    total_results: 464,
+    time_taken_displayed: 1.78
+  },
+  image_sizes: [
+    {
+      title: 'All sizes',
+      link: 'https://www.google.com/search?sca_esv=be445f0cc062ab15&sca_upv=1&tbs=simg:CAQSmQIJxucrg1834YoajQILEKjU2AQaBggXCD0IQgwLELCMpwgaOgo4CAQSFIsypCSLL4o7rSzEB-4a7Ru_1CdUzGhq1iS6IOv4B1V4VYveWFTMDMADBgMY0g9FvkiAFMAQMCxCOrv4IGgoKCAgBEgSEmJxlDAsQne3BCRqeAQocCglnZW50bGVtYW7apYj2AwsKCS9tLzAxOXA1cQoYCgVldmVudNqliPYDCwoJL20vMDgxcGtqCiAKDHNtYXJ0IGNhc3VhbNqliPYDDAoKL20vMDI1c2t6NwogCg1ubyBleHByZXNzaW9u2qWI9gMLCgkvai85X2JocG4KIAoNc29waGlzdGljYXRlZNqliPYDCwoJL2EvNjlseW53DA&q=nasdaq+tsla&tbm=isch&sa=X&ved=2ahUKEwjIrKPd_PmFAxUVTTABHaSABtQQ2A4oAHoECAcQAg',
+      serpapi_link: 'https://serpapi.com/search.json?device=desktop&engine=google&google_domain=google.com&tbm=isch&tbs=simg%3ACAQSmQIJxucrg1834YoajQILEKjU2AQaBggXCD0IQgwLELCMpwgaOgo4CAQSFIsypCSLL4o7rSzEB-4a7Ru_1CdUzGhq1iS6IOv4B1V4VYveWFTMDMADBgMY0g9FvkiAFMAQMCxCOrv4IGgoKCAgBEgSEmJxlDAsQne3BCRqeAQocCglnZW50bGVtYW7apYj2AwsKCS9tLzAxOXA1cQoYCgVldmVudNqliPYDCwoJL20vMDgxcGtqCiAKDHNtYXJ0IGNhc3VhbNqliPYDDAoKL20vMDI1c2t6NwogCg1ubyBleHByZXNzaW9u2qWI9gMLCgkvai85X2JocG4KIAoNc29waGlzdGljYXRlZNqliPYDCwoJL2EvNjlseW53DA'
+    },
+    {
+      title: 'Medium',
+      link: 'https://www.google.com/search?sca_esv=be445f0cc062ab15&sca_upv=1&tbs=simg:CAQSmQIJxucrg1834YoajQILEKjU2AQaBggXCD0IQgwLELCMpwgaOgo4CAQSFIsypCSLL4o7rSzEB-4a7Ru_1CdUzGhq1iS6IOv4B1V4VYveWFTMDMADBgMY0g9FvkiAFMAQMCxCOrv4IGgoKCAgBEgSEmJxlDAsQne3BCRqeAQocCglnZW50bGVtYW7apYj2AwsKCS9tLzAxOXA1cQoYCgVldmVudNqliPYDCwoJL20vMDgxcGtqCiAKDHNtYXJ0IGNhc3VhbNqliPYDDAoKL20vMDI1c2t6NwogCg1ubyBleHByZXNzaW9u2qWI9gMLCgkvai85X2JocG4KIAoNc29waGlzdGljYXRlZNqliPYDCwoJL2EvNjlseW53DA,isz:m&q=nasdaq+tsla&tbm=isch&sa=X&ved=2ahUKEwjIrKPd_PmFAxUVTTABHaSABtQQ2A4oAXoECAcQAw',
+      serpapi_link: 'https://serpapi.com/search.json?device=desktop&engine=google&google_domain=google.com&tbm=isch&tbs=simg%3ACAQSmQIJxucrg1834YoajQILEKjU2AQaBggXCD0IQgwLELCMpwgaOgo4CAQSFIsypCSLL4o7rSzEB-4a7Ru_1CdUzGhq1iS6IOv4B1V4VYveWFTMDMADBgMY0g9FvkiAFMAQMCxCOrv4IGgoKCAgBEgSEmJxlDAsQne3BCRqeAQocCglnZW50bGVtYW7apYj2AwsKCS9tLzAxOXA1cQoYCgVldmVudNqliPYDCwoJL20vMDgxcGtqCiAKDHNtYXJ0IGNhc3VhbNqliPYDDAoKL20vMDI1c2t6NwogCg1ubyBleHByZXNzaW9u2qWI9gMLCgkvai85X2JocG4KIAoNc29waGlzdGljYXRlZNqliPYDCwoJL2EvNjlseW53DA%2Cisz%3Am'
+    },
+    {
+      title: 'Large',
+      link: 'https://www.google.com/search?sca_esv=be445f0cc062ab15&sca_upv=1&tbs=simg:CAQSmQIJxucrg1834YoajQILEKjU2AQaBggXCD0IQgwLELCMpwgaOgo4CAQSFIsypCSLL4o7rSzEB-4a7Ru_1CdUzGhq1iS6IOv4B1V4VYveWFTMDMADBgMY0g9FvkiAFMAQMCxCOrv4IGgoKCAgBEgSEmJxlDAsQne3BCRqeAQocCglnZW50bGVtYW7apYj2AwsKCS9tLzAxOXA1cQoYCgVldmVudNqliPYDCwoJL20vMDgxcGtqCiAKDHNtYXJ0IGNhc3VhbNqliPYDDAoKL20vMDI1c2t6NwogCg1ubyBleHByZXNzaW9u2qWI9gMLCgkvai85X2JocG4KIAoNc29waGlzdGljYXRlZNqliPYDCwoJL2EvNjlseW53DA,isz:l&q=nasdaq+tsla&tbm=isch&sa=X&ved=2ahUKEwjIrKPd_PmFAxUVTTABHaSABtQQ2A4oAnoECAcQBA',
+      serpapi_link: 'https://serpapi.com/search.json?device=desktop&engine=google&google_domain=google.com&tbm=isch&tbs=simg%3ACAQSmQIJxucrg1834YoajQILEKjU2AQaBggXCD0IQgwLELCMpwgaOgo4CAQSFIsypCSLL4o7rSzEB-4a7Ru_1CdUzGhq1iS6IOv4B1V4VYveWFTMDMADBgMY0g9FvkiAFMAQMCxCOrv4IGgoKCAgBEgSEmJxlDAsQne3BCRqeAQocCglnZW50bGVtYW7apYj2AwsKCS9tLzAxOXA1cQoYCgVldmVudNqliPYDCwoJL20vMDgxcGtqCiAKDHNtYXJ0IGNhc3VhbNqliPYDDAoKL20vMDI1c2t6NwogCg1ubyBleHByZXNzaW9u2qWI9gMLCgkvai85X2JocG4KIAoNc29waGlzdGljYXRlZNqliPYDCwoJL2EvNjlseW53DA%2Cisz%3Al'
+    }
+  ],
+  inline_images: [
+    {
+      source: 'https://www.ccn.com/author/josiah-wilmoth/page/223',
+      thumbnail: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/a4cb6bd5ecdec4cef4800ced7218bf612fccf6476a8de7cceb8f33724c7e6cbd.jpeg',
+      original: 'https://www.ccn.com/wp-content/uploads/2019/10/elon-musk-tesla-stock-falls-afp.jpg',
+      title: 'Josiah Wilmoth, Author at CCN.com | Page 223 of 250',
+      source_name: 'CCN.com'
+    },
+    {
+      source: 'https://www.tipranks.com/news/tesla-stock-nasdaqtsla-another-court-win-for-ceo-musk',
+      thumbnail: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/a4cb6bd5ecdec4cec8e82516257cee4cef869829637f9fb30822cd4de111bd9c.jpeg',
+      original: 'https://blog.tipranks.com/wp-content/uploads/2022/08/Elon-Musk-0811-750x406.jpg',
+      title: 'Tesla Stock (NASDAQ:TSLA): Another Court Win for CEO Musk ...',
+      source_name: 'Tipranks'
+    },
+    {
+      source: 'https://www.linkedin.com/posts/aden-m-ali-0a913234_elon-musk-reacts-to-alleged-israeli-airstrike-activity-7186923006923804673-P7CC',
+      thumbnail: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/a4cb6bd5ecdec4ce66844b5888686e874fab4549b835638ae32d4e5218f19806.jpeg',
+      original: 'https://media.licdn.com/dms/image/sync/D5627AQEvm4yzjFN5IA/articleshare-shrink_800/0/1713495966183?e=2147483647&v=beta&t=4u1ysKQ2QHnQYUZz73o5FNOuK4TDlRC90KCDSnD45Wo',
+      title: 'Aden M. Ali on LinkedIn: Elon Musk Reacts To Alleged Israeli ...',
+      source_name: 'LinkedIn'
+    },
+    {
+      source: 'https://www.linkedin.com/posts/philrosen_tesla-stock-will-gain-550-and-spacexs-valuation-activity-7157076611274604544-LzDa',
+      thumbnail: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/a4cb6bd5ecdec4cec1fe13c0c444002582eae1a0ebdb21ad2fc010c83d61db7d.jpeg',
+      original: 'https://media.licdn.com/dms/image/sync/D4E27AQGBnrNOepDAlg/articleshare-shrink_800/0/1711515814848?e=2147483647&v=beta&t=MMotVInAIaH7VxlZZi8WLX-DGGKAjftVc2_nRXiEV7c',
+      title: 'Tesla stock gains and SpaceX valuations under Musk | Phil ...',
+      source_name: 'LinkedIn'
+    },
+    {
+      source: 'https://www.proactiveinvestors.com/companies/news/204377/tesla-chief-elon-musk-faces-lawsuit-from-short-seller-andrew-left-of-citron-research-204377.html',
+      thumbnail: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/a4cb6bd5ecdec4cecac7c148cd541656baf3518815326882019ebde382b3a03e.jpeg',
+      original: 'https://cdn.proactiveinvestors.com/eyJidWNrZXQiOiJwYS1jZG4iLCJrZXkiOiJ1cGxvYWRcL05ld3NcL0ltYWdlXC8yMDE4XzA5XC8xNTM2MjYwMjQwX2Vsb25tdXNrLmpwZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6NDIwLCJoZWlnaHQiOjE5NSwiZml0IjoiY292ZXIifX19',
+      title: 'Tesla chief Elon Musk faces lawsuit from short-seller Andrew ...',
+      source_name: 'Proactive Investors'
+    },
+    {
+      source: 'https://www.linkedin.com/posts/jonathanshockley_elon-musks-common-sense-rule-to-make-you-activity-7161442341365481472-Xk9y',
+      thumbnail: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/a4cb6bd5ecdec4ceb892444b82e31da11a7021e5e53d86a118330cf9a23b50e4.jpeg',
+      original: 'https://media.licdn.com/dms/image/sync/D5627AQFmUc7ZPcwHrg/articleshare-shrink_800/0/1711398803528?e=2147483647&v=beta&t=xwbjq9eLeUPfZMNaGDPhmT4ZQdpUWcpm_G81IT3EZg0',
+      title: "Jonathan S. on LinkedIn: Elon Musk's Common-Sense Rule to ...",
+      source_name: 'LinkedIn'
+    },
+    {
+      source: 'https://www.prkernel.com/%D1%82%D0%BE%D0%B2%D0%B0-%D0%B5-%D0%BA%D0%B0%D1%82%D0%BE-%D0%BC%D0%B0%D0%B3%D0%B8%D1%8F-%D0%BA%D0%B0%D0%B7%D0%B2%D0%B0-%D0%B8%D0%BB%D0%BE%D0%BD-%D0%BC%D1%8A%D1%81%D0%BA-%D0%B4/',
+      original: 'https://cdn.benzinga.com/files/images/story/2024/USAFA-Hosts-Elon-Musk_3.jpeg?width=1200&height=800&fit=crop',
+      title: 'Това е като магия“, казва Илон Мъск, докато контролираният ...',
+      source_name: 'PRKernel'
+    },
+    {
+      source: 'https://finance.yahoo.com/news/tesla-lost-250-billion-market-161135552.html',
+      original: 'https://s.yimg.com/ny/api/res/1.2/J.b9R1SCne0C_qYo5SEmmA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MDtoPTQyNw--/https://media.zenfs.com/en/Benzinga/c885b4d27e1acacd779688160c778742',
+      title: 'Tesla Has Lost $250 Billion in Market Cap Since Elon Musk ...',
+      source_name: 'Yahoo Finance'
+    },
+    {
+      source: 'https://www.wallstreetreporter.com/2022/10/20/tesla-inc-nasdaq-tsla-ceo-elon-musk-i-see-potential-path-for-tesla-to-be-worth-more-than-apple-and-saudi-aramco-combined/',
+      original: 'https://www.wallstreetreporter.com/wp-content/uploads/2022/01/Elon_Musk_Royal_Society_crop2-461x381.jpg',
+      title: 'Tesla, Inc. (NASDAQ: TSLA) CEO Elon Musk: “I See Potential ...',
+      source_name: 'Wall Street Reporter'
+    },
+    {
+      source: 'https://thebull.com.au/news/tesla-shares-trading-up-premarket-analyst-price-target-adjusts/',
+      original: 'https://thebull.com.au/wp-content/uploads/2019/12/Elon-Musk-300x200.jpg',
+      title: 'Tesla shares (NASDAQ: TSLA) trading up in premarket despite ...',
+      source_name: 'The Bull'
+    },
+    {
+      source: 'https://markets.businessinsider.com/news/stocks/tesla-investors-slam-elon-musk-in-open-letter-the-board-has-allowed-the-ceo-to-be-overcommitted-1032251111',
+      original: 'https://cdn.benzinga.com/files/imagecache/1024x768xUP/images/story/2023/04/22/elon_musk.jpg',
+      title: "Tesla Investors Slam Elon Musk In Open Letter: 'The Board ...",
+      source_name: 'Markets Insider - Business Insider'
+    },
+    {
+      source: 'https://www.proactiveinvestors.com/companies/news/968849/tesla-ceo-elon-musk-tweets-that-he-is-thinking-of-quitting-his-jobs-968849.html',
+      original: 'https://cdn.proactiveinvestors.com/eyJidWNrZXQiOiJwYS1jZG4iLCJrZXkiOiJ1cGxvYWRcL05ld3NcL0ltYWdlXC8yMDIxXzEyXC8xNjM5MTI2MDQ4XzIwMjAtMTEtMjUtMTMtMjctMTJfZWNkZWQ5OWMxYjBlNmY1MTJjNGY5NTRhNTIxNWExZTguanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0MjAsImhlaWdodCI6MTk1LCJmaXQiOiJjb3ZlciJ9fX0=',
+      title: "Tesla CEO Elon Musk tweets he is 'thinking of quitting' his ...",
+      source_name: 'Proactive Investors'
+    },
+    {
+      source: 'https://www.marketbeat.com/stocks/NASDAQ/TSLA/',
+      original: 'https://insidertrades.com/media/elon-musk-NASDAQ-TSLA.jpg',
+      title: 'Tesla (TSLA) Stock Price, News & Analysis',
+      source_name: 'MarketBeat'
+    },
+    {
+      source: 'https://www.dailymail.co.uk/news/article-5959057/Tesla-stock-plummets-Elon-Musks-Twitter-rants.html',     
+      original: 'https://i.dailymail.co.uk/i/newpix/2018/07/16/17/4E5092AE00000578-0-image-a-3_1531757438657.jpg',       
+      title: "Tesla stock plummets after Elon Musk's Twitter rants | Daily ...",
+      source_name: 'Daily Mail'
+    },
+    {
+      source: 'https://www.wealthly.com/stock/TSLA',
+      original: 'https://cdn.benzinga.com/files/images/story/2024/05/02/Tesla-CEO-Elon-Musk.jpeg?width=1200&height=800&fit=crop',
+      title: 'Tesla (TSLA) | Wealthly',
+      source_name: 'Wealthly'
+    },
+    {
+      source: 'https://maxtrend.net/tech-titans-conflict-mark-zuckerberg-rises-as-elon-musk-falters-in-billionaire-rankings-tesla-nasdaqtsla-amazon-com-nasdaqamzn/',
+      original: 'https://cdn.benzinga.com/files/images/story/2024/04/07/shutterstock_2403418425.jpg?width=1200&height=800&fit=crop',
+      title: 'Tech Titans Conflict: Mark Zuckerberg Rises As Elon Musk ...',
+      source_name: 'Maxtrend'
+    },
+    {
+      source: 'https://wallstreetwindow.com/2020/02/the-tesla-nasdaq-tsla-short-squeeze-is-now-one-for-the-history-books-mike-swanson-02-04-2020/',
+      original: 'https://i0.wp.com/wallstreetwindow.com/wp-content/uploads/2018/05/Elon_Musk_2015.jpg?fit=256%2C376&ssl=1',
+      title: 'The Tesla (NASDAQ: TSLA) Short Squeeze Is Now One For The ...',
+      source_name: 'WallStreetWindow.com'
+    },
+    {
+      source: 'https://www.facebook.com/EVOTradeClub/',
+      original: 'https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=149024466971591',
+      title: 'EVO Trading Club',
+      source_name: 'Facebook'
+    },
+    {
+      source: 'https://seekingalpha.com/article/4180684-investor-sentiment-and-tesla-stock-price',
+      original: 'https://static.seekingalpha.com/uploads/2018/6/8/47444632-15284818076436245_origin.jpg',
+      title: 'Investor Sentiment And Tesla Stock Price (NASDAQ:TSLA ...',
+      source_name: 'Seeking Alpha'
+    },
+    {
+      source: 'https://www.pinterest.com/pin/heres-how-much-a-1000-investment-in-tesla-stock-will-be-worth-in-2030-if-ron-barons-price-target-hits-tesla-nasdaqtsla-benzin-in-2023--1146377280132021452/',
+      original: 'https://i.pinimg.com/736x/c7/01/48/c70148eb78668050489eff37e378f21f.jpg',
+      title: "Here's How Much A $1,000 Investment In Tesla Stock Will Be ...",
+      source_name: 'Pinterest'
+    },
+    {
+      source: 'https://us.techjawed.com/web-stories/whats-going-on-with-tesla-stock-today/',
+      original: 'https://us.techjawed.com/wp-content/uploads/2022/10/OIP-1.webp',
+      title: "What's Going On With Tesla Stock Today - Tech Jawed",
+      source_name: 'Tech Jawed'
+    }
+  ],
+  inline_images_link: 'https://www.google.com/search?sca_esv=be445f0cc062ab15&sca_upv=1&tbs=simg:CAESmQIJxucrg1834YoajQILEKjU2AQaBggXCD0IQgwLELCMpwgaOgo4CAQSFIsypCSLL4o7rSzEB-4a7Ru_1CdUzGhq1iS6IOv4B1V4VYveWFTMDMADBgMY0g9FvkiAFMAQMCxCOrv4IGgoKCAgBEgSEmJxlDAsQne3BCRqeAQocCglnZW50bGVtYW7apYj2AwsKCS9tLzAxOXA1cQoYCgVldmVudNqliPYDCwoJL20vMDgxcGtqCiAKDHNtYXJ0IGNhc3VhbNqliPYDDAoKL20vMDI1c2t6NwogCg1ubyBleHByZXNzaW9u2qWI9gMLCgkvai85X2JocG4KIAoNc29waGlzdGljYXRlZNqliPYDCwoJL2EvNjlseW53DA&q=nasdaq+tsla&tbm=isch',
+  inline_images_serpapi_link: 'https://serpapi.com/search.json?device=desktop&engine=google_images&gl=us&google_domain=google.com&hl=en&q=nasdaq+tsla&tbs=simg%3ACAESmQIJxucrg1834YoajQILEKjU2AQaBggXCD0IQgwLELCMpwgaOgo4CAQSFIsypCSLL4o7rSzEB-4a7Ru_1CdUzGhq1iS6IOv4B1V4VYveWFTMDMADBgMY0g9FvkiAFMAQMCxCOrv4IGgoKCAgBEgSEmJxlDAsQne3BCRqeAQocCglnZW50bGVtYW7apYj2AwsKCS9tLzAxOXA1cQoYCgVldmVudNqliPYDCwoJL20vMDgxcGtqCiAKDHNtYXJ0IGNhc3VhbNqliPYDDAoKL20vMDI1c2t6NwogCg1ubyBleHByZXNzaW9u2qWI9gMLCgkvai85X2JocG4KIAoNc29waGlzdGljYXRlZNqliPYDCwoJL2EvNjlseW53DA',
+  image_results: [
+    {
+      position: 1,
+      title: 'Tesla, Inc. (TSLA) Stock Price, Quote, News & History | Nasdaq',
+      link: 'https://www.nasdaq.com/market-activity/stocks/tsla',
+      redirect_link: 'https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.nasdaq.com/market-activity/stocks/tsla&ved=2ahUKEwjIrKPd_PmFAxUVTTABHaSABtQQFnoECAgQAQ',
+      displayed_link: 'https://www.nasdaq.com › Market Activity › Stocks',
+      favicon: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/e5f46d4cd9642319dc807682d7aea2fc667b49fe0ee43fe7.png',
+      snippet: 'Discover real-time Tesla, Inc. Common Stock (TSLA) stock prices, quotes, historical data, news, and Insights for informed trading and investment decisions.',
+      snippet_highlighted_words: [Array],
+      source: 'Nasdaq'
+    },
+    {
+      position: 2,
+      title: 'Tesla, Inc. (TSLA) Stock Price, News, Quote & History',
+      link: 'https://finance.yahoo.com/quote/TSLA/',
+      redirect_link: 'https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://finance.yahoo.com/quote/TSLA/&ved=2ahUKEwjIrKPd_PmFAxUVTTABHaSABtQQFnoECA4QAQ',
+      displayed_link: 'https://finance.yahoo.com › quote › TSLA',
+      favicon: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/e5f46d4cd964231986bf241c64fe94ef279cabf2d7d50b1e.png',
+      snippet: 'Analysis · Options · Holders · Sustainability. NasdaqGS - Nasdaq Real Time Price • USD. Tesla, Inc. (TSLA). Follow. 185.16 +3.97 (+2.19%). As of 2:25 PM EDT.',
+      snippet_highlighted_words: [Array],
+      source: 'Yahoo Finance'
+    },
+    {
+      position: 3,
+      title: 'Live: Tesla Q1 Earnings Call 2024 (TSLA) - YouTube',
+      link: 'https://www.youtube.com/watch?v=SRrLDVKX1HA',
+      redirect_link: 'https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.youtube.com/watch%3Fv%3DSRrLDVKX1HA&ved=2ahUKEwjIrKPd_PmFAxUVTTABHaSABtQQFnoECAoQAQ',
+      displayed_link: '62.6K+ views · 1 week ago',
+      thumbnail: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/e5f46d4cd9642319887afacddb4fe98af6b102e5a639661e09aa6b01397e28ec.jpeg',
+      favicon: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/e5f46d4cd9642319887afacddb4fe98a085ac073d06964c6.png',
+      snippet: "Listen to Elon Musk and Tesla management discuss Tesla's Q1 2024 financial results and answer questions from investors and analysts.",
+      source: 'YouTube · Tesla Daily'
+    },
+    {
+      position: 4,
+      title: 'Tsla Nasdaq Hotsell 1693600284, 46% OFF',
+      link: 'https://support.groundworkgis.org.uk/?a=tsla-nasdaq-hotsell-1693600284-ee-ppybjjSW',
+      redirect_link: 'https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://support.groundworkgis.org.uk/%3Fa%3Dtsla-nasdaq-hotsell-1693600284-ee-ppybjjSW&ved=2ahUKEwjIrKPd_PmFAxUVTTABHaSABtQQFnoECDIQAQ',
+      displayed_link: 'https://support.groundworkgis.org.uk › tesla nasdaq',
+      thumbnail: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/e5f46d4cd96423195381d81b23d1894771b05bb3fb4dd81998ac0e89734d44f3.jpeg',
+      snippet: "Tsla Nasdaq Hotsell 1693600284, This t-shirt is everything you've dreamed of and It feels soft and lightweight, with the right amount of It's comfortable ...",
+      snippet_highlighted_words: [Array],
+      source: 'Groundwork GIS'
+    },
+    {
+      position: 5,
+      title: 'Tsla Nasdaq Hotsell 1693600284, 60% OFF',
+      link: 'https://support.groundworkgis.org.uk/?a=tsla-nasdaq-hotsell-1693600284-ee-26KRO2uV',
+      redirect_link: 'https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://support.groundworkgis.org.uk/%3Fa%3Dtsla-nasdaq-hotsell-1693600284-ee-26KRO2uV&ved=2ahUKEwjIrKPd_PmFAxUVTTABHaSABtQQFnoECCUQAQ',
+      displayed_link: 'https://support.groundworkgis.org.uk › tesla nasdaq',
+      thumbnail: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/e5f46d4cd9642319bbaf6d29f05bc641f0070cb7e3376b934d80852b6e442463.jpeg',
+      snippet: "Tsla Nasdaq Hotsell 1693600284, This t-shirt is everything you've dreamed of and It feels soft and lightweight, with the right amount of It's comfortable ...",
+      snippet_highlighted_words: [Array],
+      source: 'Groundwork GIS'
+    },
+    {
+      position: 6,
+      title: 'Tesla Stock: Latest Updates on TSLA Shares — Eightify',
+      link: 'https://www.fedenatir.org/?y=hh-Rv5Kq9CQ',
+      redirect_link: 'https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.fedenatir.org/%3Fy%3Dhh-Rv5Kq9CQ&ved=2ahUKEwjIrKPd_PmFAxUVTTABHaSABtQQFnoECC8QAQ',
+      displayed_link: 'https://www.fedenatir.org › tsla stock',
+      thumbnail: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/e5f46d4cd964231935304e47ac85e59dd8556aa89cfdd0c9785822567863dc2b.jpeg',
+      favicon: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/e5f46d4cd964231935304e47ac85e59d2d9314879b1addbf.png',
+      snippet: 'Buy Elon Musk (TSLA) Stock Price Is Too High IMO ,Canvas Art Poster |Wall Art |Office Decor Investor Stock Market |Day Trader at Aliexpress for.',
+      snippet_highlighted_words: [Array],
+      source: 'FEDENATIR'
+    },
+    {
+      position: 7,
+      title: 'Tsla nasdaq, 89% off affaire incroyable - mashin-sharji.com',
+      link: 'https://mashin-sharji.com/?h=d63d0d7&iid=17_12726414_1_2',
+      redirect_link: 'https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://mashin-sharji.com/%3Fh%3Dd63d0d7%26iid%3D17_12726414_1_2&ved=2ahUKEwjIrKPd_PmFAxUVTTABHaSABtQQFnoECA0QAQ',
+      displayed_link: 'https://mashin-sharji.com › ...',
+      thumbnail: 'https://serpapi.com/searches/66394c3b8b7ed20082d2e83b/images/e5f46d4cd9642319fcec7d4fbddf7d7e86a2c8581bbfee348b99090299ad8f12.jpeg',
+      snippet: "Commande Tsla nasdaq, Nikola Corporation Vs Tesla Inc How Different?, Opinion A smart way to play Tesla's big stock-market swings using, Tesla NASDAQ hit ...",
+      snippet_highlighted_words: [Array],
+      source: 'mashin-sharji.com'
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import {queryChat} from "./async/func/queryChat.js";
+import {queryChat} from "./async/func/functions.js";
 
 chrome.runtime.onStartup.addListener(() => {
     console.log(`onStartup()`)
@@ -52,7 +52,6 @@ chrome.runtime.onConnect.addListener((port) => {
 
                     response.data.content = await queryChat(chatHistory, null, chat_model)
                     break;
-
             }
             port.postMessage(response);
         });

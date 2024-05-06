@@ -104,8 +104,8 @@ const main = async () => {
                 const img = new Image()     
                 img.src = croppedImageData
                 img.className = 'cropped-image-test'
-                document.body.appendChild(img)
-                console.log(img)
+                // document.body.appendChild(img)
+                // console.log(img)
 
                 const imageData = await fetch(croppedImageData)
                 const blob = await imageData.blob()
@@ -115,7 +115,9 @@ const main = async () => {
                         new ClipboardItem({
                             [blob.type]: blob
                         })
-                    ])
+                    ]).then(() => {
+                        console.log('Image copied to clipboard')
+                    })
                 } catch (e) {
                     console.error(e)
                 }

@@ -49,4 +49,5 @@ const queryChat = async (chatHistory, imageData = null, chat_model = 0) => {
     }
 }
 
+
 export {queryChat};
