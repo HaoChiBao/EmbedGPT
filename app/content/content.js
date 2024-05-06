@@ -100,14 +100,26 @@ const main = async () => {
                 const croppedImageData = await cropDataUrl(dataUrl, dimensions)
                 highlight_imageData = croppedImageData
                 
-                // testing
-                const img = document.createElement('img')
+                // save image to clipboard
+                const img = new Image()     
                 img.src = croppedImageData
                 img.className = 'cropped-image-test'
                 document.body.appendChild(img)
-    
                 console.log(img)
-    
+
+                const imageData = await fetch(croppedImageData)
+                const blob = await imageData.blob()
+                
+                try{
+                    navigator.clipboard.write([
+                        new ClipboardItem({
+                            [blob.type]: blob
+                        })
+                    ])
+                } catch (e) {
+                    console.error(e)
+                }
+
                 break;
     
             case 'refresh':
