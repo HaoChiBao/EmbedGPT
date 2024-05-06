@@ -107,7 +107,7 @@ smart_circle.addEventListener('click', () => {
     clickTimeout = setTimeout(() => {
         smart_circle.classList.remove('active');
         send_message_to_content('highlight');
-        // window.close()
+        window.close()
     }, 500)
 
 })

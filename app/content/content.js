@@ -79,7 +79,7 @@ const main = async () => {
         port = chrome.runtime.connect({ name: "content" });
     })
 
-    port.postMessage({ action: 'refresh' });
+    port.postMessage({ action: 'refresh' }); //constantly refreshes the service worker
 
     // __________________________________________RESPONSE HANDLER__________________________________________
     const responseHandler = async (response) => {
@@ -99,7 +99,7 @@ const main = async () => {
     
                 const croppedImageData = await cropDataUrl(dataUrl, dimensions)
                 highlight_imageData = croppedImageData
-                
+
                 // save image to clipboard
                 const img = new Image()     
                 img.src = croppedImageData
@@ -456,6 +456,16 @@ const main = async () => {
         highlight_area.style.cursor = 'crosshair'
 
         gradient_outer.classList.add('active')
+
+        // pause all videos 
+        const videos = document.querySelectorAll('video')
+        videos.forEach((video) => {
+            try{
+                video.pause()
+            } catch(e) {
+                console.error(e)
+            }
+        })
     }
 
     // stops highlighter drawing
