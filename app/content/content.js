@@ -20,8 +20,15 @@ const makeElementDraggable = (element, dragElement) => {
         pos2 = pos4 - e.clientY;
         pos3 = e.clientX;
         pos4 = e.clientY;
-        element.style.top = (element.offsetTop - pos2) + "px";
-        element.style.left = (element.offsetLeft - pos1) + "px";
+
+        const moveY = element.offsetTop - pos2
+        const moveX = element.offsetLeft - pos1
+
+        if(moveY < 30 || moveY > window.innerHeight) return
+        if(moveX < 0 || moveX > window.innerWidth) return   
+
+        element.style.top = `${moveY}px`;
+        element.style.left = `${moveX}px`;
         element.classList.add('dragging')
     }
     
@@ -294,7 +301,7 @@ const main = async () => {
         if(query === '') return
     
         console.log('Submitting query:', query)
-    
+
         // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
         console.log(currentChatHistory.length)
         // if(allChats[currentChat].title === NEW_CHAT_NAME && currentChatHistory.length === 0 ) setTitle(query);
