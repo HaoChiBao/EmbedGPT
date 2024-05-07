@@ -66,6 +66,12 @@ const main = async () => {
 
     let highlight_imageData = null
 
+    // chat variables
+    const NEW_CHAT_NAME = 'New Chat';
+    let allChats = []
+    let currentChat = 0
+    let currentChatHistory = []
+
     // __________________________________________PORT FOR SERVICE WORKER__________________________________________
     let port = await chrome.runtime.connect({ name: "content" });
     
@@ -123,6 +129,14 @@ const main = async () => {
                 }
 
                 break;
+
+            case 'queryText':
+                const response_message = data.content.choices[0].message.content;
+                update_chat_history(1, response_message); // add system response to chat history
+                render_response(response_message); // display system response (with animation) in chat
+    
+                console.log(currentChatHistory)
+                break;
     
             case 'refresh':
                 // keeps the service worker actuve
@@ -139,6 +153,218 @@ const main = async () => {
         }
         
     }
+
+    // __________________________________________CHAT__________________________________________
+    const create_unique_id = () => { // create unique id for each chat
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let id = '';
+        for(let i = 0; i < 10; i++) {
+            id += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        id += Date.now();
+        return id;
+    }
+    
+    const create_new_chat = () => {
+
+        // check if any chats are empty, meaning that they are new chats
+        const empty_chat = allChats.find(chat => chat.chatHistory.length === 0);
+        if(empty_chat) {
+            currentChat = allChats.indexOf(empty_chat);
+            currentChatHistory = allChats[currentChat].chatHistory;
+            currentChatId = allChats[currentChat].id;
+            lastChatId = currentChatId;
+            load_chat();
+            return
+        }
+    
+        const new_chat = {timestamp: Date.now(), chatHistory: [], title: NEW_CHAT_NAME, id : create_unique_id()};
+        allChats.push(new_chat);
+        currentChat = allChats.indexOf(new_chat);
+        currentChatHistory = allChats[currentChat].chatHistory;
+        currentChatId = allChats[currentChat].id;
+    
+        lastChatId = currentChatId;
+    
+        load_chat();
+    
+        console.log(allChats)
+    }
+
+    const create_chat_bubble = async (role, content) => {
+        const message_element = document.createElement('div'); 
+        const profile_image = document.createElement('img');
+        const message = document.createElement('p');
+    
+        if(role === 'user' || role === 0) {
+            message_element.classList.add('user-chat');
+            // profile_image.src = '../../../../images/profile.png';
+            profile_image.src = await chrome.runtime.getURL('images/profile.png');
+        } else {
+            message_element.classList.add('system-chat');
+            // profile_image.src = '../../../../images/stars.png';
+            profile_image.src = await chrome.runtime.getURL('images/stars.png');
+        }
+        message_element.classList.add('message');
+        message.innerHTML = content;
+    
+        message_element.appendChild(profile_image);
+        message_element.appendChild(message);
+    
+        return message_element;
+    }
+    // used when chat is first loaded
+    const load_chat = () => {
+        chat_body.innerHTML = '';
+    
+        if(currentChatHistory.length === 0) {
+            const empty_chat = document.createElement('div');
+            empty_chat.classList.add('empty-chat');
+            empty_chat.innerHTML = 'start a conversation...';
+            chat_body.appendChild(empty_chat)
+        }
+    
+        currentChatHistory.forEach(async chat => {
+            const chat_element = await create_chat_bubble(chat.role, chat.content);
+            chat_body.appendChild(chat_element);
+        })
+        // set chat scroll to bottom
+        chat_body.scrollTop = chat_body.scrollHeight;
+    }
+    
+    let last_response_element = null;
+    // used when a response is returned
+    const render_response = (content) => {
+    
+        if(last_response_element == null) return
+    
+        let message = last_response_element.querySelector('p');
+        message.innerHTML = '';
+        let typed = ''; // current message content
+        const loop = setInterval(() => {
+            if(typed === content) {
+                clearInterval(loop);
+                return
+            }
+            typed += content[typed.length];
+            message.innerHTML = typed;
+        }, 1000 / 60);
+    
+        last_response_element = null;
+    }
+    
+    const response_loading = async () => {
+        const response_element = await create_chat_bubble('system', '');
+        chat_body.appendChild(response_element);
+        
+        const message = response_element.querySelector('p');
+    
+        const loading_gif = document.createElement('img');
+        loading_gif.classList.add('loading-gif');
+        // loading_gif.src = '../../../../images/typing.gif';
+        loading_gif.src = await chrome.runtime.getURL('images/typing.gif');
+    
+        message.appendChild(loading_gif);
+        
+        chat_body.scrollTop = chat_body.scrollHeight;
+        last_response_element = response_element;
+    }
+    
+    // add new message to chat history
+    const update_chat_history = (role = 0, content) => {
+        // determine role
+        role = role === 0 ? 'user' : 'system';
+        currentChatHistory.push({ role, content });
+    
+        // update timestamp (last sent message)
+        allChats[currentChat].timestamp = Date.now();
+        // allChats[currentChat].timestamp = new Date();
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+    
+        const input = form.querySelector('input');
+        const query = input.value;
+        input.value = '';
+    
+        if(query === '') return
+    
+        console.log('Submitting query:', query)
+    
+        // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
+        console.log(currentChatHistory.length)
+        // if(allChats[currentChat].title === NEW_CHAT_NAME && currentChatHistory.length === 0 ) setTitle(query);
+        update_chat_history(0, query);
+        // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
+        load_chat();
+        await response_loading();
+    
+        // console.log(allChats)
+        
+        
+        port.postMessage({ 
+            action: 'queryText', 
+            chatModel: 0,
+            chatHistory: currentChatHistory,
+        });
+    }
+
+    // __________________________________________CHAT UI__________________________________________
+    const createContentChat = async () => {
+        const content_chat = document.createElement('div')
+        content_chat.className = 'content-chat-body'
+
+        const top = document.createElement('div')
+        top.className = 'content-chat-top'
+
+        const top_bar = document.createElement('div')
+        top_bar.className = 'content-chat-top-bar'
+        top.appendChild(top_bar)
+
+        const body = document.createElement('section')
+        body.className = 'chat-body'
+
+        const empty_chat = document.createElement('div')
+        empty_chat.className = 'empty-chat'
+        empty_chat.innerHTML = 'start a conversation...'
+
+        body.appendChild(empty_chat)
+
+        const search = document.createElement('form')
+        search.className = 'chat-search'
+
+        const search_input = document.createElement('input')
+        search_input.type = 'text'
+        search_input.placeholder = 'enter prompt here:'
+
+        const search_button = document.createElement('button')
+        const search_icon = document.createElement('img')
+        search_icon.src = await chrome.runtime.getURL('images/stars.png')
+
+        search_button.appendChild(search_icon)
+
+        search.appendChild(search_input)
+        search.appendChild(search_button)
+
+        content_chat.appendChild(top)
+        content_chat.appendChild(body)
+        content_chat.appendChild(search)
+
+        search.addEventListener('submit', handleSubmit)
+
+        return content_chat
+    }
+
+    const chat = await createContentChat()
+    const chat_body = chat.querySelector('.chat-body')
+    const top = chat.querySelector('.content-chat-top')
+    const form = chat.querySelector('.chat-search')
+
+    makeElementDraggable(chat, top)
+    document.body.appendChild(chat)
+
+    create_new_chat()
 
     // __________________________________________HIGHLIGHTER__________________________________________
     let highlight = false;
