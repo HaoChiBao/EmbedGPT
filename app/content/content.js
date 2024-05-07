@@ -285,7 +285,8 @@ const main = async () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-    
+        if(last_response_element) return // if response is still loading, do not submit query
+
         const input = form.querySelector('input');
         const query = input.value;
         input.value = '';
@@ -304,7 +305,7 @@ const main = async () => {
     
         // console.log(allChats)
         
-        
+        maximize_chat()
         port.postMessage({ 
             action: 'queryText', 
             chatModel: 0,
@@ -313,7 +314,9 @@ const main = async () => {
     }
 
     // _________________Content Chat Specific Functions____________________
-    const maximize_chat = () => {}
+    const maximize_chat = () => {
+        chat.classList.remove('minimized')
+    }
     const minimize_chat = () => {
         chat.classList.toggle('minimized')
     }
@@ -321,7 +324,8 @@ const main = async () => {
         chat.classList.add('closed')
         setTimeout(() => {
             chat.style.top = ''
-            chat.style.left = ''
+            chat.style.left = '50%'
+            setTimeout(() => {open_chat()},500)
         },500)
     }
     const open_chat = () => {
@@ -349,11 +353,12 @@ const main = async () => {
         minimize.className = 'minimize'
         minimize.addEventListener('click', minimize_chat)
         // minimize.innerHTML = '-'
-
+        
         const close = document.createElement('button')
         close.className = 'close'
         close.addEventListener('click', close_chat)
         // close.innerHTML = 'x'
+
 
         top_buttons.appendChild(minimize)
         top_buttons.appendChild(close)

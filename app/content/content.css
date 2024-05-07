@@ -156,6 +156,9 @@
     background-color: transparent;
     backdrop-filter: invert(1) blur(1px);
     border-radius: 20px;
+
+    opacity: 0.5;
+    transition: 0.3s ease;
 }
 
 .content-chat-body .content-chat-top .content-chat-top-buttons{
@@ -165,11 +168,13 @@
     justify-content: space-between;
     gap: calc(var(--var-sizing)/2);
 }
+
 .content-chat-body .content-chat-top .content-chat-top-buttons button{
     background-color: #000;
     border: none;
     outline: none;
 
+    opacity: 0.5;
     cursor: pointer;
     width: 13px;
     height: 13px;
@@ -178,15 +183,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    transition: 0.3s ease;
 }
 
-.content-chat-body .content-chat-top .content-chat-top-buttons .minimize{
-    background-color: #14FF00;
-}
-.content-chat-body .content-chat-top .content-chat-top-buttons .close{
-    background-color: #FF0000;
-}
+.content-chat-body .content-chat-top .content-chat-top-buttons .minimize{background-color: #14FF00;}
+.content-chat-body .content-chat-top .content-chat-top-buttons .close{background-color: #FF0000;}
 
+.content-chat-body .content-chat-top .content-chat-top-buttons button:hover{transform: scale(1.1);opacity: 1;}
+.content-chat-body .content-chat-top:hover .content-chat-top-bar{opacity: 1;}
 
 .content-chat-body .chat-body{
     display: flex;
@@ -195,7 +200,7 @@
 
     /* padding:1rem; */
 
-    /* padding-top: 1rem; */
+    padding-bottom: var(--var-sizing);
 
     height: 100%;
     width: 100%;
@@ -366,6 +371,7 @@
 
 .content-chat-body.minimized .chat-body{
     height: 0;
+    padding-bottom: 0;
 }
 .content-chat-body.minimized .chat-search{
     opacity: 0.7;

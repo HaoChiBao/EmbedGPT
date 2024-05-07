@@ -545,6 +545,8 @@ const setTitle = (title) => {
 const handleSubmit = async (e) => {
     e.preventDefault()
 
+    if(last_response_element) return // if response is still loading, do not submit query
+
     const input = form.querySelector('input');
     const query = input.value;
     input.value = '';
