@@ -3,7 +3,7 @@ console.log('Embed GPT')
 const makeElementDraggable = (element, dragElement) => {
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     dragElement.onmousedown = dragMouseDown;
-    
+
     function dragMouseDown(e) {
         e = e || window.event;
         e.preventDefault();
@@ -22,11 +22,13 @@ const makeElementDraggable = (element, dragElement) => {
         pos4 = e.clientY;
         element.style.top = (element.offsetTop - pos2) + "px";
         element.style.left = (element.offsetLeft - pos1) + "px";
+        element.classList.add('dragging')
     }
     
     function closeDragElement() {
         document.onmouseup = null;
         document.onmousemove = null;
+        element.classList.remove('dragging')
     }
 }
 
@@ -313,10 +315,14 @@ const main = async () => {
     // _________________Content Chat Specific Functions____________________
     const maximize_chat = () => {}
     const minimize_chat = () => {
-        chat.classList.add('minimized')
+        chat.classList.toggle('minimized')
     }
     const close_chat = () => {
         chat.classList.add('closed')
+        setTimeout(() => {
+            chat.style.top = ''
+            chat.style.left = ''
+        },500)
     }
     const open_chat = () => {
         chat.classList.remove('closed')
