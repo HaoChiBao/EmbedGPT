@@ -310,11 +310,24 @@ const main = async () => {
         });
     }
 
+    // _________________Content Chat Specific Functions____________________
+    const maximize_chat = () => {}
+    const minimize_chat = () => {
+        chat.classList.add('minimized')
+    }
+    const close_chat = () => {
+        chat.classList.add('closed')
+    }
+    const open_chat = () => {
+        chat.classList.remove('closed')
+    }
+
     // __________________________________________CHAT UI__________________________________________
     const createContentChat = async () => {
         const content_chat = document.createElement('div')
         content_chat.className = 'content-chat-body'
 
+        // top part of chat
         const top = document.createElement('div')
         top.className = 'content-chat-top'
 
@@ -322,6 +335,24 @@ const main = async () => {
         top_bar.className = 'content-chat-top-bar'
         top.appendChild(top_bar)
 
+        const top_buttons = document.createElement('div')
+        top_buttons.className = 'content-chat-top-buttons'
+        top.appendChild(top_buttons)
+
+        const minimize = document.createElement('button')
+        minimize.className = 'minimize'
+        minimize.addEventListener('click', minimize_chat)
+        // minimize.innerHTML = '-'
+
+        const close = document.createElement('button')
+        close.className = 'close'
+        close.addEventListener('click', close_chat)
+        // close.innerHTML = 'x'
+
+        top_buttons.appendChild(minimize)
+        top_buttons.appendChild(close)
+
+        // chat boy
         const body = document.createElement('section')
         body.className = 'chat-body'
 
@@ -331,6 +362,7 @@ const main = async () => {
 
         body.appendChild(empty_chat)
 
+        // chat search form
         const search = document.createElement('form')
         search.className = 'chat-search'
 

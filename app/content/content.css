@@ -3,7 +3,7 @@
 /* _____________________ HIGHLIGHT CSS__________________ */
 .highlight-area{
     position: fixed;
-    z-index: 6969;
+    z-index: 2147483647;
     top: 0;
     left: 0;
     pointer-events: none;
@@ -47,7 +47,7 @@
 /* ______________________GRADIENT CSS___________________ */
 .gradient-outer {
     position: fixed;
-    z-index: 6900;
+    z-index: 2147483647;
     top: 100%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -67,7 +67,7 @@
     justify-content: center;
     
     opacity: 0.1;
-    /* pointer-events: none; */
+    pointer-events: none;
     
     border-radius: 50%;
     transition: 0.5s ease;
@@ -96,10 +96,14 @@
 
 /* _______________________CONTENT CHAT CSS_________________ */
 
+.content-chat-body *{
+    padding: 0;
+    margin: 0;
+}
 .content-chat-body{
     --var-sizing: 16px;
     position: fixed; 
-    z-index: 6969;
+    z-index: 2147483647;
 
     bottom: var(--var-sizing);
     left: 50%;
@@ -145,6 +149,36 @@
     background-color: #000;
     border-radius: 20px;
 }
+
+.content-chat-body .content-chat-top .content-chat-top-buttons{
+    position: absolute;
+    right: var(--var-sizing);
+    display: flex;
+    justify-content: space-between;
+    gap: calc(var(--var-sizing)/2);
+}
+.content-chat-body .content-chat-top .content-chat-top-buttons button{
+    background-color: #000;
+    border: none;
+    outline: none;
+
+    cursor: pointer;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-chat-body .content-chat-top .content-chat-top-buttons .minimize{
+    background-color: #14FF00;
+}
+.content-chat-body .content-chat-top .content-chat-top-buttons .close{
+    background-color: #FF0000;
+}
+
 
 .content-chat-body .chat-body{
     display: flex;
@@ -212,6 +246,25 @@
     filter: grayscale(100%);
 }
 
+
+
+/* CHAT CLOSED */
+.content-chat-body.closed{
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* CHAT MINIMIZED */
+.content-chat-body.minimized{
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    padding: 0;
+    padding-top: 0;
+}
+
+
+
 /* __________________________________________SEARCH____________________________________________ */
 .content-chat-body .chat-search{
     display: flex;
@@ -271,30 +324,30 @@
 }
 
 /* scrolling ------------- */
-.content-chat-body *::-webkit-scrollbar {
-    width: 15px;
+.content-chat-body .chat-body::-webkit-scrollbar {
+    width: 15px !important;
 }
 
 /* Track */
-.content-chat-body *::-webkit-scrollbar-track {
-    background:transparent;
+.content-chat-body .chat-body::-webkit-scrollbar-track {
+    background:transparent !important;
 }
 
 /* Handle */
-.content-chat-body *::-webkit-scrollbar-thumb {
+.content-chat-body .chat-body::-webkit-scrollbar-thumb {
     /* background: linear-gradient(-45deg, #d98cf5,#2b20f8,#31a2fa); */
-    background: linear-gradient(-45deg, #715AFF,#5887FF,#8DADFF);
+    background: linear-gradient(-45deg, #715AFF,#5887FF,#8DADFF) !important;
 
-    background-clip: content-box;
-    border: 5px solid transparent;
-    border-radius: 10px;
+    background-clip: content-box !important;
+    border: 5px solid transparent !important;
+    border-radius: 10px !important;
     /* background-image: url('https://assets.materialup.com/uploads/cde34f59-a45f-48d4-9699-3a686999b9dc/preview.gif'); */
     }
 
   /* Handle on hover */
-.content-chat-body *::-webkit-scrollbar-thumb:hover {
+.content-chat-body .chat-body::-webkit-scrollbar-thumb:hover {
     /* background: #555; */
-    opacity: 0.8;
+    opacity: 0.8 !important;
 }
 
 
