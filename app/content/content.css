@@ -376,9 +376,10 @@
     height: 40px !important;
     padding: 0px !important;
     border-radius: 30px !important;
-    background-color: #9f9f9f;
+    background-color: transparent !important;
 }
-.content-chat-body.minimized .content-chat-top{
+
+.content-chat-body.minimized .content-chat-top .content-chat-top-bar{
     /* opacity: 1; */
 }
 
@@ -387,13 +388,19 @@
     padding-bottom: 0;
 }
 .content-chat-body.minimized .chat-search{
-    opacity: 0.5;
+    opacity: 0.8;
+    filter: grayscale(50%);
 }
 
 .content-chat-body.minimized .chat-search:hover{
     opacity: 1;
+    filter: grayscale(0);
 }
-
+.content-chat-body.minimized .chat-search:focus-within{
+    opacity: 1;
+    filter: grayscale(0);
+}
+    
 
 
 /* testing_____________________________ */

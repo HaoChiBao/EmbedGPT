@@ -40,8 +40,9 @@ const makeElementDraggable = (element, dragElement) => {
 
     window.addEventListener('resize',()=>{
         if(element.offsetTop > window.innerHeight) element.style.top = `${window.innerHeight - 100}px`
-        if(element.offsetLeft > window.innerWidth) element.style.left = `${window.innerWidth - 100}px`
         if(element.offsetTop < 30) element.style.top = `30px`
+        
+        if(element.offsetLeft > window.innerWidth) element.style.left = `${window.innerWidth - 100}px`
         if(element.offsetLeft < 0) element.style.left = `0px`
     })
 }
