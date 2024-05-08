@@ -401,6 +401,11 @@ const main = async () => {
 
         search_button.appendChild(search_icon)
 
+        const image_preview = document.createElement('img')
+        image_preview.className = 'image-preview'
+        image_preview.src = await chrome.runtime.getURL('images/test.png')
+
+        search.appendChild(image_preview)
         search.appendChild(search_input)
         search.appendChild(search_button)
 

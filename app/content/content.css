@@ -99,6 +99,7 @@
 .content-chat-body *{
     padding: 0;
     margin: 0;
+    font-family: 'GTWalsheimPro-Regular', sans-serif !important;
 }
 .content-chat-body{
     --var-sizing: 16px;
@@ -273,10 +274,20 @@
     transition: 0.5s ease;
 }
 
+.content-chat-body .chat-search .image-preview{
+    height: calc(100% - 10px);
+    margin-left: 5px;
+
+    width: 40px;
+    border-style: dotted;
+    border-color: #fff;
+    border-radius: 20px;
+}
+
 #chat-search.active{filter: blur(5px);}
 
 .content-chat-body .chat-search input{
-    padding: 10px 16px;
+    padding: 0px 16px;
     
     background-color: transparent !important;
     border: none !important;
@@ -360,9 +371,9 @@
 
 /* CHAT MINIMIZED */
 .content-chat-body.minimized{
-    height: 50px;
-    padding: 5px;
-    border-radius: 30px;
+    height: 50px !important;
+    padding: 5px !important;
+    border-radius: 30px !important;
     background-color: #9f9f9f;
 }
 .content-chat-body.minimized .content-chat-top{
