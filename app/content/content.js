@@ -104,6 +104,18 @@ const main = async () => {
 
     port.postMessage({ action: 'refresh' }); //constantly refreshes the service worker
 
+    // port for popup to communicate with content script
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        switch(request){
+            case 'highlight':
+                console.log('highlighting')
+                start_highlighter()
+                break;
+            default:
+                console.log(request)
+        }
+    })
+
     // __________________________________________RESPONSE HANDLER__________________________________________
     const responseHandler = async (response) => {
         // console.log(response)
@@ -175,319 +187,50 @@ const main = async () => {
         
     }
 
-    // __________________________________________CHAT__________________________________________
-    const create_unique_id = () => { // create unique id for each chat
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let id = '';
-        for(let i = 0; i < 10; i++) {
-            id += characters.charAt(Math.floor(Math.random() * characters.length));
+    
+    // __________________________________________GRADIENT CANVAS__________________________________________
+    const gradient_outer = document.createElement('div')
+    gradient_outer.className = 'gradient-outer'
+    // gradient_outer.classList.add('active')
+    
+    const gradient_area = document.createElement('canvas')
+    gradient_area.className = 'gradient-area'
+    gradient_area.width = 32
+    gradient_area.height = 32
+    
+    gradient_outer.appendChild(gradient_area)
+    document.body.appendChild(gradient_outer)
+
+    const context = gradient_area.getContext('2d')
+    let time = 0;
+
+    const color = function (x, y, r, g, b) {
+    context.fillStyle = `rgb(${r}, ${g}, ${b})`
+    context.fillRect(x, y, 10, 10);
+    }
+    const R = function (x, y, time) {
+    return (Math.floor(192 + 64 * Math.cos((x * x - y * y) / 300 + time)));
+    }
+
+    const G = function (x, y, time) {
+    return (Math.floor(192 + 64 * Math.sin((x * x * Math.cos(time / 4) + y * y * Math.sin(time / 3)) / 300)));
+    }
+
+    const B = function (x, y, time) {
+    return (Math.floor(192 + 64 * Math.sin(5 * Math.sin(time / 9) + ((x - 100) * (x - 100) + (y - 100) * (y - 100)) / 1100)));
+    }
+
+    const startAnimation = function () {
+    for (x = 0; x <= 30; x++) {
+        for (y = 0; y <= 30; y++) {
+            color(x, y, R(x, y, time), G(x, y, time), B(x, y, time));
         }
-        id += Date.now();
-        return id;
     }
-    
-    const create_new_chat = () => {
-
-        // check if any chats are empty, meaning that they are new chats
-        const empty_chat = allChats.find(chat => chat.chatHistory.length === 0);
-        if(empty_chat) {
-            currentChat = allChats.indexOf(empty_chat);
-            currentChatHistory = allChats[currentChat].chatHistory;
-            currentChatId = allChats[currentChat].id;
-            lastChatId = currentChatId;
-            load_chat();
-            return
-        }
-    
-        const new_chat = {timestamp: Date.now(), chatHistory: [], title: NEW_CHAT_NAME, id : create_unique_id()};
-        allChats.push(new_chat);
-        currentChat = allChats.indexOf(new_chat);
-        currentChatHistory = allChats[currentChat].chatHistory;
-        currentChatId = allChats[currentChat].id;
-    
-        lastChatId = currentChatId;
-    
-        load_chat();
-    
-        console.log(allChats)
+    time = time + 0.03;
+    window.requestAnimationFrame(startAnimation);
     }
 
-    const create_chat_bubble = async (role, content) => {
-        const message_element = document.createElement('div'); 
-        const profile_image = document.createElement('img');
-        const message = document.createElement('p');
-    
-        if(role === 'user' || role === 0) {
-            message_element.classList.add('user-chat');
-            // profile_image.src = '../../../../images/profile.png';
-            profile_image.src = await chrome.runtime.getURL('images/profile.png');
-        } else {
-            message_element.classList.add('system-chat');
-            // profile_image.src = '../../../../images/stars.png';
-            profile_image.src = await chrome.runtime.getURL('images/stars.png');
-        }
-        message_element.classList.add('message');
-        message.innerHTML = content;
-    
-        message_element.appendChild(profile_image);
-        message_element.appendChild(message);
-    
-        return message_element;
-    }
-
-    // used when chat is first loaded
-    const load_chat = () => {
-        chat_body.innerHTML = '';
-    
-        if(currentChatHistory.length === 0) {
-            const empty_chat = document.createElement('div');
-            empty_chat.classList.add('empty-chat');
-            empty_chat.innerHTML = 'start a conversation...';
-            chat_body.appendChild(empty_chat)
-        }
-    
-        currentChatHistory.forEach(async chat => {
-            // const chat_element = await create_chat_bubble(chat.role, chat.content);
-            const chat_element = await create_chat_bubble(chat.role, chat.content[0].text);
-            chat_body.appendChild(chat_element);
-        })
-        // set chat scroll to bottom
-        chat_body.scrollTop = chat_body.scrollHeight;
-    }
-    
-    let last_response_element = null;
-    // used when a response is returned
-    const render_response = (content) => {
-    
-        if(last_response_element == null) return
-    
-        let message = last_response_element.querySelector('p');
-        message.innerHTML = '';
-        let typed = ''; // current message content
-        const loop = setInterval(() => {
-            if(typed === content) {
-                clearInterval(loop);
-                return
-            }
-            typed += content[typed.length];
-            message.innerHTML = typed;
-        }, 1000 / 60);
-    
-        last_response_element = null;
-    }
-    
-    const response_loading = async () => {
-        const response_element = await create_chat_bubble('system', '');
-        chat_body.appendChild(response_element);
-        
-        const message = response_element.querySelector('p');
-    
-        const loading_gif = document.createElement('img');
-        loading_gif.classList.add('loading-gif');
-        // loading_gif.src = '../../../../images/typing.gif';
-        loading_gif.src = await chrome.runtime.getURL('images/typing.gif');
-    
-        message.appendChild(loading_gif);
-        
-        chat_body.scrollTop = chat_body.scrollHeight;
-        last_response_element = response_element;
-    }
-    
-    const reset_highlight_imageData = () => {
-        highlight_imageData = null;
-        image_preview.src = ''
-        image_preview.style.display = 'none'
-    }
-
-    const save_highlight_imageData = (dataUrl) => {
-        highlight_imageData = dataUrl
-        image_preview.src = dataUrl
-        image_preview.style.display = 'block'
-    }
-
-    /*
-    // add new message to chat history
-    const update_chat_history = (role = 0, content) => {
-        // determine role
-        role = role === 0 ? 'user' : 'system';
-        currentChatHistory.push({ role, content });
-        
-        // update timestamp (last sent message)
-        allChats[currentChat].timestamp = Date.now();
-        // allChats[currentChat].timestamp = new Date();
-    }
-    */
-   
-   const update_chat_history = (role = 0, text) => {
-        role = role === 0 ? 'user' : 'system';
-        let content = [
-           {
-               type: 'text',
-                text
-            },
-        ]
-
-        // console.log(highlight_imageData)
-        
-        if(highlight_imageData && role === 'user') {
-            content.push({
-                type: 'image_url',
-                image_url: {
-                    url: highlight_imageData
-                }
-            })
-        }
-
-        reset_highlight_imageData()
-        
-        currentChatHistory.push({ role, content });
-        allChats[currentChat].timestamp = Date.now();
-
-        console.log(currentChatHistory)
-    }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        if(last_response_element) return // if response is still loading, do not submit query
-
-        const input = form.querySelector('input');
-        const query = input.value;
-        input.value = '';
-    
-        if(query === '') return
-    
-        console.log('Submitting query:', query)
-
-        // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
-        console.log(currentChatHistory.length)
-        // if(allChats[currentChat].title === NEW_CHAT_NAME && currentChatHistory.length === 0 ) setTitle(query);
-        update_chat_history(0, query);
-        // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
-        load_chat();
-        await response_loading();
-    
-        // console.log(allChats)
-        
-        maximize_chat()
-        port.postMessage({ 
-            // action: 'queryText', 
-            action: 'queryImage', 
-            chatModel: 0,
-            chatHistory: currentChatHistory,
-            imageData: true
-        });
-    }
-
-    // _________________Content Chat Specific Functions____________________
-    const maximize_chat = () => {
-        chat.classList.remove('minimized')
-    }
-    const minimize_chat = () => {
-        chat.classList.add('minimized')
-    }
-    const toggle_minimize = () => {
-        chat.classList.toggle('minimized')
-    }
-
-    const close_chat = () => {
-        chat.classList.add('closed')
-        setTimeout(() => {
-            chat.style.top = ''
-            chat.style.left = '50%'
-            minimize_chat()
-            setTimeout(() => {open_chat()},500)
-        },500)
-    }
-    const open_chat = () => {
-        chat.classList.remove('closed')
-    }
-
-    // __________________________________________CHAT UI__________________________________________
-    const createContentChat = async () => {
-        const content_chat = document.createElement('div')
-        content_chat.className = 'content-chat-body'
-        content_chat.classList.add('minimized') //start minimized
-        content_chat.classList.add('closed') //start closed
-
-        // top part of chat
-        const top = document.createElement('div')
-        top.className = 'content-chat-top'
-
-        const top_bar = document.createElement('div')
-        top_bar.className = 'content-chat-top-bar'
-        top.appendChild(top_bar)
-
-        const top_buttons = document.createElement('div')
-        top_buttons.className = 'content-chat-top-buttons'
-        top.appendChild(top_buttons)
-
-        const minimize = document.createElement('button')
-        minimize.className = 'minimize'
-        minimize.addEventListener('click', toggle_minimize)
-        // minimize.innerHTML = '-'
-        
-        const close = document.createElement('button')
-        close.className = 'close'
-        close.addEventListener('click', close_chat)
-        // close.innerHTML = 'x'
-
-
-        top_buttons.appendChild(minimize)
-        top_buttons.appendChild(close)
-
-        // chat boy
-        const body = document.createElement('section')
-        body.className = 'chat-body'
-
-        const empty_chat = document.createElement('div')
-        empty_chat.className = 'empty-chat'
-        empty_chat.innerHTML = 'start a conversation...'
-
-        body.appendChild(empty_chat)
-
-        // chat search form
-        const search = document.createElement('form')
-        search.className = 'chat-search'
-
-        const search_input = document.createElement('input')
-        search_input.type = 'text'
-        search_input.placeholder = 'enter prompt here:'
-
-        const search_button = document.createElement('button')
-        const search_icon = document.createElement('img')
-        search_icon.src = await chrome.runtime.getURL('images/stars.png')
-
-        search_button.appendChild(search_icon)
-
-        const image_preview = document.createElement('img')
-        image_preview.className = 'image-preview'
-        image_preview.src = await chrome.runtime.getURL('images/test.png')
-
-        search.appendChild(image_preview)
-        search.appendChild(search_input)
-        search.appendChild(search_button)
-
-        content_chat.appendChild(top)
-        content_chat.appendChild(body)
-        content_chat.appendChild(search)
-
-        search.addEventListener('submit', handleSubmit)
-
-        return content_chat
-    }
-
-    // chat variables
-    const chat = await createContentChat()
-    const chat_body = chat.querySelector('.chat-body')
-    const top = chat.querySelector('.content-chat-top')
-    const form = chat.querySelector('.chat-search')
-    const image_preview = chat.querySelector('.image-preview')
-    
-
-    makeElementDraggable(chat, top)
-    document.body.appendChild(chat)
-
-    create_new_chat()
+    startAnimation();
 
     // __________________________________________HIGHLIGHTER__________________________________________
     let highlight = false;
@@ -935,73 +678,322 @@ const main = async () => {
     init_highlighter()
 
     
-    // __________________________________________GRADIENT CANVAS__________________________________________
-    const gradient_outer = document.createElement('div')
-    gradient_outer.className = 'gradient-outer'
-    // gradient_outer.classList.add('active')
-    
-    const gradient_area = document.createElement('canvas')
-    gradient_area.className = 'gradient-area'
-    gradient_area.width = 32
-    gradient_area.height = 32
-    
-    gradient_outer.appendChild(gradient_area)
-    document.body.appendChild(gradient_outer)
-
-    const context = gradient_area.getContext('2d')
-    let time = 0;
-
-    const color = function (x, y, r, g, b) {
-    context.fillStyle = `rgb(${r}, ${g}, ${b})`
-    context.fillRect(x, y, 10, 10);
-    }
-    const R = function (x, y, time) {
-    return (Math.floor(192 + 64 * Math.cos((x * x - y * y) / 300 + time)));
-    }
-
-    const G = function (x, y, time) {
-    return (Math.floor(192 + 64 * Math.sin((x * x * Math.cos(time / 4) + y * y * Math.sin(time / 3)) / 300)));
-    }
-
-    const B = function (x, y, time) {
-    return (Math.floor(192 + 64 * Math.sin(5 * Math.sin(time / 9) + ((x - 100) * (x - 100) + (y - 100) * (y - 100)) / 1100)));
-    }
-
-    const startAnimation = function () {
-    for (x = 0; x <= 30; x++) {
-        for (y = 0; y <= 30; y++) {
-            color(x, y, R(x, y, time), G(x, y, time), B(x, y, time));
+    // __________________________________________CHAT__________________________________________
+    const create_unique_id = () => { // create unique id for each chat
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let id = '';
+        for(let i = 0; i < 10; i++) {
+            id += characters.charAt(Math.floor(Math.random() * characters.length));
         }
+        id += Date.now();
+        return id;
     }
-    time = time + 0.03;
-    window.requestAnimationFrame(startAnimation);
+    
+    const create_new_chat = () => {
+
+        // check if any chats are empty, meaning that they are new chats
+        const empty_chat = allChats.find(chat => chat.chatHistory.length === 0);
+        if(empty_chat) {
+            currentChat = allChats.indexOf(empty_chat);
+            currentChatHistory = allChats[currentChat].chatHistory;
+            currentChatId = allChats[currentChat].id;
+            lastChatId = currentChatId;
+            load_chat();
+            return
+        }
+    
+        const new_chat = {timestamp: Date.now(), chatHistory: [], title: NEW_CHAT_NAME, id : create_unique_id()};
+        allChats.push(new_chat);
+        currentChat = allChats.indexOf(new_chat);
+        currentChatHistory = allChats[currentChat].chatHistory;
+        currentChatId = allChats[currentChat].id;
+    
+        lastChatId = currentChatId;
+    
+        load_chat();
+    
+        console.log(allChats)
     }
 
-    startAnimation();
+    const create_chat_bubble = async (role, content) => {
+        const message_element = document.createElement('div'); 
+        const profile_image = document.createElement('img');
+        const message = document.createElement('p');
+    
+        if(role === 'user' || role === 0) {
+            message_element.classList.add('user-chat');
+            // profile_image.src = '../../../../images/profile.png';
+            profile_image.src = await chrome.runtime.getURL('images/profile.png');
+        } else {
+            message_element.classList.add('system-chat');
+            // profile_image.src = '../../../../images/stars.png';
+            profile_image.src = await chrome.runtime.getURL('images/stars.png');
+        }
+        message_element.classList.add('message');
+        message.innerHTML = content;
+    
+        message_element.appendChild(profile_image);
+        message_element.appendChild(message);
+    
+        return message_element;
+    }
 
-    // let clickOut = false
-    // gradient_outer.addEventListener('click', async () => {
-    //     if (clickOut){
-    //         await close_highlighter()
-    //         clickOut = false
-    //     }
-    // })
-    // gradient_outer.addEventListener('mousedown', async () => {
-    //     clickOut = true
-    // })
+    // used when chat is first loaded
+    const load_chat = () => {
+        chat_body.innerHTML = '';
+    
+        if(currentChatHistory.length === 0) {
+            const empty_chat = document.createElement('div');
+            empty_chat.classList.add('empty-chat');
+            empty_chat.innerHTML = 'start a conversation...';
+            chat_body.appendChild(empty_chat)
+        }
+    
+        currentChatHistory.forEach(async chat => {
+            // const chat_element = await create_chat_bubble(chat.role, chat.content);
+            const chat_element = await create_chat_bubble(chat.role, chat.content[0].text);
+            chat_body.appendChild(chat_element);
+        })
+        // set chat scroll to bottom
+        chat_body.scrollTop = chat_body.scrollHeight;
+    }
+    
+    let last_response_element = null;
+    // used when a response is returned
+    const render_response = (content) => {
+    
+        if(last_response_element == null) return
+    
+        let message = last_response_element.querySelector('p');
+        message.innerHTML = '';
+        let typed = ''; // current message content
+        const loop = setInterval(() => {
+            if(typed === content) {
+                clearInterval(loop);
+                return
+            }
+            typed += content[typed.length];
+            message.innerHTML = typed;
+        }, 1000 / 60);
+    
+        last_response_element = null;
+    }
+    
+    const response_loading = async () => {
+        const response_element = await create_chat_bubble('system', '');
+        chat_body.appendChild(response_element);
+        
+        const message = response_element.querySelector('p');
+    
+        const loading_gif = document.createElement('img');
+        loading_gif.classList.add('loading-gif');
+        // loading_gif.src = '../../../../images/typing.gif';
+        loading_gif.src = await chrome.runtime.getURL('images/typing.gif');
+    
+        message.appendChild(loading_gif);
+        
+        chat_body.scrollTop = chat_body.scrollHeight;
+        last_response_element = response_element;
+    }
+    
+    const reset_highlight_imageData = () => {
+        highlight_imageData = null;
+        image_preview.src = ''
+        image_preview.style.display = 'none'
+    }
+
+    const save_highlight_imageData = (dataUrl) => {
+        highlight_imageData = dataUrl
+        image_preview.src = dataUrl
+        image_preview.style.display = 'block'
+    }
+
+    /*
+    // add new message to chat history
+    const update_chat_history = (role = 0, content) => {
+        // determine role
+        role = role === 0 ? 'user' : 'system';
+        currentChatHistory.push({ role, content });
+        
+        // update timestamp (last sent message)
+        allChats[currentChat].timestamp = Date.now();
+        // allChats[currentChat].timestamp = new Date();
+    }
+    */
+   
+   const update_chat_history = (role = 0, text) => {
+        role = role === 0 ? 'user' : 'system';
+        let content = [
+           {
+               type: 'text',
+                text
+            },
+        ]
+
+        // console.log(highlight_imageData)
+        
+        if(highlight_imageData && role === 'user') {
+            content.push({
+                type: 'image_url',
+                image_url: {
+                    url: highlight_imageData
+                }
+            })
+        }
+
+        reset_highlight_imageData()
+        
+        currentChatHistory.push({ role, content });
+        allChats[currentChat].timestamp = Date.now();
+
+        console.log(currentChatHistory)
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        if(last_response_element) return // if response is still loading, do not submit query
+
+        const input = form.querySelector('input');
+        const query = input.value;
+        input.value = '';
+    
+        if(query === '') return
+    
+        console.log('Submitting query:', query)
+
+        // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
+        console.log(currentChatHistory.length)
+        // if(allChats[currentChat].title === NEW_CHAT_NAME && currentChatHistory.length === 0 ) setTitle(query);
+        update_chat_history(0, query);
+        // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
+        load_chat();
+        await response_loading();
+    
+        // console.log(allChats)
+        
+        maximize_chat()
+        port.postMessage({ 
+            // action: 'queryText', 
+            action: 'queryImage', 
+            chatModel: 0,
+            chatHistory: currentChatHistory,
+            imageData: true
+        });
+    }
+
+    // _________________Content Chat Specific Functions____________________
+    const maximize_chat = () => {
+        chat.classList.remove('minimized')
+    }
+    const minimize_chat = () => {
+        chat.classList.add('minimized')
+    }
+    const toggle_minimize = () => {
+        chat.classList.toggle('minimized')
+    }
+
+    const close_chat = () => {
+        chat.classList.add('closed')
+        setTimeout(() => {
+            chat.style.top = ''
+            chat.style.left = '50%'
+            minimize_chat()
+            setTimeout(() => {open_chat()},500)
+        },500)
+    }
+    const open_chat = () => {
+        chat.classList.remove('closed')
+    }
+
+    // __________________________________________CHAT UI__________________________________________
+    const createContentChat = async () => {
+        const content_chat = document.createElement('div')
+        content_chat.className = 'content-chat-body'
+        content_chat.classList.add('minimized') //start minimized
+        content_chat.classList.add('closed') //start closed
+
+        // top part of chat
+        const top = document.createElement('div')
+        top.className = 'content-chat-top'
+
+        const top_bar = document.createElement('div')
+        top_bar.className = 'content-chat-top-bar'
+        top.appendChild(top_bar)
+
+        const top_buttons = document.createElement('div')
+        top_buttons.className = 'content-chat-top-buttons'
+        top.appendChild(top_buttons)
+
+        const minimize = document.createElement('button')
+        minimize.className = 'minimize'
+        minimize.addEventListener('click', toggle_minimize)
+        // minimize.innerHTML = '-'
+        
+        const close = document.createElement('button')
+        close.className = 'close'
+        close.addEventListener('click', close_chat)
+        // close.innerHTML = 'x'
+
+
+        top_buttons.appendChild(minimize)
+        top_buttons.appendChild(close)
+
+        // chat boy
+        const body = document.createElement('section')
+        body.className = 'chat-body'
+
+        const empty_chat = document.createElement('div')
+        empty_chat.className = 'empty-chat'
+        empty_chat.innerHTML = 'start a conversation...'
+
+        body.appendChild(empty_chat)
+
+        // chat search form
+        const search = document.createElement('form')
+        search.className = 'chat-search'
+
+        const search_input = document.createElement('input')
+        search_input.type = 'text'
+        search_input.placeholder = 'enter prompt here:'
+
+        const search_button = document.createElement('button')
+        const search_icon = document.createElement('img')
+        search_icon.src = await chrome.runtime.getURL('images/stars.png')
+
+        search_button.appendChild(search_icon)
+
+        const image_preview = document.createElement('img')
+        image_preview.className = 'image-preview'
+        image_preview.src = await chrome.runtime.getURL('images/test.png')
+
+        search.appendChild(image_preview)
+        search.appendChild(search_input)
+        search.appendChild(search_button)
+
+        content_chat.appendChild(top)
+        content_chat.appendChild(body)
+        content_chat.appendChild(search)
+
+        search.addEventListener('submit', handleSubmit)
+
+        return content_chat
+    }
+
+    // chat variables
+    const chat = await createContentChat()
+    const chat_body = chat.querySelector('.chat-body')
+    const top = chat.querySelector('.content-chat-top')
+    const form = chat.querySelector('.chat-search')
+    const image_preview = chat.querySelector('.image-preview')
+    
+
+    makeElementDraggable(chat, top)
+    document.body.appendChild(chat)
+
+    create_new_chat()
+
 
     //______________________________________________ TESTING ______________________________________________
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        switch(request){
-            case 'highlight':
-                console.log('highlighting')
-                start_highlighter()
-                break;
-            default:
-                console.log(request)
-        }
-    })
-
     return
     const moveAround = document.createElement('div')
     moveAround.className = 'move-around'
