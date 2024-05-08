@@ -371,8 +371,10 @@
 
 /* CHAT MINIMIZED */
 .content-chat-body.minimized{
-    height: 50px !important;
-    padding: 5px !important;
+    /* height: 50px !important; */
+    /* padding: 5px !important; */
+    height: 40px !important;
+    padding: 0px !important;
     border-radius: 30px !important;
     background-color: #9f9f9f;
 }
@@ -385,7 +387,11 @@
     padding-bottom: 0;
 }
 .content-chat-body.minimized .chat-search{
-    opacity: 0.7;
+    opacity: 0.5;
+}
+
+.content-chat-body.minimized .chat-search:hover{
+    opacity: 1;
 }
 
 

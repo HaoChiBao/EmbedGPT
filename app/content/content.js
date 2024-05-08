@@ -350,6 +350,7 @@ const main = async () => {
     const createContentChat = async () => {
         const content_chat = document.createElement('div')
         content_chat.className = 'content-chat-body'
+        content_chat.classList.add('minimized') //start minimized
 
         // top part of chat
         const top = document.createElement('div')
