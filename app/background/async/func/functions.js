@@ -3,6 +3,7 @@ import {OPENAI_API_KEY} from './API_KEYS.js'
 const GPT_INFO = {
     GPT_ENDPOINT: "https://api.openai.com/v1/chat/completions",
     GPT_IMAGE_MODAL: "gpt-4-vision-preview",
+    // GPT_IMAGE_MODAL: "gpt-4-turbo",
     GPT_TEXT_MODAL: "gpt-4",
     API_KEY: OPENAI_API_KEY
 }

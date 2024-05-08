@@ -282,6 +282,10 @@
     border-style: dotted;
     border-color: #fff;
     border-radius: 20px;
+
+    background-color: black;
+
+    object-fit: contain;
 }
 
 #chat-search.active{filter: blur(5px);}

@@ -121,15 +121,10 @@ const main = async () => {
                 const dimensions = data.dimensions
     
                 const croppedImageData = await cropDataUrl(dataUrl, dimensions)
-                highlight_imageData = croppedImageData
-
+                save_highlight_imageData(croppedImageData)
+                open_chat()
+                
                 // save image to clipboard
-                const img = new Image()     
-                img.src = croppedImageData
-                img.className = 'cropped-image-test'
-                // document.body.appendChild(img)
-                // console.log(img)
-
                 const imageData = await fetch(croppedImageData)
                 const blob = await imageData.blob()
                 
@@ -153,6 +148,15 @@ const main = async () => {
                 render_response(response_message); // display system response (with animation) in chat
     
                 console.log(currentChatHistory)
+                break;
+
+            case 'queryImage':
+                console.log(data)
+                const response_message_image = data.content.choices[0].message.content;
+                update_chat_history(1, response_message_image); // add system response to chat history
+                render_response(response_message_image); // display system response (with animation) in chat
+    
+                // console.log(currentChatHistory)
                 break;
     
             case 'refresh':
@@ -230,6 +234,7 @@ const main = async () => {
     
         return message_element;
     }
+
     // used when chat is first loaded
     const load_chat = () => {
         chat_body.innerHTML = '';
@@ -242,7 +247,8 @@ const main = async () => {
         }
     
         currentChatHistory.forEach(async chat => {
-            const chat_element = await create_chat_bubble(chat.role, chat.content);
+            // const chat_element = await create_chat_bubble(chat.role, chat.content);
+            const chat_element = await create_chat_bubble(chat.role, chat.content[0].text);
             chat_body.appendChild(chat_element);
         })
         // set chat scroll to bottom
@@ -287,15 +293,57 @@ const main = async () => {
         last_response_element = response_element;
     }
     
+    const reset_highlight_imageData = () => {
+        highlight_imageData = null;
+        image_preview.src = ''
+        image_preview.style.display = 'none'
+    }
+
+    const save_highlight_imageData = (dataUrl) => {
+        highlight_imageData = dataUrl
+        image_preview.src = dataUrl
+        image_preview.style.display = 'block'
+    }
+
+    /*
     // add new message to chat history
     const update_chat_history = (role = 0, content) => {
         // determine role
         role = role === 0 ? 'user' : 'system';
         currentChatHistory.push({ role, content });
-    
+        
         // update timestamp (last sent message)
         allChats[currentChat].timestamp = Date.now();
         // allChats[currentChat].timestamp = new Date();
+    }
+    */
+   
+   const update_chat_history = (role = 0, text) => {
+        role = role === 0 ? 'user' : 'system';
+        let content = [
+           {
+               type: 'text',
+                text
+            },
+        ]
+
+        // console.log(highlight_imageData)
+        
+        if(highlight_imageData && role === 'user') {
+            content.push({
+                type: 'image_url',
+                image_url: {
+                    url: highlight_imageData
+                }
+            })
+        }
+
+        reset_highlight_imageData()
+        
+        currentChatHistory.push({ role, content });
+        allChats[currentChat].timestamp = Date.now();
+
+        console.log(currentChatHistory)
     }
 
     const handleSubmit = async (e) => {
@@ -322,9 +370,11 @@ const main = async () => {
         
         maximize_chat()
         port.postMessage({ 
-            action: 'queryText', 
+            // action: 'queryText', 
+            action: 'queryImage', 
             chatModel: 0,
             chatHistory: currentChatHistory,
+            imageData: true
         });
     }
 
@@ -333,13 +383,18 @@ const main = async () => {
         chat.classList.remove('minimized')
     }
     const minimize_chat = () => {
+        chat.classList.add('minimized')
+    }
+    const toggle_minimize = () => {
         chat.classList.toggle('minimized')
     }
+
     const close_chat = () => {
         chat.classList.add('closed')
         setTimeout(() => {
             chat.style.top = ''
             chat.style.left = '50%'
+            minimize_chat()
             setTimeout(() => {open_chat()},500)
         },500)
     }
@@ -352,6 +407,7 @@ const main = async () => {
         const content_chat = document.createElement('div')
         content_chat.className = 'content-chat-body'
         content_chat.classList.add('minimized') //start minimized
+        content_chat.classList.add('closed') //start closed
 
         // top part of chat
         const top = document.createElement('div')
@@ -367,7 +423,7 @@ const main = async () => {
 
         const minimize = document.createElement('button')
         minimize.className = 'minimize'
-        minimize.addEventListener('click', minimize_chat)
+        minimize.addEventListener('click', toggle_minimize)
         // minimize.innerHTML = '-'
         
         const close = document.createElement('button')
@@ -420,10 +476,13 @@ const main = async () => {
         return content_chat
     }
 
+    // chat variables
     const chat = await createContentChat()
     const chat_body = chat.querySelector('.chat-body')
     const top = chat.querySelector('.content-chat-top')
     const form = chat.querySelector('.chat-search')
+    const image_preview = chat.querySelector('.image-preview')
+    
 
     makeElementDraggable(chat, top)
     document.body.appendChild(chat)
