@@ -715,9 +715,17 @@ const main = async () => {
         console.log(allChats)
     }
 
-    const create_chat_bubble = async (role, content) => {
+    const create_chat_image = (source) => {
+        const image = document.createElement('img')
+        image.src = source
+        image.className = 'chat-image'
+        return image
+    }
+
+    const create_chat_bubble = async (role, content, image) => {
         const message_element = document.createElement('div'); 
         const profile_image = document.createElement('img');
+        // profile_image.className = 'profile-image';
         const message = document.createElement('p');
     
         if(role === 'user' || role === 0) {
@@ -734,6 +742,11 @@ const main = async () => {
     
         message_element.appendChild(profile_image);
         message_element.appendChild(message);
+
+        if(image){
+            const image_element = create_chat_image(image)
+            message.appendChild(image_element)
+        }
     
         return message_element;
     }
@@ -751,8 +764,13 @@ const main = async () => {
     
         currentChatHistory.forEach(async chat => {
             // const chat_element = await create_chat_bubble(chat.role, chat.content);
-            const chat_element = await create_chat_bubble(chat.role, chat.content[0].text);
+            const chat_element = await create_chat_bubble(chat.role, chat.content[0].text, chat.content[1] ? chat.content[1].image_url.url : null);
             chat_body.appendChild(chat_element);
+
+            // if(chat.content[1] && chat.content[1].type === 'image_url') {
+            //     const image = create_chat_image(chat.content[1].image_url.url)
+            //     chat_body.appendChild(image)
+            // }
         })
         // set chat scroll to bottom
         chat_body.scrollTop = chat_body.scrollHeight;
