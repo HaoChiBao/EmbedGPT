@@ -7,6 +7,7 @@ const makeElementDraggable = (element, dragElement) => {
     function dragMouseDown(e) {
         e = e || window.event;
         e.preventDefault();
+        e.stopPropagation();
         pos3 = e.clientX;
         pos4 = e.clientY;
         document.onmouseup = closeDragElement;
@@ -16,6 +17,7 @@ const makeElementDraggable = (element, dragElement) => {
     function elementDrag(e) {
         e = e || window.event;
         e.preventDefault();
+        e.stopPropagation();
         pos1 = pos3 - e.clientX;
         pos2 = pos4 - e.clientY;
         pos3 = e.clientX;
