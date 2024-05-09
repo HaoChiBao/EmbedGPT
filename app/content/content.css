@@ -199,7 +199,8 @@
 .content-chat-body .chat-body{
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: start !important;
+    justify-content: flex-start !important;
 
     /* padding:1rem; */
 
@@ -407,27 +408,31 @@
 
 /* scrolling ------------- */
 .content-chat-body .chat-body::-webkit-scrollbar {
+    all: initial;
     width: 15px !important;
 }
 
 /* Track */
 .content-chat-body .chat-body::-webkit-scrollbar-track {
+    all: initial;
     background:transparent !important;
 }
 
 /* Handle */
 .content-chat-body .chat-body::-webkit-scrollbar-thumb {
+    all: initial;
     /* background: linear-gradient(-45deg, #d98cf5,#2b20f8,#31a2fa); */
     background: linear-gradient(-45deg, #715AFF,#5887FF,#8DADFF) !important;
-
+    
     background-clip: content-box !important;
     border: 5px solid transparent !important;
     border-radius: 10px !important;
     /* background-image: url('https://assets.materialup.com/uploads/cde34f59-a45f-48d4-9699-3a686999b9dc/preview.gif'); */
-    }
+}
 
-  /* Handle on hover */
+/* Handle on hover */
 .content-chat-body .chat-body::-webkit-scrollbar-thumb:hover {
+    all: initial;
     /* background: #555; */
     opacity: 0.8 !important;
 }
