@@ -921,6 +921,13 @@ const main = async () => {
     }
     const open_chat = () => {
         chat.classList.remove('closed')
+        const chat_input = chat.querySelector('input')
+        chat_input.value = 'what do you see?'
+        
+        // highight input text
+        chat_input.select()
+
+        chat_input.focus()
     }
 
     // __________________________________________CHAT UI__________________________________________
