@@ -296,15 +296,64 @@
 .content-chat-body .chat-search .image-preview{
     height: calc(100% - 10px);
     margin-left: 5px;
-
-    width: 40px;
+    
+    width: 80px;
     border-style: dotted;
     border-color: #fff;
     border-radius: 20px;
-
+    
     background-color: black;
+    /* overflow: hidden; */
+    
+    position: relative;
+}
 
+.content-chat-body .chat-search .image-preview:hover .delete-button{
+    opacity: 1;
+}
+
+.content-chat-body .chat-search .image-preview .delete-button:hover{
+    background-color: #FF0000;
+    /* transform: scale(1.1) translate(40%, -40%); */
+}
+.content-chat-body .chat-search .image-preview .delete-button:hover img{
+    transform: scale(1);
+}
+
+.content-chat-body .chat-search .image-preview .delete-button{
+    position: absolute;
+    top: 0;
+    right: 0;
+    
+    padding: 0 !important;
+    
+    transform: translate(40%, -40%);
+    
+    width: 13px;
+    height: 13px;
+    
+    background-color: #a3a3a3;
+    
+    border-radius: 50%;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    cursor: pointer;
+    transition: 0.3s ease;
+    opacity: 0;
+}
+
+.content-chat-body .chat-search .image-preview .delete-button img{
+    width: 5px;
+    height: 5px;
+}
+
+.content-chat-body .chat-search .image-preview img{
     object-fit: contain;
+    width: 100%;
+    height: 100%;
 }
 
 #chat-search.active{filter: blur(5px);}

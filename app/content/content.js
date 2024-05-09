@@ -816,13 +816,13 @@ const main = async () => {
     
     const reset_highlight_imageData = () => {
         highlight_imageData = null;
-        image_preview.src = ''
+        image_preview_img.src = ''
         image_preview.style.display = 'none'
     }
 
     const save_highlight_imageData = (dataUrl) => {
         highlight_imageData = dataUrl
-        image_preview.src = dataUrl
+        image_preview_img.src = dataUrl
         image_preview.style.display = 'block'
     }
 
@@ -916,7 +916,7 @@ const main = async () => {
             chat.style.top = ''
             chat.style.left = '50%'
             minimize_chat()
-            setTimeout(() => {open_chat()},500)
+            // setTimeout(() => {open_chat()},500)
         },500)
     }
     const open_chat = () => {
@@ -981,15 +981,49 @@ const main = async () => {
         search_input.type = 'text'
         search_input.placeholder = 'enter prompt here:'
 
+        // when user clicks on input it will highlight the text
+        // search_input.addEventListener('click', e => {
+        //     search_input.select()
+        // })
+
         const search_button = document.createElement('button')
         const search_icon = document.createElement('img')
         search_icon.src = await chrome.runtime.getURL('images/stars.png')
 
         search_button.appendChild(search_icon)
 
-        const image_preview = document.createElement('img')
+        // const preview_element = document.createElement('div')
+        const image_preview = document.createElement('div')
         image_preview.className = 'image-preview'
-        image_preview.src = await chrome.runtime.getURL('images/test.png')
+        const img_element = document.createElement('img')
+        img_element.className = 'highlight-image-preview'
+        img_element.src = await chrome.runtime.getURL('images/test.png')
+
+        const delete_image = document.createElement('button')
+        delete_image.className = 'delete-button'
+
+        const close_image = document.createElement('img')
+        close_image.src = await chrome.runtime.getURL('images/close.png')
+        close_image.className = 'close-image'
+        delete_image.appendChild(close_image)
+
+        delete_image.addEventListener('click', e => {
+            /*
+                HEY FUTURE JAMES
+                For some reason all form elements are connected to the same event listener
+                so when you click on the delete button it also triggers the form submit event
+
+                but when I submit the form it also triggers the delete button event
+                weird
+            */
+            // e.stopPropagation()
+            e.preventDefault()
+            reset_highlight_imageData()
+        })
+
+
+        image_preview.appendChild(delete_image)
+        image_preview.appendChild(img_element)
 
         search.appendChild(image_preview)
         search.appendChild(search_input)
@@ -999,7 +1033,11 @@ const main = async () => {
         content_chat.appendChild(body)
         content_chat.appendChild(search)
 
-        search.addEventListener('submit', handleSubmit)
+        // search.addEventListener('submit', handleSubmit)
+        search_input.addEventListener('keydown', (e) => {
+            if(event.key === 'Enter') handleSubmit(e)
+        })
+        search_button.addEventListener('click', handleSubmit)
 
         return content_chat
     }
@@ -1009,7 +1047,9 @@ const main = async () => {
     const chat_body = chat.querySelector('.chat-body')
     const top = chat.querySelector('.content-chat-top')
     const form = chat.querySelector('.chat-search')
+
     const image_preview = chat.querySelector('.image-preview')
+    const image_preview_img = image_preview.querySelector('.highlight-image-preview')
     
 
     makeElementDraggable(chat, top)
