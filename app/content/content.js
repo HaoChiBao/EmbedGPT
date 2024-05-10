@@ -335,7 +335,8 @@ const main = async () => {
         highlight_area.style.cursor = 'default'
 
         console.log('transforming path')
-        const MOVE_STEP = 6 // how fast the points move to the corners
+        // const MOVE_STEP = 6 // how fast the points move to the corners
+        const MOVE_STEP = 10 // how fast the points move to the corners
 
         const ANGLE_STEP = Math.PI/100 // how fast the angle changes
         let angle = 0
@@ -753,6 +754,13 @@ const main = async () => {
         return message_element;
     }
 
+    const create_chat_error = (message) => {
+        const error_element = document.createElement('div');
+        error_element.className = 'chat-error';
+        error_element.innerHTML = message
+        return error_element
+    }
+
     // used when chat is first loaded
     const load_chat = () => {
         chat_body.innerHTML = '';
@@ -763,17 +771,19 @@ const main = async () => {
             empty_chat.innerHTML = 'start a conversation...';
             chat_body.appendChild(empty_chat)
         }
-    
-        currentChatHistory.forEach(async chat => {
-            // const chat_element = await create_chat_bubble(chat.role, chat.content);
-            const chat_element = await create_chat_bubble(chat.role, chat.content[0].text, chat.content[1] ? chat.content[1].image_url.url : null);
-            chat_body.appendChild(chat_element);
 
-            // if(chat.content[1] && chat.content[1].type === 'image_url') {
-            //     const image = create_chat_image(chat.content[1].image_url.url)
-            //     chat_body.appendChild(image)
-            // }
+        currentChatHistory.forEach(async chat => {
+            try{
+                // const chat_element = await create_chat_bubble(chat.role, chat.content);
+                const chat_element = await create_chat_bubble(chat.role, chat.content[0].text, chat.content[1] ? chat.content[1].image_url.url : null);
+                chat_body.appendChild(chat_element);
+            } catch (e){
+                // const chat_error = create_chat_error('Error loading chat');
+                const chat_error = create_chat_error(e);
+                chat_body.appendChild(chat_error);
+            }
         })
+
         // set chat scroll to bottom
         chat_body.scrollTop = chat_body.scrollHeight;
     }
@@ -938,6 +948,10 @@ const main = async () => {
         content_chat.className = 'content-chat-body'
         content_chat.classList.add('minimized') //start minimized
         content_chat.classList.add('closed') //start closed
+
+        content_chat.addEventListener('mousedown', e => e.stopPropagation())
+        // content_chat.addEventListener('mouseup', e => e.stopPropagation())
+        // content_chat.addEventListener('mousemove', e => e.stopPropagation())
 
         // top part of chat
         const top = document.createElement('div')

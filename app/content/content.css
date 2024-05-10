@@ -473,9 +473,30 @@
     opacity: 1;
     filter: grayscale(0);
 }
+
+.content-chat-body.minimized .chat-search input:focus{
+    outline: none;
+    border: none;
+}
+
 .content-chat-body.minimized .chat-search:focus-within{
     opacity: 1;
     filter: grayscale(0);
+}
+
+.content-chat-body .chat-body .chat-error{
+    background-color: #ff7171;
+    color: #fff;
+    
+    border: #FF0000 3px solid;
+    
+    border-radius: 10px;
+
+    width: 100%;
+
+
+    margin-bottom: calc(var(--var-sizing)/2);
+    padding: calc(var(--var-sizing)/2);
 }
     
 
