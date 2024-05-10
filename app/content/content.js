@@ -83,7 +83,7 @@ const cropDataUrl = async (dataUrl, dimensions) => {
 // initialize data and event listeners
 const main = async () => {
 
-    let highlight_imageData = null
+    let imagePreview_imageData = null
 
     // chat variables
     const NEW_CHAT_NAME = 'New Chat';
@@ -135,7 +135,7 @@ const main = async () => {
                 const dimensions = data.dimensions
     
                 const croppedImageData = await cropDataUrl(dataUrl, dimensions)
-                save_highlight_imageData(croppedImageData)
+                save_imagePreview_imageData(croppedImageData)
                 open_chat()
                 
                 // save image to clipboard
@@ -158,7 +158,7 @@ const main = async () => {
 
             case 'queryText':
                 const response_message = data.content.choices[0].message.content;
-                update_chat_history(1, response_message); // add system response to chat history
+                await update_chat_history(1, response_message); // add system response to chat history
                 render_response(response_message); // display system response (with animation) in chat
     
                 console.log(currentChatHistory)
@@ -167,9 +167,8 @@ const main = async () => {
             case 'queryImage':
                 console.log(data)
                 const response_message_image = data.content.choices[0].message.content;
-                update_chat_history(1, response_message_image); // add system response to chat history
+                await update_chat_history(1, response_message_image); // add system response to chat history
                 render_response(response_message_image); // display system response (with animation) in chat
-    
                 // console.log(currentChatHistory)
                 break;
     
@@ -691,6 +690,10 @@ const main = async () => {
         id += Date.now();
         return id;
     }
+
+    const setTitle = (title) => {
+        allChats[currentChat].title = title;
+    }
     
     const create_new_chat = () => {
 
@@ -826,14 +829,14 @@ const main = async () => {
         last_response_element = response_element;
     }
     
-    const reset_highlight_imageData = () => {
-        highlight_imageData = null;
+    const reset_imagePreview_imageData = () => {
+        imagePreview_imageData = null;
         image_preview_img.src = ''
         image_preview.style.display = 'none'
     }
 
-    const save_highlight_imageData = (dataUrl) => {
-        highlight_imageData = dataUrl
+    const save_imagePreview_imageData = (dataUrl) => {
+        imagePreview_imageData = dataUrl
         image_preview_img.src = dataUrl
         image_preview.style.display = 'block'
     }
@@ -851,7 +854,7 @@ const main = async () => {
     }
     */
    
-   const update_chat_history = (role = 0, text) => {
+   const update_chat_history = async (role = 0, text) => {
         role = role === 0 ? 'user' : 'system';
         let content = [
            {
@@ -860,23 +863,38 @@ const main = async () => {
             },
         ]
 
-        // console.log(highlight_imageData)
+        // console.log(imagePreview_imageData)
         
-        if(highlight_imageData && role === 'user') {
+        if(imagePreview_imageData && role === 'user') {
             content.push({
                 type: 'image_url',
                 image_url: {
-                    url: highlight_imageData
+                    url: imagePreview_imageData
                 }
             })
         }
 
-        reset_highlight_imageData()
+        reset_imagePreview_imageData()
         
         currentChatHistory.push({ role, content });
         allChats[currentChat].timestamp = Date.now();
 
-        console.log(currentChatHistory)
+        await save_content_chat()
+        // console.log(currentChatHistory)
+    }
+
+    const save_content_chat = async () => {
+        // load all chats saved
+        const saved_chats = await chrome.storage.local.get('allChats')
+        // check if this is a unique chat
+        const chat_exists = saved_chats.allChats.find(chat => chat.id === currentChatId)
+        if(chat_exists) {
+            // replace the chat with the new chat
+            saved_chats.allChats[saved_chats.allChats.indexOf(chat_exists)] = allChats[currentChat]
+        }
+        else {saved_chats.allChats.push(allChats[currentChat])}
+        // save the chat
+        await chrome.storage.local.set({ allChats: saved_chats.allChats });
     }
 
     const handleSubmit = async (e) => {
@@ -893,13 +911,11 @@ const main = async () => {
 
         // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
         console.log(currentChatHistory.length)
-        // if(allChats[currentChat].title === NEW_CHAT_NAME && currentChatHistory.length === 0 ) setTitle(query);
-        update_chat_history(0, query);
+        if(allChats[currentChat].title === NEW_CHAT_NAME && currentChatHistory.length === 0 ) setTitle(query);
+        await update_chat_history(0, query);
         // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
         load_chat();
         await response_loading();
-    
-        // console.log(allChats)
         
         maximize_chat()
         port.postMessage({ 
@@ -1034,7 +1050,7 @@ const main = async () => {
             */
             // e.stopPropagation()
             e.preventDefault()
-            reset_highlight_imageData()
+            reset_imagePreview_imageData()
         })
 
 

@@ -22,6 +22,17 @@ Popup
     * image query 
 
 
+
+Freemium model
+- Free Tier
+    - 5 image searches a day (circle searches)
+    - GPT 3.5
+
+- Premium Tier
+    - Unlimited image queries
+    - GPT 4
+
+
 Inspiration
 * Samsung AI Features
 * Glasp (Chrome extension)

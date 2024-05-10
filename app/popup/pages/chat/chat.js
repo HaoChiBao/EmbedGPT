@@ -65,7 +65,8 @@ const port = chrome.runtime.connect({ name: "content" });
 // determine last chat activated
 let lastChatId = null;
 
-const TEST = false;
+let TEST = false;
+// TEST = true;
 let allChats = []
 if(TEST) allChats = test_data
 
@@ -74,6 +75,8 @@ let currentChat = null;
 // let currentChatHistory = allChats[currentChat].chatHistory;
 let currentChatId = null
 let currentChatHistory = null
+
+let imagePreview_imageData = null;
 
 
 // ___________________________________UTILS___________________________________
@@ -357,9 +360,10 @@ const create_menu_item = (chat) => {
 
         console.log(chat.chatHistory.length)
         if(chat.title == NEW_CHAT_NAME && chat.chatHistory.length === 0) return
-        if(chat.id === currentChatId) {create_new_chat()}
         
         allChats = allChats.filter(curr_chat => curr_chat.id !== chat.id);
+        if(chat.id === currentChatId) {create_new_chat()}
+        
         render_all_chats();
     })
 
@@ -448,7 +452,14 @@ chat_body.addEventListener('click', ()=>{
 
 // ___________________________________CHAT___________________________________
 
-const create_chat_bubble = (role, content) => {
+const create_chat_image = (source) => {
+    const image = document.createElement('img')
+    image.src = source
+    image.className = 'chat-image'
+    return image
+}
+
+const create_chat_bubble = (role, content, image) => {
     const message_element = document.createElement('div'); 
     const profile_image = document.createElement('img');
     const message = document.createElement('p');
@@ -466,8 +477,21 @@ const create_chat_bubble = (role, content) => {
     message_element.appendChild(profile_image);
     message_element.appendChild(message);
 
+    if(image){
+        const image_element = create_chat_image(image)
+        message.appendChild(image_element)
+    }
+
     return message_element;
 }
+
+const create_chat_error = (message) => {
+    const error_element = document.createElement('div');
+    error_element.className = 'chat-error';
+    error_element.innerHTML = message
+    return error_element
+}
+
 // used when chat is first loaded
 const load_chat = () => {
     chat_body.innerHTML = '';
@@ -479,10 +503,19 @@ const load_chat = () => {
         chat_body.appendChild(empty_chat)
     }
 
-    currentChatHistory.forEach(chat => {
-        const chat_element = create_chat_bubble(chat.role, chat.content);
-        chat_body.appendChild(chat_element);
+    currentChatHistory.forEach(async chat => {
+        try{
+            // const chat_element = await create_chat_bubble(chat.role, chat.content);
+            // console.log(chat.content[1])
+            const chat_element = create_chat_bubble(chat.role, chat.content[0].text, chat.content[1] ? chat.content[1].image_url.url : null);
+            chat_body.appendChild(chat_element);
+        } catch (e){
+            // const chat_error = create_chat_error('Error loading chat');
+            const chat_error = create_chat_error(e);
+            chat_body.appendChild(chat_error);
+        }
     })
+
     // set chat scroll to bottom
     chat_body.scrollTop = chat_body.scrollHeight;
 }
@@ -525,9 +558,17 @@ const response_loading = () => {
 }
 
 // add new message to chat history
-const update_chat_history = (role = 0, content) => {
+const update_chat_history = (role = 0, text) => {
     // determine role
     role = role === 0 ? 'user' : 'system';
+
+    let content = [
+        {
+            type: 'text',
+             text
+         },
+    ]
+
     currentChatHistory.push({ role, content });
 
     // update timestamp (last sent message)
@@ -556,7 +597,9 @@ const handleSubmit = async (e) => {
     console.log('Submitting query:', query)
 
     // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
-    console.log(currentChatHistory.length)
+    // console.log(currentChatHistory.length)
+    console.log(allChats)
+    console.log(currentChat)
     if(allChats[currentChat].title === NEW_CHAT_NAME && currentChatHistory.length === 0 ) setTitle(query);
     update_chat_history(0, query);
     // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
@@ -657,6 +700,7 @@ const main = async () => {
     window.addEventListener('blur', async () => {
         // set chrome local storage
         await chrome.storage.local.set(({ allChats }));
+        // await chrome.storage.local.set(({ allChats:[] }));
     })
 
     search_input.focus();

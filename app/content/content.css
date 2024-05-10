@@ -112,8 +112,8 @@
     /* overflow: hidden; */
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 
-    height: calc(531px - 2rem);
-    width: calc(350px - 2rem);
+    height: calc(531px - var(--var-sizing)*2);
+    width: calc(350px - var(--var-sizing)*2);
 
     padding: var(--var-sizing);
     /* padding-top: 0; */

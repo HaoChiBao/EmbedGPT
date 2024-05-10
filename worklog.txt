@@ -1,0 +1,10 @@
+Notes for future things to add (starting May 9, 2024)
+
+* Save content chat into all chat history
+
+* Popup chat can loaded chat into content chat 
+    * add button to specifically add it
+
+* create website for chrome extension
+    * Graphics about the site
+    * Web portal for users to purchase premium features

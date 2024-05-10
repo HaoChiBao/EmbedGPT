@@ -7,22 +7,19 @@
 }
 
 body {
-    --var-sizing: 16px;
-
-    height: calc(561px - var(--var-sizing)*2);
-    width: calc(322px - var(--var-sizing)*2);
-
-    padding: var(--var-sizing);
-    /* padding-top: 0; */
-
-    background-color: #fff;
+    height: calc(561px - 2rem);
+    width: calc(302px - 2rem);
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    transition: 0.5s ease;
+    position: relative;
+    overflow: hidden;
+    padding:1rem;
+
+    /* border-style: dotted; */
 }
 
 /* scroll wheel css =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
@@ -409,13 +406,11 @@ body {
 #chat-body{
     display: flex;
     flex-direction: column;
-    align-items: start !important;
-    justify-content: flex-start !important;
+    align-items: start;
 
-    /* padding:1rem; */
+    padding:1rem;
 
-    padding-bottom: var(--var-sizing);
-    padding-top: calc(var(--var-sizing)*2);
+    padding-top: 2rem;
 
     height: 100%;
     width: 100%;
@@ -428,10 +423,7 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
 
-    font-size: var(--var-sizing);
-
-    -webkit-mask-image: linear-gradient(to bottom,black 95%,transparent 100%);
-    mask-image: linear-gradient(to bottom,black 95%,transparent 100%);
+    font-size: 1rem;
 }
 
 #chat-body.active{filter: blur(5px);}
@@ -448,45 +440,26 @@ body {
 
 #chat-body .user-chat{
     border-top: #8DADFF 1px solid;
-    padding-top: var(--var-sizing);
+    padding-top: 1rem;
 }
 
 #chat-body .message {
     width: 100%;
     /* border-style: dotted; */
-    margin: calc(var(--var-sizing)/2) 0;
+    margin: 0.5rem 0;
 
     display: flex;
     align-items: start;
-    gap: calc(var(--var-sizing)/2);
+    gap: 0.5rem;
 }
 
 #chat-body .message img{
     aspect-ratio: 1/1;
-    width: calc(var(--var-sizing)*2);
+    width: 2rem;
 }
 
 #chat-body .message p{
-    margin-top: calc(var(--var-sizing)/4);
-
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: calc(var(--var-sizing)/2);
-}
-
-#chat-body .message .chat-image{
-    width: calc(100% - 8px) !important;
-    max-height: 200px !important;
-    aspect-ratio: auto !important;
-    object-fit: contain;
-
-    background: linear-gradient(90deg, #715AFF 0%, #8DADFF 100%);
-
-    border-radius: 10px;
-    cursor: pointer;
-
-    overflow: hidden;
+    margin-top: 0.25rem;
 }
 
 #chat-body .loading-gif{
@@ -499,98 +472,32 @@ body {
     align-items: center;
     justify-content: center;
     
-    height: 40px;
     width: 100%;
     
     background: linear-gradient(90deg, #715AFF 0%, #8DADFF 100%);
-    border-radius: calc(var(--var-sizing)*2) !important;
+    border-radius: 1.5rem;
     transition: 0.5s ease;
-}
-
-#chat-search .image-preview{
-    height: calc(100% - 10px);
-    margin-left: 5px;
-    
-    width: 80px;
-    border-style: dotted !important;
-    border-color: #fff !important;
-    border-radius: 20px;
-    
-    background-color: black;
-    /* overflow: hidden; */
-    
-    position: relative;
-}
-
-#chat-search .image-preview:hover .delete-button{
-    opacity: 1;
-}
-
-#chat-search .image-preview .delete-button:hover{
-    background-color: #FF0000;
-    /* transform: scale(1.1) translate(40%, -40%); */
-}
-#chat-search .image-preview .delete-button:hover img{
-    transform: scale(1);
-}
-
-#chat-search .image-preview .delete-button{
-    all: initial;
-    position: absolute;
-    top: 0;
-    right: 0;
-    
-    padding: 0 !important;
-    
-    transform: translate(40%, -40%);
-    
-    width: 13px !important;
-    height: 13px !important;
-    aspect-ratio: 1/1 !important;
-    
-    background-color: #a3a3a3;
-    
-    border-radius: 50%;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    cursor: pointer;
-    transition: 0.3s ease;
-    opacity: 0;
-}
-
-#chat-search .image-preview .delete-button img{
-    width: 5px;
-    height: 5px;
-}
-
-#chat-search .image-preview img{
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
 }
 
 #chat-search.active{filter: blur(5px);}
 
 #chat-search input{
-    padding: 0px 16px;
+    padding:0.7rem 1rem;
     
-    background-color: transparent !important;
-    border: none !important;
-    outline: none !important;
+    background-color: transparent;
+    border: none;
+    outline: none;
 
-    font-size: 16px !important;
+    font-size: 1rem;
     width: 100%;
-    color: #fff !important;
+    color: #fff;
 }
 #chat-search input::placeholder{
     color: #ececec;
 }
 
 #chat-search button{
-    padding: 8px 16px;
+    padding:0.5rem 1rem;
     background-color: transparent;
     border: none;
     outline: none;
@@ -603,8 +510,8 @@ body {
 }
 
 #chat-search button img{
-    width: calc(var(--var-sizing)*3/2);
-    height: calc(var(--var-sizing)*3/2);
+    width: 1.5rem;
+    height: 1.5rem;
 
     transition: 0.5s ease;
 }
