@@ -67,12 +67,11 @@ let lastChatId = null;
 
 let TEST = false;
 // TEST = true;
-let allChats = []
+// let allChats = []
+let allChats = {}
 if(TEST) allChats = test_data
 
-let currentChat = null;
-// let currentChatId = allChats[currentChat].id;
-// let currentChatHistory = allChats[currentChat].chatHistory;
+// let currentChat = null;
 let currentChatId = null
 let currentChatHistory = null
 
@@ -91,7 +90,8 @@ const create_unique_id = () => { // create unique id for each chat
 }
 
 const get_chat_by_id = (id) => {
-    return allChats.find(chat => chat.id === id);
+    // return allChats.find(chat => chat.id === id);
+    return allChats[id];
 }
 
 // ________________________________PREMIUM___________________________________
@@ -117,6 +117,20 @@ smart_circle.addEventListener('click', () => {
 
 // _________________________________MENU___________________________________
 
+const isAllChatsEmpty = () => {
+    const chatIds = Object.keys(allChats);
+    return chatIds.length === 0;
+}
+
+const isAnyChatEmpty = () => {
+    const chatIds = Object.keys(allChats);
+    for(let i = 0; i < chatIds.length; i++) {
+        const chat = allChats[chatIds[i]];
+        // console.log(chat)
+        if(chat['chatHistory'].length === 0) return chat;
+    }
+    return null;
+}
 
 const toggleMenu = () => {
     if (menuButton.classList.contains('active')) {
@@ -147,27 +161,26 @@ const closeMenu = () => {
 
 const create_new_chat = () => {
     // check if any chats are empty, meaning that they are new chats
-    const empty_chat = allChats.find(chat => chat.chatHistory.length === 0);
+    const empty_chat = isAnyChatEmpty();
+    
     if(empty_chat) {
-        currentChat = allChats.indexOf(empty_chat);
-        currentChatHistory = allChats[currentChat].chatHistory;
-        currentChatId = allChats[currentChat].id;
+        currentChatHistory = allChats[currentChatId].chatHistory;
+        currentChatId = empty_chat.id;
         lastChatId = currentChatId;
         load_chat();
         return
     }
 
     const new_chat = {timestamp: Date.now(), chatHistory: [], title: NEW_CHAT_NAME, id : create_unique_id()};
-    allChats.push(new_chat);
-    currentChat = allChats.indexOf(new_chat);
-    currentChatHistory = allChats[currentChat].chatHistory;
-    currentChatId = allChats[currentChat].id;
-
+    // allChats.push(new_chat);
+    allChats[new_chat.id] = new_chat;
+    currentChatId = new_chat.id;
+    currentChatHistory = allChats[currentChatId].chatHistory;
     lastChatId = currentChatId;
 
     load_chat();
 
-    console.log(allChats)
+    // console.log(allChats)
 }
 
 const hide_menu_header = (id) => {
@@ -322,9 +335,8 @@ const create_menu_item = (chat) => {
     }
 
     const open_chat = () => {
-        currentChat = allChats.indexOf(chat);
-        currentChatHistory = allChats[currentChat].chatHistory;
-        currentChatId = allChats[currentChat].id;
+        currentChatId = chat.id;
+        currentChatHistory = allChats[currentChatId].chatHistory;
         load_chat();
     }
 
@@ -361,7 +373,8 @@ const create_menu_item = (chat) => {
         console.log(chat.chatHistory.length)
         if(chat.title == NEW_CHAT_NAME && chat.chatHistory.length === 0) return
         
-        allChats = allChats.filter(curr_chat => curr_chat.id !== chat.id);
+        delete allChats[chat.id];
+
         if(chat.id === currentChatId) {create_new_chat()}
         
         render_all_chats();
@@ -376,6 +389,13 @@ const create_menu_item = (chat) => {
 }
 menu_section.addEventListener('scroll', (e) => {close_all_edit_menus()})
 
+// sorts all chats by timestamp and returns an array of sorted chats
+const sort_chats = () => {
+    const chatIds = Object.keys(allChats);
+    chatIds.sort((a, b) => allChats[b].timestamp - allChats[a].timestamp);
+    return chatIds;
+}
+
 /* 
     sort chats by timestamps
     separated by:
@@ -386,7 +406,7 @@ menu_section.addEventListener('scroll', (e) => {close_all_edit_menus()})
     Older
 */
 const render_all_chats = () => {
-    if(allChats.length === 0) create_new_chat();
+    if(isAllChatsEmpty()) create_new_chat();
 
     // clear all menu items/headers
     for(let i = 0; i < 5; i++) {
@@ -401,9 +421,12 @@ const render_all_chats = () => {
     // const menu_header = create_menu_header('Today');
     // menu_section.appendChild(menu_header);
     
-    allChats.sort((a, b) => b.timestamp - a.timestamp); // sort by timestamp
-    console.log(allChats)
-    allChats.forEach((chat, index) => {
+    // allChats.sort((a, b) => b.timestamp - a.timestamp); // sort by timestamp
+    // console.log(allChats)
+    const sortedChatIds = sort_chats();
+    sortedChatIds.forEach( id => {
+        const chat = allChats[id];
+
         const timestamp = chat.timestamp;
 
         const menu_item = create_menu_item(chat);
@@ -572,7 +595,7 @@ const update_chat_history = (role = 0, text) => {
     currentChatHistory.push({ role, content });
 
     // update timestamp (last sent message)
-    allChats[currentChat].timestamp = Date.now();
+    allChats[currentChatId].timestamp = Date.now();
     // allChats[currentChat].timestamp = new Date();
 }
 
@@ -580,7 +603,7 @@ const update_chat_history = (role = 0, text) => {
 
 
 const setTitle = (title) => {
-    allChats[currentChat].title = title;
+    allChats[currentChatId].title = title;
 }
 
 const handleSubmit = async (e) => {
@@ -599,8 +622,7 @@ const handleSubmit = async (e) => {
     // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
     // console.log(currentChatHistory.length)
     console.log(allChats)
-    console.log(currentChat)
-    if(allChats[currentChat].title === NEW_CHAT_NAME && currentChatHistory.length === 0 ) setTitle(query);
+    if(allChats[currentChatId].title === NEW_CHAT_NAME && currentChatHistory.length === 0 ) setTitle(query);
     update_chat_history(0, query);
     // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
     load_chat();
@@ -609,10 +631,16 @@ const handleSubmit = async (e) => {
     // console.log(allChats)
     
     
+    // port.postMessage({ 
+    //     action: 'queryText', 
+    //     chatModel: 0,
+    //     chatHistory: currentChatHistory,
+    // });
     port.postMessage({ 
-        action: 'queryText', 
+        action: 'queryImage', 
         chatModel: 0,
         chatHistory: currentChatHistory,
+        imageData: true,
     });
 }
 
@@ -664,6 +692,12 @@ const main = async () => {
     
                 console.log(currentChatHistory)
                 break;
+
+            case 'queryImage':
+                const response_message_image = msg.data.content.choices[0].message.content;
+                update_chat_history(1, response_message_image); // add system response to chat history
+                render_response(response_message_image); 
+
             case 'refresh':
                 // keeps the service worker actuve
                 setTimeout(() => {
@@ -700,7 +734,7 @@ const main = async () => {
     window.addEventListener('blur', async () => {
         // set chrome local storage
         await chrome.storage.local.set(({ allChats }));
-        // await chrome.storage.local.set(({ allChats:[] }));
+        await chrome.storage.local.set(({ allChats: {} }));
     })
 
     search_input.focus();

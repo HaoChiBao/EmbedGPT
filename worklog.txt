@@ -8,3 +8,20 @@ Notes for future things to add (starting May 9, 2024)
 * create website for chrome extension
     * Graphics about the site
     * Web portal for users to purchase premium features
+
+
+Things to work on May 10, 2024
+* current allChat is a list (make it an object where the chat keys are the chat IDs)
+
+
+______________________May 11, 2024______________________
+Task to do for today
+* Rework of chat storing data structure
+    * Current chat 
+        * AllChats = [chat, chat], 
+        * currentChat = 0 (this refers to this index)
+    * New chat 
+        * Allchats = {id0: chat, id2: chat} 
+        * currentChat = id0
+
+    * The current chat history is stored by referencing i
