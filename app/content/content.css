@@ -2,6 +2,7 @@
 
 /* _____________________ HIGHLIGHT CSS__________________ */
 .highlight-area{
+    /* all: initial !important; */
     position: fixed;
     z-index: 2147483647;
     top: 0;
@@ -110,7 +111,7 @@
     left: 50%;
     transform: translate(-50%, 0);
     /* overflow: hidden; */
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 
     height: calc(531px - var(--var-sizing)*2);
     width: calc(350px - var(--var-sizing)*2);
@@ -236,8 +237,16 @@
 }
 
 .content-chat-body .chat-body .user-chat{
-    border-top: #8DADFF 1px solid;
+    border-top: #8DADFF 1px solid !important;
+    
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+
     padding-top: var(--var-sizing);
+}
+.content-chat-body .chat-body .system-chat{
+    border: none !important;
 }
 
 .content-chat-body .chat-body .message {
@@ -272,12 +281,25 @@
     aspect-ratio: auto !important;
     object-fit: contain;
 
-    background: linear-gradient(90deg, #715AFF 0%, #8DADFF 100%);
+    background: linear-gradient(45deg, #D48DFF 0%, #5887FF 25%, #715AFF 50%, #E6978E 100%);
+    background-size: 400% 400%;
+    animation: movingGradient 10s infinite linear;
 
     border-radius: 10px;
     cursor: pointer;
 
     overflow: hidden;
+}
+@keyframes movingGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .content-chat-body .chat-body .loading-gif{
@@ -368,7 +390,8 @@
 #chat-search.active{filter: blur(5px);}
 
 .content-chat-body .chat-search input{
-    padding: 0px 16px;
+    padding: 0px 16px !important;
+    margin: 0px !important;
     
     background-color: transparent !important;
     border: none !important;

@@ -1,20 +1,44 @@
-Notes for future things to add (starting May 9, 2024)
+____________________To Do List (starting May 9, 2024)
 
-* Save content chat into all chat history
+Completed: ---------------
+
+* Save content chat into all chat history 
 
 * Popup chat can loaded chat into content chat 
     * add button to specifically add it
+
+
+Need to Work On: --------------------
+
+* Chat features
+    * Pin/Star chats
+    * Add Latex/markdown features 
+    * Add buttons to messages
+        * Copy button
+        * Speak button (with google api)
+
+    * Added Settings
+        * Settings element in menu
+        * Personal features
+        * Accessibility features
+        * 
+
+* Authentication (Client Side)
+    * Login/Signup popup pages
+    * Save allchats to users firebase index
+
+* Authentication (Server Side)
+    * Firebase DB Rules
+    * create AWS Server that returns encrypted api keys (Note* this could also just return the queries as well)
 
 * create website for chrome extension
     * Graphics about the site
     * Web portal for users to purchase premium features
 
 
-Things to work on May 10, 2024
-* current allChat is a list (make it an object where the chat keys are the chat IDs)
 
 
-______________________May 11, 2024______________________
+____________________________________________May 11, 2024____________________________________________
 Task to do for today
 * Rework of chat storing data structure
     * Current chat 
@@ -27,7 +51,7 @@ Task to do for today
     * The current chat history is stored by referencing indexes in an array
 
 
-______________________May 13, 2024______________________
+____________________________________________May 12, 2024____________________________________________
 Finished replacing the data structure for both popup and content chats
 Other things done today include:
 
@@ -42,3 +66,8 @@ Other things done today include:
     * Closing menu automatically focuses input section in popup chat
     * Highlight button will open up the currentchat in the content chat
     * Highlighting will bring up a minimized content chat
+
+
+
+
+____________________________________________May 13, 2024____________________________________________

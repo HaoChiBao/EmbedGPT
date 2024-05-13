@@ -281,8 +281,8 @@ const create_menu_item = (chat) => {
     delete_img.src = '../../../../images/delete.png';
     delete_btn.appendChild(delete_img);
 
-    edit_menu.appendChild(rename_btn);
     edit_menu.appendChild(popout_btn);
+    edit_menu.appendChild(rename_btn);
     edit_menu.appendChild(delete_btn);
 
     menu_item.appendChild(chat_image);
