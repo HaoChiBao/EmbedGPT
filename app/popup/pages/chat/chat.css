@@ -351,6 +351,7 @@ body {
     
     border-radius: 1rem;
     background-color: #DEDEDE;
+    background-color: #ffffff;
     
     display: flex;
     flex-direction: column;
@@ -460,9 +461,11 @@ body {
     gap: calc(var(--var-sizing)/2);
 }
 
-#chat-body .message img{
+#chat-body .message .pfp{
     aspect-ratio: 1/1;
     width: calc(var(--var-sizing)*2);
+    user-select: none;
+    pointer-events: none;
 }
 
 #chat-body .message p{
@@ -490,6 +493,8 @@ body {
 
 #chat-body .loading-gif{
     filter: grayscale(100%);
+    aspect-ratio: 1/1;
+    width: calc(var(--var-sizing)*2);
 }
 
 /* __________________________________________SEARCH____________________________________________ */

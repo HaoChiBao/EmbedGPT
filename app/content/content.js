@@ -83,7 +83,9 @@ const cropDataUrl = async (dataUrl, dimensions) => {
 // initialize data and event listeners
 const main = async () => {
 
+    // content chat element related variables
     let imagePreview_imageData = null
+    let AUTOFILL_TEXT = 'What do you see?'
 
     // chat variables
     const NEW_CHAT_NAME = 'New Chat';
@@ -126,6 +128,9 @@ const main = async () => {
                     allChats[currentChatId] = chat
 
                     load_chat()
+
+                    open_chat(false)
+                    maximize_chat()
 
                     break;
                 default:
@@ -765,7 +770,7 @@ const main = async () => {
     const create_chat_bubble = async (role, content, image) => {
         const message_element = document.createElement('div'); 
         const profile_image = document.createElement('img');
-        // profile_image.className = 'profile-image';
+        profile_image.className = 'pfp';
         const message = document.createElement('p');
     
         if(role === 'user' || role === 0) {
@@ -971,10 +976,11 @@ const main = async () => {
             // setTimeout(() => {open_chat()},500)
         },500)
     }
-    const open_chat = () => {
+    const open_chat = (autofill = true) => {
         chat.classList.remove('closed')
         const chat_input = chat.querySelector('input')
-        chat_input.value = 'what do you see?'
+        chat_input.value = ''
+        if(autofill) chat_input.value = AUTOFILL_TEXT
         
         // highight input text
         chat_input.select()
@@ -1051,9 +1057,12 @@ const main = async () => {
         // const preview_element = document.createElement('div')
         const image_preview = document.createElement('div')
         image_preview.className = 'image-preview'
+        image_preview.style.display = 'none'
+
         const img_element = document.createElement('img')
         img_element.className = 'highlight-image-preview'
-        img_element.src = await chrome.runtime.getURL('images/test.png')
+        // img_element.src = await chrome.runtime.getURL('images/test.png')
+        img_element.alt = 'highlight image preview'
 
         const delete_image = document.createElement('button')
         delete_image.className = 'delete-button'

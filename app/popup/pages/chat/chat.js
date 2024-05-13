@@ -74,6 +74,8 @@ if(TEST) allChats = test_data
 let currentChatId = null
 let currentChatHistory = null
 
+let last_response_element = null;
+
 let imagePreview_imageData = null;
 
 
@@ -161,6 +163,8 @@ const closeMenu = () => {
         section.classList.remove('active');
     })
     form.classList.remove('active');
+
+    search_input.focus();
 }
 
 const create_new_chat = () => {
@@ -183,6 +187,8 @@ const create_new_chat = () => {
     currentChatId = new_chat.id;
     currentChatHistory = allChats[currentChatId].chatHistory;
     lastChatId = currentChatId;
+
+    last_response_element = null; // if response is still loading, do not submit query
 
     load_chat();
 
@@ -355,6 +361,8 @@ const create_menu_item = (chat) => {
         currentChatId = chat.id;
         currentChatHistory = allChats[currentChatId].chatHistory;
         load_chat();
+
+        last_response_element = null; // if response is still loading, do not submit query
     }
 
     let is_editing = false;
@@ -497,10 +505,7 @@ const render_all_chats = () => {
 }
 
 chat_body.addEventListener('click', () =>{
-    if (isMenuOpen()) {
-        search_input.focus();
-        closeMenu();
-    } 
+    if(isMenuOpen()) closeMenu();
 })
 
 // ___________________________________HEADER___________________________________
@@ -517,6 +522,7 @@ const create_chat_image = (source) => {
 const create_chat_bubble = (role, content, image) => {
     const message_element = document.createElement('div'); 
     const profile_image = document.createElement('img');
+    profile_image.className = 'pfp';
     const message = document.createElement('p');
 
     if(role === 'user' || role === 0) {
@@ -575,7 +581,6 @@ const load_chat = () => {
     chat_body.scrollTop = chat_body.scrollHeight;
 }
 
-let last_response_element = null;
 // used when a response is returned
 const render_response = (content) => {
 
@@ -603,7 +608,7 @@ const response_loading = () => {
     const message = response_element.querySelector('p');
 
     const loading_gif = document.createElement('img');
-    loading_gif.classList.add('loading-gif');
+    loading_gif.className = 'loading-gif';
     loading_gif.src = '../../../../images/typing.gif';
 
     message.appendChild(loading_gif);
@@ -727,8 +732,15 @@ const main = async () => {
 
             case 'queryImage':
                 const response_message_image = msg.data.content.choices[0].message.content;
-                update_chat_history(1, response_message_image); // add system response to chat history
-                render_response(response_message_image); 
+
+                console.log(last_response_element)
+                if(last_response_element){ // if the response element is null then that means the user switched chats before the response was returned
+                    update_chat_history(1, response_message_image); // add system response to chat history
+                    render_response(response_message_image); 
+                    console.log('Response rendering!')
+                } else {
+                    console.log('Response NOT rendering!')
+                }
 
             case 'refresh':
                 // keeps the service worker actuve

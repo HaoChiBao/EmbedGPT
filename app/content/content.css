@@ -250,9 +250,11 @@
     gap: calc(var(--var-sizing)/2);
 }
 
-.content-chat-body .chat-body .message img{
+.content-chat-body .chat-body .message .pfp{
     aspect-ratio: 1/1;
     width: calc(var(--var-sizing)*2);
+    user-select: none;
+    pointer-events: none;
 }
 
 .content-chat-body .chat-body .message p{
@@ -280,6 +282,8 @@
 
 .content-chat-body .chat-body .loading-gif{
     filter: grayscale(100%);
+    aspect-ratio: 1/1;
+    width: calc(var(--var-sizing)*2);
 }
 
 /* __________________________________________SEARCH____________________________________________ */
