@@ -24,4 +24,21 @@ Task to do for today
         * Allchats = {id0: chat, id2: chat} 
         * currentChat = id0
 
-    * The current chat history is stored by referencing i
+    * The current chat history is stored by referencing indexes in an array
+
+
+______________________May 13, 2024______________________
+Finished replacing the data structure for both popup and content chats
+Other things done today include:
+
+* New Features
+    * Added popout button to edit menus
+        * Clicking will open content menu and saved chat will be shared between content and popup 
+
+* Styling changes
+    * buttons on edit menu are more similar and better spaced apart
+
+* Slice of life changes
+    * Closing menu automatically focuses input section in popup chat
+    * Highlight button will open up the currentchat in the content chat
+    * Highlighting will bring up a minimized content chat

@@ -130,7 +130,7 @@ const main = async () => {
                     load_chat()
 
                     open_chat(false)
-                    maximize_chat()
+                    // maximize_chat()
 
                     break;
                 default:

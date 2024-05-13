@@ -1,41 +1,7 @@
-const test_data = [
-    {timestamp: Date.now() - 10000000, chatHistory: [
-        {
-            role: 'user',
-            content: 'how far is the sun from the earth?'
-        },
-        {
-            role: 'system',
-            content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        },
-        {
-            role: 'user',
-            content: 'what is the capital of Nigeria?',
-        },
-        {
-            role: 'system',
-            content: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        },
-    ], title: 'test1', id: 'testid1'},
-    // timestamp set from yesterday
-    {timestamp: Date.now() - 86400000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?2'},], title: 'test2', id: 'testid2'},
-    // timestamp set from last week
-    {timestamp: Date.now() - 604800000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?3'},], title: 'test3', id: 'testid3'},
-    // timestamp set from last month
-    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?4'},], title: 'test4', id: 'testid4'},
-    // random test data
-    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?5'},], title: 'test5', id: 'testid5'},
-    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?6'},], title: 'test6', id: 'testid6'},
-    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?7'},], title: 'test7', id: 'testid7'},
-    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?8'},], title: 'test8', id: 'testid8'},
-    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?9'},], title: 'test9', id: 'testid9'},
-    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?5'},], title: 'test5', id: 'testid5'},
-    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?6'},], title: 'test6', id: 'testid6'},
-    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?7'},], title: 'test7', id: 'testid7'},
-    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?8'},], title: 'test8', id: 'testid8'},
-    {timestamp: Date.now() - 2628000000, chatHistory: [{role: 'user',content: 'how far is the sun from the earth?9'},], title: 'test9', id: 'testid9'},
-]
-// ________ Global Variables ______
+const test_data = {
+} 
+    
+// _______ Global Variables ______
 
 const NEW_CHAT_NAME = "New Chat";
 
@@ -111,7 +77,10 @@ smart_circle.addEventListener('click', () => {
     clearTimeout(clickTimeout);
     clickTimeout = setTimeout(() => {
         smart_circle.classList.remove('active');
+
         send_message_to_content('highlight');
+        send_message_to_content('popout', { chat: allChats[currentChatId] });
+
         window.close()
     }, 500)
 
