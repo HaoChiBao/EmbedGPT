@@ -821,7 +821,7 @@ const main = async () => {
             }
             typed += content[typed.length];
             message.innerHTML = typed;
-        }, 1000 / 60);
+        }, 1000 / 120);
     
         last_response_element = null;
     }

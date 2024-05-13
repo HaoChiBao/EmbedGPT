@@ -67,11 +67,10 @@ let lastChatId = null;
 
 let TEST = false;
 // TEST = true;
-// let allChats = []
+
 let allChats = {}
 if(TEST) allChats = test_data
 
-// let currentChat = null;
 let currentChatId = null
 let currentChatHistory = null
 
@@ -139,6 +138,10 @@ const toggleMenu = () => {
         render_all_chats();
         openMenu();
     }
+}
+
+const isMenuOpen = () => {
+    return menuButton.classList.contains('active');
 }
 
 const openMenu = () => {
@@ -290,6 +293,12 @@ const create_menu_item = (chat) => {
     rename_img.src = '../../../../images/rename.png';
     rename_btn.appendChild(rename_img);
 
+    const popout_btn = document.createElement('button');
+    popout_btn.classList.add('popout-btn');
+    const popout_img = document.createElement('img');
+    popout_img.src = '../../../../images/popout.png';
+    popout_btn.appendChild(popout_img);
+
     const delete_btn = document.createElement('button');
     delete_btn.classList.add('delete-btn');
     const delete_img = document.createElement('img');
@@ -297,6 +306,7 @@ const create_menu_item = (chat) => {
     delete_btn.appendChild(delete_img);
 
     edit_menu.appendChild(rename_btn);
+    edit_menu.appendChild(popout_btn);
     edit_menu.appendChild(delete_btn);
 
     menu_item.appendChild(chat_image);
@@ -351,6 +361,7 @@ const create_menu_item = (chat) => {
         if(is_editing) e.stopPropagation();
     })
     
+    // rename chat
     rename_btn.addEventListener('click', (e) => {
         // make chat title editable
         close_all_edit_menus();
@@ -364,15 +375,13 @@ const create_menu_item = (chat) => {
         if(currentChatId !== chat.id) open_chat();
     });
 
-    // is_editing = false; when user presses enter or clicks outside of chat_text
-    chat_text.addEventListener('blur', (e) => {stop_edit();})
-    chat_text.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter') {
-            e.preventDefault();
-            stop_edit();
-        }
+    // popout chat
+    popout_btn.addEventListener('click', (e) => {
+        console.log('popout chat')
+        close_all_edit_menus();
     })
 
+    // delete chat
     delete_btn.addEventListener('click', (e) => {
         close_all_edit_menus();
 
@@ -384,6 +393,15 @@ const create_menu_item = (chat) => {
         if(chat.id === currentChatId) {create_new_chat()}
         
         render_all_chats();
+    })
+
+    // is_editing = false; when user presses enter or clicks outside of chat_text
+    chat_text.addEventListener('blur', (e) => {stop_edit();})
+    chat_text.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter') {
+            e.preventDefault();
+            stop_edit();
+        }
     })
 
     menu_item.addEventListener('click', () => {
@@ -473,8 +491,11 @@ const render_all_chats = () => {
     })
 }
 
-chat_body.addEventListener('click', ()=>{
-    closeMenu();
+chat_body.addEventListener('click', () =>{
+    if (isMenuOpen()) {
+        search_input.focus();
+        closeMenu();
+    } 
 })
 
 // ___________________________________HEADER___________________________________
@@ -565,7 +586,7 @@ const render_response = (content) => {
         }
         typed += content[typed.length];
         message.innerHTML = typed;
-    }, 1000 / 60);
+    }, 1000 / 120);
 
     last_response_element = null;
 }
