@@ -87,8 +87,10 @@ const main = async () => {
 
     // chat variables
     const NEW_CHAT_NAME = 'New Chat';
-    let allChats = []
-    let currentChat = 0
+    // let allChats = []
+    let allChats = {}
+    // let currentChat = 0
+    let currentChatId = null
     let currentChatHistory = []
 
     // __________________________________________PORT FOR SERVICE WORKER__________________________________________
@@ -692,33 +694,45 @@ const main = async () => {
     }
 
     const setTitle = (title) => {
-        allChats[currentChat].title = title;
+        allChats[currentChatId].title = title;
+    }
+
+    const isAllChatsEmpty = () => {
+        const chatIds = Object.keys(allChats);
+        return chatIds.length === 0;
+    }
+    
+    const isAnyChatEmpty = () => {
+        const chatIds = Object.keys(allChats);
+        for(let i = 0; i < chatIds.length; i++) {
+            const chat = allChats[chatIds[i]];
+            // console.log(chat)
+            if(chat.chatHistory.length === 0) return chat;
+        }
+        return null;
     }
     
     const create_new_chat = () => {
 
         // check if any chats are empty, meaning that they are new chats
-        const empty_chat = allChats.find(chat => chat.chatHistory.length === 0);
+        const empty_chat = isAnyChatEmpty();
+    
         if(empty_chat) {
-            currentChat = allChats.indexOf(empty_chat);
-            currentChatHistory = allChats[currentChat].chatHistory;
-            currentChatId = allChats[currentChat].id;
+            currentChatId = empty_chat.id;
+            currentChatHistory = allChats[currentChatId].chatHistory;
             lastChatId = currentChatId;
+            allChats[currentChatId].timestamp = Date.now();
             load_chat();
             return
         }
     
         const new_chat = {timestamp: Date.now(), chatHistory: [], title: NEW_CHAT_NAME, id : create_unique_id()};
-        allChats.push(new_chat);
-        currentChat = allChats.indexOf(new_chat);
-        currentChatHistory = allChats[currentChat].chatHistory;
-        currentChatId = allChats[currentChat].id;
-    
+        allChats[new_chat.id] = new_chat;
+        currentChatId = new_chat.id;
+        currentChatHistory = allChats[currentChatId].chatHistory;
         lastChatId = currentChatId;
-    
+
         load_chat();
-    
-        console.log(allChats)
     }
 
     const create_chat_image = (source) => {
@@ -841,18 +855,6 @@ const main = async () => {
         image_preview.style.display = 'block'
     }
 
-    /*
-    // add new message to chat history
-    const update_chat_history = (role = 0, content) => {
-        // determine role
-        role = role === 0 ? 'user' : 'system';
-        currentChatHistory.push({ role, content });
-        
-        // update timestamp (last sent message)
-        allChats[currentChat].timestamp = Date.now();
-        // allChats[currentChat].timestamp = new Date();
-    }
-    */
    
    const update_chat_history = async (role = 0, text) => {
         role = role === 0 ? 'user' : 'system';
@@ -877,7 +879,7 @@ const main = async () => {
         reset_imagePreview_imageData()
         
         currentChatHistory.push({ role, content });
-        allChats[currentChat].timestamp = Date.now();
+        allChats[currentChatId].timestamp = Date.now();
 
         await save_content_chat()
         // console.log(currentChatHistory)
@@ -886,13 +888,15 @@ const main = async () => {
     const save_content_chat = async () => {
         // load all chats saved
         const saved_chats = await chrome.storage.local.get('allChats')
+        if(!saved_chats.allChats) saved_chats.allChats = {}
+
         // check if this is a unique chat
-        const chat_exists = saved_chats.allChats.find(chat => chat.id === currentChatId)
-        if(chat_exists) {
+        const saved_chat = saved_chats.allChats[currentChatId]
+        if(saved_chat) {
             // replace the chat with the new chat
-            saved_chats.allChats[saved_chats.allChats.indexOf(chat_exists)] = allChats[currentChat]
+            saved_chats.allChats[currentChatId] = allChats[currentChatId]
         }
-        else {saved_chats.allChats.push(allChats[currentChat])}
+        else {saved_chats.allChats[currentChatId] = allChats[currentChatId]}
         // save the chat
         await chrome.storage.local.set({ allChats: saved_chats.allChats });
     }
@@ -910,8 +914,8 @@ const main = async () => {
         console.log('Submitting query:', query)
 
         // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
-        console.log(currentChatHistory.length)
-        if(allChats[currentChat].title === NEW_CHAT_NAME && currentChatHistory.length === 0 ) setTitle(query);
+        // console.log(currentChatHistory.length)
+        if(allChats[currentChatId].title === NEW_CHAT_NAME && currentChatHistory.length === 0 ) setTitle(query);
         await update_chat_history(0, query);
         // console.log(allChats[currentChat].title, NEW_CHAT_NAME)
         load_chat();

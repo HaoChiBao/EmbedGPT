@@ -127,7 +127,7 @@ const isAnyChatEmpty = () => {
     for(let i = 0; i < chatIds.length; i++) {
         const chat = allChats[chatIds[i]];
         // console.log(chat)
-        if(chat['chatHistory'].length === 0) return chat;
+        if(chat.chatHistory.length === 0) return chat;
     }
     return null;
 }
@@ -164,9 +164,11 @@ const create_new_chat = () => {
     const empty_chat = isAnyChatEmpty();
     
     if(empty_chat) {
-        currentChatHistory = allChats[currentChatId].chatHistory;
         currentChatId = empty_chat.id;
+        currentChatHistory = allChats[currentChatId].chatHistory;
         lastChatId = currentChatId;
+        allChats[currentChatId].timestamp = Date.now();
+
         load_chat();
         return
     }
@@ -307,6 +309,10 @@ const create_menu_item = (chat) => {
         const isActive = edit_menu.classList.contains('active');
         close_all_edit_menus();
         if(!isActive) edit_menu.classList.add('active');
+        open_chat();
+
+        deactivateLastChat();
+        activateChat(menu_item);
     });
 
     edit_menu.addEventListener('click', (e) => {
@@ -370,7 +376,7 @@ const create_menu_item = (chat) => {
     delete_btn.addEventListener('click', (e) => {
         close_all_edit_menus();
 
-        console.log(chat.chatHistory.length)
+        // console.log(chat.chatHistory.length)
         if(chat.title == NEW_CHAT_NAME && chat.chatHistory.length === 0) return
         
         delete allChats[chat.id];
@@ -690,7 +696,7 @@ const main = async () => {
                 update_chat_history(1, response_message); // add system response to chat history
                 render_response(response_message); // display system response (with animation) in chat
     
-                console.log(currentChatHistory)
+                // console.log(currentChatHistory)
                 break;
 
             case 'queryImage':
@@ -734,7 +740,7 @@ const main = async () => {
     window.addEventListener('blur', async () => {
         // set chrome local storage
         await chrome.storage.local.set(({ allChats }));
-        await chrome.storage.local.set(({ allChats: {} }));
+        // await chrome.storage.local.set(({ allChats: {} }));
     })
 
     search_input.focus();
