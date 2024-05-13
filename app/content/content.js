@@ -110,13 +110,33 @@ const main = async () => {
 
     // port for popup to communicate with content script
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        switch(request){
-            case 'highlight':
-                console.log('highlighting')
-                start_highlighter()
-                break;
-            default:
-                console.log(request)
+        const { action, data } = request
+        try{
+            switch(action){
+                case 'highlight':
+                    console.log('highlighting')
+                    start_highlighter()
+                    break;
+                case 'popout':
+                    // console.log('popout')
+                    
+                    const chat = data.chat
+                    currentChatId = chat.id
+                    currentChatHistory = chat.chatHistory
+                    allChats[currentChatId] = chat
+
+                    load_chat()
+
+                    break;
+                default:
+                    console.log(request)
+            }
+
+            // sendResponse({status: 'received'})
+
+        } catch(e) {
+            console.error(e)
+            // sendResponse({status: 'error', error: e})
         }
     })
 

@@ -97,8 +97,9 @@ const get_chat_by_id = (id) => {
 
 let clickTimeout = null;
 
-const send_message_to_content = async (message) => {
+const send_message_to_content = async (action, data = {}) => {
     await chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const message = { action, data }
         chrome.tabs.sendMessage(tabs[0].id, message)
     })
 }
@@ -379,6 +380,10 @@ const create_menu_item = (chat) => {
     popout_btn.addEventListener('click', (e) => {
         console.log('popout chat')
         close_all_edit_menus();
+
+        // send message to content script
+        send_message_to_content('popout', { chat });
+        window.close();
     })
 
     // delete chat
