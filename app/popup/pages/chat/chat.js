@@ -79,7 +79,7 @@ smart_circle.addEventListener('click', () => {
         smart_circle.classList.remove('active');
 
         send_message_to_content('highlight');
-        send_message_to_content('popout', { chat: allChats[currentChatId] });
+        send_message_to_content('popout', { chat: allChats[currentChatId], maximize: false});
 
         window.close()
     }, 500)
@@ -359,7 +359,7 @@ const create_menu_item = (chat) => {
         close_all_edit_menus();
 
         // send message to content script
-        send_message_to_content('popout', { chat });
+        send_message_to_content('popout', { chat , maximize: true});
         window.close();
     })
 
@@ -728,8 +728,10 @@ const main = async () => {
 
     const savedChats = await chrome.storage.local.get(["allChats"])
     
-    if(savedChats.allChats) {
-        if (!TEST) allChats = savedChats.allChats;
+    if(savedChats.allChats) { 
+        allChats = savedChats.allChats;
+        console.log('_________________________Chats loaded__________________________')
+        console.log(allChats)
     }
 
     // send message to background script

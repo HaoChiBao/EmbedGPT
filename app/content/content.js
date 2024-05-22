@@ -116,7 +116,7 @@ const main = async () => {
         try{
             switch(action){
                 case 'highlight':
-                    console.log('highlighting')
+                    // console.log('highlighting')
                     start_highlighter()
                     break;
                 case 'popout':
@@ -130,7 +130,11 @@ const main = async () => {
                     load_chat()
 
                     open_chat(false)
-                    // maximize_chat()
+
+                    // console.log(maximize)
+                    const maximize = data.maximize
+                    if (maximize) maximize_chat()
+                    else minimize_chat()
 
                     break;
                 default:

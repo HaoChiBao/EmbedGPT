@@ -11,13 +11,14 @@ Completed: ---------------
 Need to Work On: --------------------
 
 * Chat features
-    * Pin/Star chats
-    * Add Latex/markdown features 
-    * Add buttons to messages
+    1. Add buttons to messages
         * Copy button
         * Speak button (with google api)
+    2. Make Chat resizable
+    3. Pin/Star chats
+    4. Add Latex/markdown features 
 
-    * Added Settings
+    5. Added Settings
         * Settings element in menu
         * Personal features
         * Accessibility features
