@@ -842,14 +842,21 @@ const main = async () => {
     
         let message = last_response_element.querySelector('p');
         message.innerHTML = '';
+        const typeAmount = 5 // amount of characters typed per frame 
         let typed = ''; // current message content
         const loop = setInterval(() => {
-            if(typed === content) {
+            try{
+                if(typed === content) {
+                    clearInterval(loop);
+                    return
+                }
+                typed += content.slice(typed.length, typed.length + typeAmount);
+                message.innerHTML = typed;
+            } catch (e) {
+                console.error(e)
+                message.innerHTML = content;
                 clearInterval(loop);
-                return
             }
-            typed += content[typed.length];
-            message.innerHTML = typed;
         }, 1000 / 120);
     
         last_response_element = null;
@@ -1053,10 +1060,18 @@ const main = async () => {
         // })
 
         const search_button = document.createElement('button')
+        search_button.className = 'content-search-button'
         const search_icon = document.createElement('img')
         search_icon.src = await chrome.runtime.getURL('images/stars.png')
 
         search_button.appendChild(search_icon)
+
+        const highlight_button = document.createElement('button')
+        highlight_button.className = 'content-highlight-button'
+        const highlight_icon = document.createElement('img')
+        highlight_icon.src = await chrome.runtime.getURL('images/pen.png')
+
+        highlight_button.appendChild(highlight_icon)
 
         // const preview_element = document.createElement('div')
         const image_preview = document.createElement('div')
@@ -1097,6 +1112,7 @@ const main = async () => {
         search.appendChild(image_preview)
         search.appendChild(search_input)
         search.appendChild(search_button)
+        search.appendChild(highlight_button)
 
         content_chat.appendChild(top)
         content_chat.appendChild(body)
@@ -1107,6 +1123,17 @@ const main = async () => {
             if(event.key === 'Enter') handleSubmit(e)
         })
         search_button.addEventListener('click', handleSubmit)
+
+        let clickTimeout = null;
+        highlight_button.addEventListener('click', e => {
+            e.preventDefault()
+            highlight_button.classList.add('active')
+            clearTimeout(clickTimeout);
+            clickTimeout = setTimeout(() => {
+                highlight_button.classList.remove('active');
+                start_highlighter()
+            }, 500)
+        })
 
         return content_chat
     }

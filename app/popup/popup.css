@@ -7,12 +7,83 @@
 }
 
 body {
-    height: calc(561px - 2rem);
-    width: calc(332px - 2rem);
+    --var-sizing: 16px;
+
+    height: calc(561px - var(--var-sizing)*2);
+    width: calc(322px - var(--var-sizing)*2);
+
+    padding: var(--var-sizing);
+    /* padding-top: 0; */
+
+    background-color: #fff;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    padding:1rem;
+    transition: 0.5s ease;
+
+    /* resize: both; */
+}
+
+section{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* border-style: dotted; */
+}
+
+footer {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* border-style: dotted; */
+}
+
+footer button{
+    width: 85%;
+    height: 40px;
+
+    margin-bottom: calc(var(--var-sizing)/2);
+    
+    border-radius: 20px;
+    outline: none;
+    border: none;
+}
+
+/* scroll wheel css =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background:transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    /* background: linear-gradient(-45deg, #d98cf5,#2b20f8,#31a2fa); */
+    background: linear-gradient(-45deg, #715AFF,#5887FF,#8DADFF);
+
+    background-clip: content-box;
+    border: 5px solid transparent;
+    border-radius: 10px;
+    /* background-image: url('https://assets.materialup.com/uploads/cde34f59-a45f-48d4-9699-3a686999b9dc/preview.gif'); */
+    }
+
+  /* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    /* background: #555; */
+    opacity: 0.8;
 }

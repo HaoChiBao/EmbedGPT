@@ -552,19 +552,26 @@ const load_chat = () => {
 
 // used when a response is returned
 const render_response = (content) => {
-
+    
     if(last_response_element == null) return
 
     let message = last_response_element.querySelector('p');
     message.innerHTML = '';
+    const typeAmount = 2 // amount of characters typed per frame 
     let typed = ''; // current message content
     const loop = setInterval(() => {
-        if(typed === content) {
+        try{
+            if(typed === content) {
+                clearInterval(loop);
+                return
+            }
+            typed += content.slice(typed.length, typed.length + typeAmount);
+            message.innerHTML = typed;
+        } catch (e) {
+            console.error(e)
+            message.innerHTML = content;
             clearInterval(loop);
-            return
         }
-        typed += content[typed.length];
-        message.innerHTML = typed;
     }, 1000 / 120);
 
     last_response_element = null;

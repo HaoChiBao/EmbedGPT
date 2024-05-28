@@ -406,7 +406,7 @@
     color: #ececec;
 }
 
-.content-chat-body .chat-search button{
+.content-chat-body .chat-search .content-search-button{
     padding: 8px 16px;
     background-color: transparent;
     border: none;
@@ -419,20 +419,83 @@
     position: relative;
 }
 
-.content-chat-body .chat-search button img{
+.content-chat-body .chat-search .content-search-button img{
     width: calc(var(--var-sizing)*3/2);
     height: calc(var(--var-sizing)*3/2);
 
     transition: 0.5s ease;
 }
 
-.content-chat-body .chat-search button:hover img{
+.content-chat-body .chat-search .content-search-button:hover img{
     transform: translateY(-0.3rem) scale(1.1);
     filter: drop-shadow(0 0 1rem rgba(255, 255, 255, 0.5))
 }
-.content-chat-body .chat-search button:active img{
+.content-chat-body .chat-search .content-search-button:active img{
     transform: scale(0.9);
 }
+
+.content-chat-body .chat-search .content-highlight-button{
+    position: absolute;
+    left: calc(100% + var(--var-sizing));
+    /* transform: translate(calc(var(--var-sizing)*3), 0); */
+
+    /* radial gradient */
+    background: radial-gradient(100% 100% at 0% 0%, #C071FF 0%, #8CC1FF 100%);
+    background-position: 0% 50%;
+    
+    height: calc(var(--var-sizing)*2.5);
+    aspect-ratio: 1/1;
+    
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s ease;
+}
+
+.content-chat-body .chat-search .content-highlight-button img{
+    aspect-ratio: 1/1;
+    height: 50%;
+    pointer-events: none;
+    filter: invert(1);
+
+    transition: 0.3s ease;
+}
+
+.content-chat-body .chat-search .content-highlight-button.active{
+    animation: rotate 0.2s infinite linear;
+    height: calc(var(--var-sizing));
+}
+.content-chat-body .chat-search .content-highlight-button.active:hover{transform: scale(0.5);}
+.content-chat-body .chat-search .content-highlight-button.active img{
+    opacity: 0;
+}
+
+.content-chat-body .chat-search .content-highlight-button:hover{
+    transform: scale(1.05);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    
+    transition: 0.5s ease;
+}
+.content-chat-body .chat-search .content-highlight-button:hover img{
+    animation: rock 1s infinite linear;
+}
+
+@keyframes rock {
+    0% {transform: rotate(0deg);}
+    50% {transform: rotate(5deg);}
+    100% {transform: rotate(0deg);}
+}
+
+@keyframes rotate {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+}
+
 
 /* scrolling ------------- */
 .content-chat-body .chat-body::-webkit-scrollbar {

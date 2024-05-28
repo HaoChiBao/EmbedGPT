@@ -1,7 +1,8 @@
 
-const chat_button = document.getElementById('chat');
+const start_btn = document.querySelector('button');
 // redirect to chat page
-window.location.href = "pages/chat/chat.html";
-// chat_button.addEventListener('click', () => {
-//     window.location.href = "pages/chat/chat.html";
-// });
+// window.location.href = "pages/chat/chat.html";
+
+start_btn.addEventListener('click', () => {
+    window.location.href = "pages/chat/chat.html";
+});
