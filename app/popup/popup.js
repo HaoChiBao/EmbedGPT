@@ -10,7 +10,7 @@ const main = async () => {
         window.location.href = "pages/chat/chat.html";
     }
 }
-main()
+// main()
 
 start_btn.addEventListener('click', () => {
     window.location.href = "pages/register/register.html";

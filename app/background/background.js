@@ -37,7 +37,13 @@ chrome.runtime.onConnect.addListener((port) => {
                 case 'saveChats':
                     if(system.isLoggedIn()) {
                         const allChats = msg.allChats
-                        console.log(allChats)
+                        try{
+                            system.userData.data.allChats = allChats
+                            console.log(system.userData.data.allChats)
+                            response.data.response = {status: true, response: await system.updateUser()}
+                        } catch(e) {
+                            response.data.response = {status: false, error: e.message}
+                        }
                     } else {
                         response.data.response = {status: false, error: 'User not logged in'}
                     }
@@ -55,7 +61,17 @@ chrome.runtime.onConnect.addListener((port) => {
                     const l_email = msg.email
                     const l_password = msg.password
                     response.data.response = await system.login(l_email, l_password)
-                    await chrome.storage.local.set({w_userCredentials: system.userCredentials})
+                    
+                    // if the login was successful, save the user's email and password to the local storage
+                    if(system.isLoggedIn()) { 
+                        await chrome.storage.local.set({w_userCredentials: system.userCredentials})
+
+                        // get the user's data from the database
+                        if(!system.userData.data.allChats) {
+                            system.userData.data.allChats = {}
+                        }
+                        await chrome.storage.local.set({allChats: system.userData.data.allChats})
+                    }
                     break;
 
                 case 'refresh':

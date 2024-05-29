@@ -728,6 +728,9 @@ const main = async () => {
                     }
                 }, 20000)
                 break;
+            case 'saveChats':
+                console.log('Saved allChats')
+                break;
             default:
                 console.log('Invalid action')
         }
@@ -760,9 +763,9 @@ const main = async () => {
 
     })
     
-    window.addEventListener('click', async () => {
-        port.postMessage({ action: 'saveChats', allChats});
-    })
+    // window.addEventListener('click', async () => {
+    //     port.postMessage({ action: 'saveChats', allChats});
+    // })
 
     search_input.focus();
 }
