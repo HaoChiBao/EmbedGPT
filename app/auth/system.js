@@ -31,10 +31,16 @@ class System {
     }
 
     init = async (userCredentials) => {
-
-        if(userCredentials === null) return -1
+        if(userCredentials === null) return -1 // if the user is not signed in
 
         this.#userCredentials = userCredentials;
+
+        const currentDate = Date.now(); 
+
+        // check if the token is about to expire (5 minutes before expiration)
+        if (this.#userCredentials.expiresIn - 5 * 60 * 1000 < currentDate) {
+            await this.#refreshToken();
+        }
 
         const userData = await this.#get(`/${this.#accountHeader}/${this.#userCredentials.localId}`)
 
@@ -45,7 +51,7 @@ class System {
         }
     }
 
-    signInWithEmailAndPassword = async (email, password) => {
+    login = async (email, password) => {
         try {
             const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.#firebaseConfig.apiKey}`, {
             //   const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC_3AUmJ8rDAr0E95xq9K80PCbzgyuSlLo`, {
@@ -108,7 +114,7 @@ class System {
         console.log(response)
     }
 
-    createNewAccount = async (email, password) => {
+    register = async (email, password) => {
         try {
             const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.#firebaseConfig.apiKey}`, {
                 method: 'POST',
@@ -140,6 +146,7 @@ class System {
         }
     };
 
+    // provides a new idToken and refreshToken if the current idToken is about to expire
     #refreshToken = async () => {
         try {
             const response = await fetch(`https://securetoken.googleapis.com/v1/token?key=${this.#firebaseConfig.apiKey}`, {
@@ -272,8 +279,8 @@ const main = async () => {
     } 
 
     const system = new System();
-    await system.signInWithEmailAndPassword(auth.e, auth.p);
-    // await system.createNewAccount(auth.e, auth.p);
+    await system.login(auth.e, auth.p);
+    // await system.register(auth.e, auth.p);
 
     console.log(system.userCredentials)
     // console.log(system.userData)

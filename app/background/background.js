@@ -1,4 +1,7 @@
 import {queryChat} from "./async/func/functions.js";
+import System from "../auth/system.js";
+
+const system = new System()
 
 chrome.runtime.onStartup.addListener(() => {
     console.log(`onStartup()`)
@@ -21,6 +24,9 @@ chrome.runtime.onConnect.addListener((port) => {
             let chat_model = null
             // switch on the action (This is where the magic happens!)
             switch(msg.action) {
+                case 'login':
+                    response.data = await system.login(msg.email, msg.password)
+                    break;
 
                 case 'refresh':
                     // keeps the service worker actuve
