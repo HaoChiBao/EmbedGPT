@@ -98,6 +98,10 @@ const isAnyChatEmpty = () => {
     for(let i = 0; i < chatIds.length; i++) {
         const chat = allChats[chatIds[i]];
         // console.log(chat)
+        if(!chat.chatHistory) {
+            chat.chatHistory = [];
+            return chat;
+        }
         if(chat.chatHistory.length === 0) return chat;
     }
     return null;
@@ -757,17 +761,20 @@ const main = async () => {
 
     // When the user leaves the chrome extension save the chat history
     window.addEventListener('blur', async () => {
+
         // set chrome local storage
         await chrome.storage.local.set(({ allChats })); //save chats locally
+        port.postMessage({ action: 'saveChats', allChats}); //save chats to database
         // await chrome.storage.local.set(({ allChats: {} }));
-
     })
-    
-    // window.addEventListener('click', async () => {
-    //     port.postMessage({ action: 'saveChats', allChats});
-    // })
 
     search_input.focus();
+
+    // ___________________________________TEST___________________________________
+    const signoutBtn = document.getElementById('signout');
+    signoutBtn.addEventListener('click', async () => {
+        port.postMessage({ action: 'signOut' });
+    })
 }
 
 main();

@@ -6,9 +6,12 @@ const main = async () => {
     const userCredentials = await chrome.storage.local.get('w_userCredentials')
     // console.log(userCredentials)
     if(userCredentials.w_userCredentials) {
+        const keys = Object.keys(userCredentials.w_userCredentials)
+        if(keys.length === 0) return
+
         console.log('User is logged in')
         await system.init(userCredentials.w_userCredentials)
-        console.log(system.userData)
+        // console.log(system.userData)
     }
 }
 main()
@@ -49,6 +52,11 @@ chrome.runtime.onConnect.addListener((port) => {
                     }
                     break; 
 
+                case 'signOut':
+                    system.signOut()
+                    await chrome.storage.local.remove('w_userCredentials')
+                    break;
+
                 case 'register':
                     const r_email = msg.email
                     const r_password = msg.password
@@ -70,7 +78,17 @@ chrome.runtime.onConnect.addListener((port) => {
                         if(!system.userData.data.allChats) {
                             system.userData.data.allChats = {}
                         }
-                        await chrome.storage.local.set({allChats: system.userData.data.allChats})
+
+                        // check that all of the chats have a title, timestamp, id, and chatHistory
+                        const loaded_allChats = system.userData.data.allChats
+                        loaded_allChats.forEach(chat => {
+                            if(!chat.title) {chat.title = 'New Chat'}
+                            if(!chat.timestamp) {chat.timestamp = Date.now()}
+                            if(!chat.id) {chat.id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)}
+                            if(!chat.chatHistory) {chat.chatHistory = []}
+                        })
+
+                        await chrome.storage.local.set({allChats: loaded_allChats})
                     }
                     break;
 
@@ -105,7 +123,11 @@ chrome.runtime.onConnect.addListener((port) => {
                     response.data.content = await queryChat(chatHistory, null, chat_model)
                     break;
             }
-            port.postMessage(response);
+            try{
+                port.postMessage(response);
+            } catch(e) {
+                // console.error(e)
+            }
         });
     }
 })
