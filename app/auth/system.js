@@ -95,11 +95,14 @@ class System {
                 this.#userData = userData.response;
             } 
 
+            return {status: true}
+
             // chrome.runtime.localStorage.set({NODESuserCredentials: this.#userCredentials});
 
             // console.log("User signed in:", userData);
         } catch (error) {
             console.error("Authentication error:", error.message);
+            return {status: false, error: error.message}
         }
     };
 
@@ -140,9 +143,11 @@ class System {
             // console.log(this.#userCredentials)
             await this.#createUserDetails();
             // console.log("Account created:", userData);
+            return {status: true}
         }   
         catch (error) {
             console.error("Account creation error:", error.message);
+            return {status: false, error: error.message}
         }
     };
 

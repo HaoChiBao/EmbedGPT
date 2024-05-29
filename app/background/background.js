@@ -24,8 +24,10 @@ chrome.runtime.onConnect.addListener((port) => {
             let chat_model = null
             // switch on the action (This is where the magic happens!)
             switch(msg.action) {
-                case 'login':
-                    response.data = await system.login(msg.email, msg.password)
+                case 'register':
+                    const email = msg.email
+                    const password = msg.password
+                    response.data.response = await system.register(email, password)
                     break;
 
                 case 'refresh':
