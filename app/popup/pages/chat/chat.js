@@ -713,7 +713,6 @@ const main = async () => {
             case 'queryImage':
                 const response_message_image = msg.data.content.choices[0].message.content;
 
-                console.log(last_response_element)
                 if(last_response_element){ // if the response element is null then that means the user switched chats before the response was returned
                     update_chat_history(1, response_message_image); // add system response to chat history
                     render_response(response_message_image); 
@@ -734,6 +733,9 @@ const main = async () => {
                 break;
             case 'saveChats':
                 console.log('Saved allChats')
+                break;
+            case 'signOut':
+                window.location.href = "../../popup.html";
                 break;
             default:
                 console.log('Invalid action')

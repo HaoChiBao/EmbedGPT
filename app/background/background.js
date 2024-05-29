@@ -81,7 +81,9 @@ chrome.runtime.onConnect.addListener((port) => {
 
                         // check that all of the chats have a title, timestamp, id, and chatHistory
                         const loaded_allChats = system.userData.data.allChats
-                        loaded_allChats.forEach(chat => {
+                        const chat_ids = Object.keys(loaded_allChats)
+                        chat_ids.forEach(id => {
+                            const chat = loaded_allChats[id]
                             if(!chat.title) {chat.title = 'New Chat'}
                             if(!chat.timestamp) {chat.timestamp = Date.now()}
                             if(!chat.id) {chat.id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)}
