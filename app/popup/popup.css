@@ -122,9 +122,18 @@ footer button{
     border-radius: 20px;
     outline: none;
     border: none;
-
+    
     transition: 0.5s ease;
     cursor: pointer;
+}
+
+footer button img{
+    position: absolute;
+    height: calc(var(--var-sizing)*1.5);
+
+    right: var(--var-sizing);
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 footer button:hover{

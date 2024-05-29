@@ -24,7 +24,8 @@ body {
 
     transition: 0.5s ease;
 
-    /* resize: both; */
+    background: radial-gradient(190% 140% at -20% -20% , #D48DFF 0%, #5887FF 35%, #715AFF 70%, #E6978E 100%);
+    /* background: radial-gradient(250% 100% at 90% 65%, #E6978E 0%, #715AFF 35%, #5887FF 70%, #D48DFF 100%); */
 }
 
 /* scroll wheel css =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
@@ -56,3 +57,98 @@ body {
 }
 
 /* ___________________________CSS UNIQUE TO THIS PAGE_______________________________________ */
+
+section{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* border-style: dotted; */
+    gap: calc(var(--var-sizing)*1.5);
+}
+
+input{
+    width: 85%;
+    height: 40px;
+    padding: 0 10px;
+    
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #fff;
+    
+    background: transparent;
+    
+    font-size: calc(var(--var-sizing)*1);
+    
+    transition: 0.5s ease;
+    /* placeholder color*/
+    color: #fff;
+}
+
+input::placeholder{
+    color: #fff;
+    opacity: 0.5;
+}
+input::-webkit-input-placeholder{
+    color: #fff;
+    opacity: 0.5;
+}
+input::-ms-input-placeholder{
+    color: #fff;
+    opacity: 0.5;
+}
+
+
+footer {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* border-style: dotted; */
+}
+
+footer button{
+    width: 85%;
+    height: 40px;
+    
+    margin-bottom: calc(var(--var-sizing)/2);
+    
+    opacity: 0.5;
+    backdrop-filter: blur(10px);
+    
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    
+    transition: 0.5s ease;
+    cursor: pointer;
+}
+
+footer button img{
+    position: absolute;
+    height: calc(var(--var-sizing)*1.5);
+
+    right: var(--var-sizing);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+footer button:hover{
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+footer a{
+    color: #fff;
+    opacity: 0.5;
+    transition: 0.5s ease;
+}
+footer a:hover{
+    opacity: 1;
+}
