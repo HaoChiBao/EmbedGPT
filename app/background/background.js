@@ -55,6 +55,7 @@ chrome.runtime.onConnect.addListener((port) => {
                 case 'signOut':
                     system.signOut()
                     await chrome.storage.local.remove('w_userCredentials')
+                    await chrome.storage.local.remove('allChats')
                     break;
 
                 case 'register':
