@@ -755,8 +755,13 @@ const main = async () => {
     // When the user leaves the chrome extension save the chat history
     window.addEventListener('blur', async () => {
         // set chrome local storage
-        await chrome.storage.local.set(({ allChats }));
+        await chrome.storage.local.set(({ allChats })); //save chats locally
         // await chrome.storage.local.set(({ allChats: {} }));
+
+    })
+    
+    window.addEventListener('click', async () => {
+        port.postMessage({ action: 'saveChats', allChats});
     })
 
     search_input.focus();

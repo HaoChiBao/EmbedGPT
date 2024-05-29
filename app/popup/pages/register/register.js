@@ -8,10 +8,21 @@ port.onMessage.addListener((msg) => {
             const status = msg.data.response.status
             if(status) {
                 setErrorMessage('Registration successful')
+                window.location.href = '../chat/chat.html'
             } else {
                 const errorMsg  = msg.data.response.error
                 setErrorMessage(errorMsg)
             }
+            break
+        case 'refresh':
+            // keeps the service worker actuve
+            setTimeout(() => {
+                try{
+                    port.postMessage({ action: 'refresh' });
+                } catch(e) {
+                    console.error(e)
+                }
+            }, 20000)
             break
     }
 })
@@ -42,8 +53,8 @@ const handleSubmit = async (e) => {
     } else if(!isValidEmail(email)) { // check if email is valid
         setErrorMessage('Email is not valid')
         return
-    } else if(password.length < 8) { // check if password is at least 8 characters long
-        setErrorMessage('Password must be at least 8 characters long')
+    } else if(password.length < 6) { // check if password is at least 6 characters long
+        setErrorMessage('Password must be at least 6 characters long')
         return
     } else if(password !== confirmPassword) { // check if passwords match
         setErrorMessage('Passwords do not match')
@@ -57,3 +68,10 @@ const handleSubmit = async (e) => {
 
 const submitButton = document.querySelector('button')
 submitButton.addEventListener('click', handleSubmit)
+window.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') {
+        handleSubmit(e)
+    }
+})
+
+port.postMessage({ action: 'refresh' })

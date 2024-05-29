@@ -17,8 +17,9 @@ class System {
         email: "new email",
         uid: "",
         data: {
+            created: Date.now(),
             allChats: {
-                test: 'test'
+                
             }
         }
     }
@@ -250,6 +251,11 @@ class System {
             response: response, 
             ping: ping,
         };
+    }
+
+    isLoggedIn = () => {
+        const keys = Object.keys(this.#userCredentials);
+        return keys.length > 0;
     }
 
     // update the db user data with local user data
