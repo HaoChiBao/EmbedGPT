@@ -189,8 +189,36 @@ body {
 .menu .menu-settings{
     height: 20%;
     width: calc(100% - 2rem);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: end;
     /* border-style: dotted; */
 }
+
+.menu .menu-settings #settings{
+    border: none;
+    outline: none;
+    background-color: transparent;
+    height: calc(var(--var-sizing)*1.5);
+    width: calc(var(--var-sizing)*1.5);
+    transition: 0.5s ease;
+    cursor: pointer;
+}
+
+.menu .menu-settings #settings:hover{
+    filter: drop-shadow(0 0 5px 0 rgba(0, 0, 0, 0.5));
+    transform: translate(0, -0.2rem) scale(1.05);
+}
+
+.menu .menu-settings #settings img{
+    aspect-ratio: 1/1;
+    width: 100%;
+    filter: invert(1);
+    user-select: none;
+}
+
 
 /* Menu sections (divided by timestamp) */
 .menu .menu-section .menu-header{

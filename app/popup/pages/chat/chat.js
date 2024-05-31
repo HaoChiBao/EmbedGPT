@@ -773,9 +773,10 @@ const main = async () => {
     search_input.focus();
 
     // ___________________________________TEST___________________________________
-    const signoutBtn = document.getElementById('signout');
-    signoutBtn.addEventListener('click', async () => {
-        port.postMessage({ action: 'signOut' });
+    const settingsBtn = document.getElementById('settings');
+    settingsBtn.addEventListener('click', async () => {
+        // port.postMessage({ action: 'signOut' });
+        window.location.href = "../settings/settings.html";
     })
 }
 
