@@ -25,13 +25,13 @@ const main = async () => {
     redirectChat.addEventListener('click', () => {
         window.location.href = "../chat/chat.html";
     })
+
+    const logout = document.getElementById('logout')    
+    logout.addEventListener('click', () => {
+        port.postMessage({ action: 'signOut' })
+    })
 }
 main()
-
-// const btnSignOut = document.querySelector('button')
-// btnSignOut.addEventListener('click', () => {
-//     port.postMessage({ action: 'signOut' })
-// })
 
 
 port.postMessage({ action: 'refresh' })
