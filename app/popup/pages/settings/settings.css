@@ -54,3 +54,104 @@ body {
 }
 
 /* ___________________________CSS UNIQUE TO THIS PAGE_______________________________________ */
+
+button{
+    outline: none;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+button img{
+    transition: 0.5s ease;
+}
+
+button:hover img{
+    transform: scale(1.1);
+}
+
+header{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+
+    width: 100%;
+    gap: var(--var-sizing);
+
+    /* margin-bottom: calc(var(--var-sizing)); */
+}
+
+h1{
+    font-size: calc(var(--var-sizing)*1.5);
+    font-weight: bold;
+}
+
+header button {
+    width: calc(var(--var-sizing)*2);
+    height: calc(var(--var-sizing)*2);
+}
+header button img{
+    width: 100%;
+    height: 100%;
+}
+
+section{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+section h4{
+    font-size: calc(var(--var-sizing));
+    font-weight: bold;
+    margin: calc(var(--var-sizing)*1.5) 0;
+}
+
+section .menu-item{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    
+    width: 100%;
+
+    gap: calc(var(--var-sizing)*1.5);
+    
+    transition: 0.5s ease;
+}
+
+section .menu-item .item{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    
+    padding-left: calc(var(--var-sizing));
+    /* margin-bottom: calc(var(--var-sizing)); */
+    
+    width: 100%;
+    height: calc(var(--var-sizing)*2);
+}
+
+
+section .menu-item .item img{
+    height: calc(var(--var-sizing)*1.75);
+    margin-right: calc(var(--var-sizing));
+}
+
+section .menu-item .item .details{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+section .menu-item .item h3{
+    font-size: calc(var(--var-sizing));
+    font-weight: bold;
+}
+
+section .menu-item .item p{
+    font-size: calc(var(--var-sizing));
+    font-weight: normal;
+}

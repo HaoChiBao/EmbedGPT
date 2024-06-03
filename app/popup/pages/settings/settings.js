@@ -20,10 +20,18 @@ port.onMessage.addListener((msg) => {
     }
 })
 
-const btnSignOut = document.querySelector('button')
-btnSignOut.addEventListener('click', () => {
-    port.postMessage({ action: 'signOut' })
-})
+const main = async () => {
+    const redirectChat = document.getElementById('redirect-chat')
+    redirectChat.addEventListener('click', () => {
+        window.location.href = "../chat/chat.html";
+    })
+}
+main()
+
+// const btnSignOut = document.querySelector('button')
+// btnSignOut.addEventListener('click', () => {
+//     port.postMessage({ action: 'signOut' })
+// })
 
 
 port.postMessage({ action: 'refresh' })
