@@ -127,10 +127,19 @@ section .menu-item .item{
     align-items: center;
     
     padding-left: calc(var(--var-sizing));
+
     /* margin-bottom: calc(var(--var-sizing)); */
     
     width: 100%;
     height: calc(var(--var-sizing)*2);
+
+    border-radius: 20px;
+    
+    filter: opacity(1) grayscale(100%);
+}
+
+section .menu-item .item:hover{
+    filter: opacity(1) grayscale(0%);
 }
 
 
@@ -148,10 +157,25 @@ section .menu-item .item .details{
 
 section .menu-item .item h3{
     font-size: calc(var(--var-sizing));
-    font-weight: bold;
+    font-weight: normal;
 }
 
 section .menu-item .item p{
     font-size: calc(var(--var-sizing));
-    font-weight: normal;
+    font-weight: bold;
+    background: -webkit-linear-gradient(45deg, #D48DFF, #5887FF, #715AFF, #E6978E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+#delete-chats {
+    filter: grayscale(100%) opacity(1);
 }
+
+#logout{
+    color: #FF0000;
+    filter: opacity(0.5);
+}
+
+#delete-chats:hover {filter: grayscale(0%);color: #FF0000;}
+#logout:hover{filter: opacity(1);}
