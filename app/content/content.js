@@ -837,21 +837,22 @@ const main = async () => {
     let last_response_element = null;
     // used when a response is returned
     const render_response = (content) => {
-    
         if(last_response_element == null) return
     
         let message = last_response_element.querySelector('p');
         message.innerHTML = '';
         const typeAmount = 5 // amount of characters typed per frame 
         let typed = ''; // current message content
+        const type_end = " ◉" // end of message content (used to indicate that the message is being typed)
         const loop = setInterval(() => {
             try{
                 if(typed === content) {
+                    message.innerHTML = content;
                     clearInterval(loop);
                     return
                 }
                 typed += content.slice(typed.length, typed.length + typeAmount);
-                message.innerHTML = typed;
+                message.innerHTML = typed + type_end;
             } catch (e) {
                 console.error(e)
                 message.innerHTML = content;

@@ -4,6 +4,7 @@ const start_btn = document.querySelector('button');
 
 const main = async () => {
 
+    // window.location.href = "pages/archived-chats/archive.html"; return;
     // window.location.href = "pages/settings/settings.html"; return;
     const userCredentials = await chrome.storage.local.get('w_userCredentials')
     // console.log(userCredentials)
