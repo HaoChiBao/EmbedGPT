@@ -209,7 +209,7 @@ const main = async () => {
                     try{
                         port.postMessage({ action: 'refresh' });
                     } catch(e) {
-                        console.error(e)
+                        console.log('Error refreshing service worker', e)
                     }
                 }, 20000)
                 break;
