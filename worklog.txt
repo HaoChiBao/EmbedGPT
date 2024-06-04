@@ -71,4 +71,12 @@ Other things done today include:
 
 
 
-____________________________________________May 13, 2024____________________________________________
+____________________________________________May 13 - June 1, 2024____________________________________________
+* Did stuff, implemented Authentication
+
+
+____________________________________________June 4, 2024____________________________________________
+* Added Settings
+* Things to work on next
+    * Creating server that handles Auth verification and chat handling
+
