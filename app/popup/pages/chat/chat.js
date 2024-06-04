@@ -243,7 +243,6 @@ const deactivateLastChat = () => {
     deactivateChat(document.getElementById(lastChatId));
 }
 
-
 const create_menu_item = (chat) => {
     const menu_item = document.createElement('div');
     menu_item.classList.add('menu-item');
@@ -255,6 +254,7 @@ const create_menu_item = (chat) => {
 
     const chat_text = document.createElement('p');
     chat_text.innerHTML = chat.title;
+    chat_text.title = chat.title;
 
     const chat_dots = document.createElement('button');
     chat_dots.classList.add('chat-dots');
