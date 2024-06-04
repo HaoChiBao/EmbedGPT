@@ -47,16 +47,60 @@ const main = async () => {
 
     emailText.innerText = userCredentials.w_userCredentials.email
 
+    // ____________________________________________EMAIL BUTTON____________________________________________
     email.addEventListener('click', () => {console.log('email');})
+    // ____________________________________________SUBSCRIPTION PLAN____________________________________________
     plan.addEventListener('click', () => {console.log('plan');})
+    // ____________________________________________ARCHIVE CHATS____________________________________________
     archive.addEventListener('click', () => {console.log('archive');})
-    theme.addEventListener('click', () => {console.log('theme');})
+    
+    
+    // ____________________________________________COLOR THEME____________________________________________
+    
+    // load theme style
+    const current_theme = await chrome.storage.local.get('w_theme')
+    if(!current_theme.w_theme) {
+        await chrome.storage.local.set({ w_theme: 'dark' })
+    }
+
+    if(current_theme.w_theme === 'dark') {
+        theme.classList.add('dark')
+        themeText.innerText = 'dark mode'
+        theme.querySelector('img').src = await chrome.runtime.getURL('images/moon.png')
+    } else {
+        themeText.innerText = 'light mode'
+        theme.querySelector('img').src = await chrome.runtime.getURL('images/sun.png')
+    }
+    
+    // toggle between themes
+    theme.addEventListener('click', async () => {
+        const themeIMG = theme.querySelector('img')
+        const current_theme = await chrome.storage.local.get('w_theme')
+        if(!current_theme.w_theme) {
+            await chrome.storage.local.set({ w_theme: 'dark' })
+        } 
+        
+        if(theme.classList.contains('dark')) {
+            theme.classList.remove('dark')
+            themeText.innerText = 'light mode'
+            themeIMG.src = await chrome.runtime.getURL('images/sun.png')
+            await chrome.storage.local.set({ w_theme: 'light' })
+        } else {
+            theme.classList.add('dark')
+            themeText.innerText = 'dark mode'
+            themeIMG.src = await chrome.runtime.getURL('images/moon.png')
+            await chrome.storage.local.set({ w_theme: 'dark' })
+        }
+        
+    })
+    
+    // ____________________________________________DELETE CHATS____________________________________________
     deleteChats.addEventListener('click', () => {console.log('deleteChats');})
-
-    // return user to chat page
+    
+    // ____________________________________________REDIRECT CHAT____________________________________________
     redirectChat.addEventListener('click', () => {window.location.href = "../chat/chat.html";})
-
-    // logout user
+    
+    // ____________________________________________LOGOUT USER____________________________________________
     logout.addEventListener('click', () => {port.postMessage({ action: 'signOut' })})
 }
 main()
