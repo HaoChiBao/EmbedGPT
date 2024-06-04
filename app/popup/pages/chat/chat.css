@@ -171,7 +171,7 @@ body {
     
     padding-right: 2.3rem;
 
-    height: 80%;
+    height: 90%;
 
     display: flex;
     flex-direction: column;
@@ -187,7 +187,7 @@ body {
 }
 
 .menu .menu-settings{
-    height: 20%;
+    height: 10%;
     width: calc(100% - 2rem);
     padding: 1rem;
     display: flex;

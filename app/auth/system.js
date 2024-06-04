@@ -39,7 +39,7 @@ class System {
         const currentDate = Date.now(); 
 
         // check if the token is about to expire (5 minutes before expiration)
-        if (this.#userCredentials.expiresIn - 5 * 60 * 1000 < currentDate) {
+        if (this.#userCredentials.expiresIn - 5 * 60 * 1000 < currentDate && this.isLoggedIn()) {
             await this.#refreshToken();
         }
 
@@ -55,7 +55,7 @@ class System {
     login = async (email, password) => {
         try {
             const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.#firebaseConfig.apiKey}`, {
-            //   const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC_3AUmJ8rDAr0E95xq9K80PCbzgyuSlLo`, {
+                // method: 'PATCH',
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -103,6 +103,7 @@ class System {
             // console.log("User signed in:", userData);
         } catch (error) {
             console.error("Authentication error:", error.message);
+            console.log(error)
             return {status: false, error: error.message}
         }
     };
