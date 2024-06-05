@@ -57,12 +57,33 @@ const main = async () => {
     
     // ____________________________________________COLOR THEME____________________________________________
     
+    const setTheme = async (theme) => {
+        const r = document.querySelector('body')
+
+        // --theme-color: #fff;
+        // --theme-text: #000;
+        // --theme-invert: 0;
+
+        if(theme === 'dark') {
+            await chrome.storage.local.set({ w_theme: 'dark' })
+            r.style.setProperty('--theme-color', '#000')
+            r.style.setProperty('--theme-text', '#fff')
+            r.style.setProperty('--theme-invert', '1')
+        } else {
+            await chrome.storage.local.set({ w_theme: 'light' })
+            r.style.setProperty('--theme-color', '#fff')
+            r.style.setProperty('--theme-text', '#000')
+            r.style.setProperty('--theme-invert', '0')
+        }
+    }
+
     // load theme style
     const current_theme = await chrome.storage.local.get('w_theme')
     if(!current_theme.w_theme) {
         await chrome.storage.local.set({ w_theme: 'dark' })
     }
 
+    setTheme(current_theme.w_theme)
     if(current_theme.w_theme === 'dark') {
         theme.classList.add('dark')
         themeText.innerText = 'dark mode'
@@ -81,11 +102,13 @@ const main = async () => {
         } 
         
         if(theme.classList.contains('dark')) {
+            setTheme('light')
             theme.classList.remove('dark')
             themeText.innerText = 'light mode'
             themeIMG.src = await chrome.runtime.getURL('images/sun.png')
             await chrome.storage.local.set({ w_theme: 'light' })
         } else {
+            setTheme('dark')
             theme.classList.add('dark')
             themeText.innerText = 'dark mode'
             themeIMG.src = await chrome.runtime.getURL('images/moon.png')

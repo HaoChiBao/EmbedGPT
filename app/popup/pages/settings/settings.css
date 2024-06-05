@@ -9,20 +9,23 @@
 body {
     --var-sizing: 16px;
 
+    --theme-color: #fff;
+    --theme-text: #000;
+    --theme-invert: 0;
+
     height: calc(561px - var(--var-sizing)*2);
     width: calc(322px - var(--var-sizing)*2);
 
     padding: var(--var-sizing);
     /* padding-top: 0; */
 
-    background-color: #fff;
+    background-color: var(--theme-color);
+    color: var(--theme-text);
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
-    transition: 0.5s ease;
 }
 
 /* scroll wheel css =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
@@ -64,6 +67,7 @@ button{
 }
 
 button img{
+    filter: invert(var(--theme-invert));
     transition: 0.5s ease;
 }
 
@@ -158,6 +162,7 @@ section .menu-item .item .details{
 section .menu-item .item h3{
     font-size: calc(var(--var-sizing));
     font-weight: normal;
+    color: var(--theme-text);
 }
 
 section .menu-item .item p{
@@ -173,9 +178,14 @@ section .menu-item .item p{
 }
 
 #logout{
-    color: #FF0000;
     filter: opacity(0.5);
 }
 
-#delete-chats:hover {filter: grayscale(0%);color: #FF0000;}
+#logout h3 {color: #FF0000 !important;}
+#delete-chats:hover h3 {color: #FF0000 !important;}
+
+#logout img{filter: invert(0);}
+#delete-chats img{filter: invert(0);} 
+
+#delete-chats:hover {filter: grayscale(0%)}
 #logout:hover{filter: opacity(1);}
