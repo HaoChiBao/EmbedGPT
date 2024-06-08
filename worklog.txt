@@ -80,3 +80,11 @@ ____________________________________________June 4, 2024________________________
 * Things to work on next
     * Creating server that handles Auth verification and chat handling
 
+____________________________________________June 5, 2024____________________________________________
+*  stuff
+
+
+
+
+
+
