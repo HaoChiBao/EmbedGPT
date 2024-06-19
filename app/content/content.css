@@ -579,12 +579,11 @@
     background-color: #ff7171;
     color: #fff;
     
-    border: #FF0000 3px solid;
+    /* border: #FF0000 3px solid; */
     
     border-radius: 10px;
 
-    width: 100%;
-
+    width: calc(100% - var(--var-sizing));
 
     margin-bottom: calc(var(--var-sizing)/2);
     padding: calc(var(--var-sizing)/2);

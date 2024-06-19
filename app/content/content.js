@@ -103,13 +103,17 @@ const main = async () => {
         // console.log(execute)
     });
 
-    port.onDisconnect.addListener(() => {
-        console.log('Port disconnected')
-        port = chrome.runtime.connect({ name: "content" });
-    })
-
-    port.postMessage({ action: 'refresh' }); //constantly refreshes the service worker
-
+    // post message to service worker
+    const postMessage = (message) => {
+        try{
+            port.postMessage(message)
+        } catch (e) {
+            console.log(e)
+            render_error(e)
+        }
+    }
+    postMessage({ action: 'refresh' }); //constantly refreshes the service worker
+    
     // port for popup to communicate with content script
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const { action, data } = request
@@ -207,7 +211,7 @@ const main = async () => {
                 // keeps the service worker active
                 setTimeout(() => {
                     try{
-                        port.postMessage({ action: 'refresh' });
+                        postMessage({ action: 'refresh' });
                     } catch(e) {
                         console.log('Error refreshing service worker', e)
                     }
@@ -528,7 +532,7 @@ const main = async () => {
                         width: h_bounding_box.maxX - h_bounding_box.minX,
                         height: h_bounding_box.maxY - h_bounding_box.minY
                     }
-                    port.postMessage({ action: 'capture', dimensions: dimensions });
+                    postMessage({ action: 'capture', dimensions: dimensions });
                     
                     // allow user to highlight again
                     start_highlighter()
@@ -825,8 +829,7 @@ const main = async () => {
                 chat_body.appendChild(chat_element);
             } catch (e){
                 // const chat_error = create_chat_error('Error loading chat');
-                const chat_error = create_chat_error(e);
-                chat_body.appendChild(chat_error);
+                render_error('Error loading chat')
             }
         })
 
@@ -879,6 +882,11 @@ const main = async () => {
         chat_body.scrollTop = chat_body.scrollHeight;
         last_response_element = response_element;
     }
+
+    const render_error = (message) => {
+        const error_element = create_chat_error(message);
+        chat_body.appendChild(error_element);
+    }
     
     const reset_imagePreview_imageData = () => {
         imagePreview_imageData = null;
@@ -893,7 +901,7 @@ const main = async () => {
     }
 
    
-   const update_chat_history = async (role = 0, text) => {
+    const update_chat_history = async (role = 0, text) => {
         role = role === 0 ? 'user' : 'system';
         let content = [
            {
@@ -918,7 +926,12 @@ const main = async () => {
         currentChatHistory.push({ role, content });
         allChats[currentChatId].timestamp = Date.now();
 
-        await save_content_chat()
+        try{
+            await save_content_chat()
+        } catch (e) {
+            console.log(e)
+            render_error('Error saving chat')
+        }
         // console.log(currentChatHistory)
     }
 
@@ -959,7 +972,7 @@ const main = async () => {
         await response_loading();
         
         maximize_chat()
-        port.postMessage({ 
+        postMessage({ 
             // action: 'queryText', 
             action: 'queryImage', 
             chatModel: 0,
@@ -1153,49 +1166,5 @@ const main = async () => {
     document.body.appendChild(chat)
 
     create_new_chat()
-
-
-    //______________________________________________ TESTING ______________________________________________
-    return
-    const moveAround = document.createElement('div')
-    moveAround.className = 'move-around'
-    
-    const testMenu = document.createElement('div')
-    testMenu.className = 'test-menu'
-    
-    const testButton = document.createElement('button')
-    testButton.textContent = 'Test'
-    testButton.onclick = async () => {
-        
-        const inputVal = testInput.value
-
-        // send message to background
-        port.postMessage({ action: inputVal });
-
-    }
-    
-    const testInput = document.createElement('input')
-    testInput.type = 'text'
-    testInput.placeholder = 'Test'
-
-    const testHighlight = document.createElement('button')
-    testHighlight.textContent = 'Highlight'
-    testHighlight.onclick = async () => {
-        // this will begin the highlighter
-        // await close_highlighter()
-        start_highlighter()
-        // highlight = true
-        // highlight_area.style.pointerEvents = 'auto'
-        // highlight_area.style.cursor = 'crosshair'
-
-        // gradient_outer.classList.add('active')
-    }
-    
-    testMenu.appendChild(moveAround)
-    testMenu.appendChild(testInput)
-    testMenu.appendChild(testButton)
-    testMenu.appendChild(testHighlight)
-    document.body.appendChild(testMenu)
-    makeElementDraggable(testMenu, moveAround)
 }
 main()
