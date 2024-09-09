@@ -88,7 +88,6 @@ ____________________________________________June 18, 2024_______________________
 Stuff to do today
 * Error message when port is disconnected
 
-
-
-
+____________________________________________September 9, 2024____________________________________________
+Preparing to launch on chrome webstore
 
