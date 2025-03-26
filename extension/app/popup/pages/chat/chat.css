@@ -497,7 +497,7 @@ body {
     pointer-events: none;
 }
 
-#chat-body .message p{
+#chat-body .message msg{
     margin-top: calc(var(--var-sizing)/4);
 
     display: flex;

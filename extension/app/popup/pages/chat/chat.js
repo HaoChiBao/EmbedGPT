@@ -496,7 +496,8 @@ const create_chat_bubble = (role, content, image) => {
     const message_element = document.createElement('div'); 
     const profile_image = document.createElement('img');
     profile_image.className = 'pfp';
-    const message = document.createElement('p');
+    // const message = document.createElement('p');
+    const message = document.createElement('msg');
 
     if(role === 'user' || role === 0) {
         message_element.classList.add('user-chat');
@@ -558,7 +559,7 @@ const load_chat = () => {
 const render_response = (content) => {
     if(last_response_element == null) return
 
-    let message = last_response_element.querySelector('p');
+    let message = last_response_element.querySelector('msg');
     message.innerHTML = '';
     const typeAmount = 1 // amount of characters typed per frame 
     let typed = ''; // current message content
@@ -582,15 +583,16 @@ const render_response = (content) => {
     last_response_element = null;
 }
 
-const response_loading = () => {
+const response_loading = async () => {
     const response_element = create_chat_bubble('system', '');
     chat_body.appendChild(response_element);
     
-    const message = response_element.querySelector('p');
+    const message = response_element.querySelector('msg');
 
     const loading_gif = document.createElement('img');
     loading_gif.className = 'loading-gif';
     loading_gif.src = '../../../../images/typing.gif';
+    // loading_gif.src = await chrome.runtime.getURL('images/typing.gif');
 
     message.appendChild(loading_gif);
     
@@ -704,19 +706,20 @@ const main = async () => {
         console.log(msg)
         switch(msg.action) {
             case 'queryText':
-                const response_message = msg.data.content.choices[0].message.content;
-                update_chat_history(1, response_message); // add system response to chat history
-                render_response(response_message); // display system response (with animation) in chat
-    
-                // console.log(currentChatHistory)
+                // const response_message = msg.data.content.choices[0].message.content;
+                const response_message = msg.data.content;
+                update_chat_history(1, response_message.html); // add system response to chat history
+                render_response(response_message.html); 
+                
                 break;
 
             case 'queryImage':
-                const response_message_image = msg.data.content.choices[0].message.content;
+                // const response_message_image = msg.data.content.choices[0].message.content;
+                const response_message_image = msg.data.content;
 
                 if(last_response_element){ // if the response element is null then that means the user switched chats before the response was returned
-                    update_chat_history(1, response_message_image); // add system response to chat history
-                    render_response(response_message_image); 
+                    update_chat_history(1, response_message_image.html); // add system response to chat history
+                    render_response(response_message_image.html); 
                     console.log('Response rendering!')
                 } else {
                     console.log('Response NOT rendering!')

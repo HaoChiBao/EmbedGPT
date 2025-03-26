@@ -267,7 +267,7 @@
     pointer-events: none;
 }
 
-.content-chat-body .chat-body .message p{
+.content-chat-body .chat-body .message msg{
     margin-top: calc(var(--var-sizing)/4);
 
     display: flex;

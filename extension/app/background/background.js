@@ -116,14 +116,15 @@ chrome.runtime.onConnect.addListener((port) => {
                     chatHistory = msg.chatHistory
                     chat_model = msg.chat_model
 
-                    response.data.content = await queryChat(chatHistory, imageData, chat_model)
+                    
+                    response.data.content = await queryChat(chatHistory, system.userCredentials)
                     break;
 
                 case 'queryText':
                     chatHistory = msg.chatHistory
                     chat_model = msg.chat_model
 
-                    response.data.content = await queryChat(chatHistory, null, chat_model)
+                    response.data.content = await queryChat(chatHistory, system.userCredentials)
                     break;
             }
             try{

@@ -192,18 +192,20 @@ const main = async () => {
                 break;
 
             case 'queryText':
-                const response_message = data.content.choices[0].message.content;
-                await update_chat_history(1, response_message); // add system response to chat history
-                render_response(response_message); // display system response (with animation) in chat
+                // const response_message = data.content.choices[0].message.content;
+                const response_message = data.content;
+                await update_chat_history(1, response_message.html); // add system response to chat history
+                render_response(response_message.html); // display system response (with animation) in chat
     
                 console.log(currentChatHistory)
                 break;
 
             case 'queryImage':
                 console.log(data)
-                const response_message_image = data.content.choices[0].message.content;
-                await update_chat_history(1, response_message_image); // add system response to chat history
-                render_response(response_message_image); // display system response (with animation) in chat
+                // const response_message_image = data.content.choices[0].message.content;
+                const response_message_image = data.content;
+                await update_chat_history(1, response_message_image.html); // add system response to chat history
+                render_response(response_message_image.html); // display system response (with animation) in chat
                 // console.log(currentChatHistory)
                 break;
     
@@ -779,7 +781,8 @@ const main = async () => {
         const message_element = document.createElement('div'); 
         const profile_image = document.createElement('img');
         profile_image.className = 'pfp';
-        const message = document.createElement('p');
+        const message = document.createElement('msg');
+        // const message = document.createElement('message');
     
         if(role === 'user' || role === 0) {
             message_element.classList.add('user-chat');
@@ -842,7 +845,7 @@ const main = async () => {
     const render_response = (content) => {
         if(last_response_element == null) return
     
-        let message = last_response_element.querySelector('p');
+        let message = last_response_element.querySelector('msg');
         message.innerHTML = '';
         const typeAmount = 5 // amount of characters typed per frame 
         let typed = ''; // current message content
@@ -870,7 +873,7 @@ const main = async () => {
         const response_element = await create_chat_bubble('system', '');
         chat_body.appendChild(response_element);
         
-        const message = response_element.querySelector('p');
+        const message = response_element.querySelector('msg');
     
         const loading_gif = document.createElement('img');
         loading_gif.classList.add('loading-gif');

@@ -1,1 +1,4 @@
 API_KEYS.js
+.env
+node_modules
+pnpm-lock.yaml
