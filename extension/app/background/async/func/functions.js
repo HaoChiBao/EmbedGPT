@@ -38,3 +38,5 @@ const queryChat = async (chatHistory, userCredentials) => {
 
 
 export {queryChat};
+
+// wasd
