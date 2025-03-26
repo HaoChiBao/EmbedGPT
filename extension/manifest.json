@@ -1,17 +1,13 @@
 {
     "manifest_version": 3,
-    "name": "A -- What Do You See",
-    "description": "AI search/query integrated into your browser",
-    "version": "0.3.1",
+    "name": "Wadoyuse (What Do You See)",
+    "description": "An advanced ChatGPT clone featuring a circling highlighter for images.",
+    "version": "1.0.0",
 
     "permissions": [
-        "scripting",
-        "activeTab",
         "unlimitedStorage",
-        "storage",
-        "downloads"
+        "storage"
     ],
-    "host_permissions": ["<all_urls>"],
     "web_accessible_resources":[{
         "resources": ["/app/*", "/images/*"],
         "matches": ["<all_urls>"]

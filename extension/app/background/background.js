@@ -95,6 +95,10 @@ chrome.runtime.onConnect.addListener((port) => {
                     }
                     break;
 
+                case 'userCredentials':
+                    response.data.userCredentials = system.userCredentials
+                    break;
+
                 case 'refresh':
                     // keeps the service worker actuve
                     break;
